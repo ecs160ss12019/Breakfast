@@ -2,6 +2,7 @@
 Breakfast-Pacman
 
 ## Project
+Name: Ms. Pac-Man  
 Link to Story Mapping: https://github.com/ecs160ss12019/Breakfast/blob/master/StoryMapping.md  
 
 ## Team Members 
