@@ -25,7 +25,6 @@ As a Pacman, I have 3 life.
 13. As a cherry, I may be eaten by the pacman.
 
 
-
 ## Sprints (Jian)
 ### Sprint 1: 
 Build Grid (with obstacles). 
