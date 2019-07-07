@@ -24,6 +24,15 @@ As a Pacman, I have 3 life.
 12. As a cherry, I will move around.
 13. As a cherry, I may be eaten by the pacman.
 
+| Epic Stories  | As a cherry, I may<br>or may not show up after<br> the pacman eats the power pellets.                | Advantages              |
+| ------------- | ----------------------- | ----------------------- |
+| Sprint 1       | first line<br>next line | first line<br>next line |
+| Sprint 2       | first line<br>next line | first line<br>next line |
+| Sprint 3       | first line<br>next line | first line<br>next line |
+
+
+
+
 
 
 ## Sprints (Jian)
