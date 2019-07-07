@@ -23,7 +23,6 @@ As a Pacman, I have 3 life.
 11. As a cherry, I will show up more frequently as the game goes on.
 12. As a cherry, I will move around.
 13. As a cherry, I may be eaten by the pacman.
-
 | Epic Stories  | As a cherry, I may<br>or may not show up after<br> the pacman eats the power pellets.                | Advantages              |
 | ------------- | ----------------------- | ----------------------- |
 | Sprint 1       | first line<br>next line | first line<br>next line |
