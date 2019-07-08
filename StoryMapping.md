@@ -1,7 +1,14 @@
 # Story Mapping for Ms. Pac-Man
 
 ## BHAG: (Siqi Chai)
-The player is a very hungry and clever fugitive trapped in a highly guarded prison, avoiding all guards, and using his or her skills to escape by eating all the gold.
+The pacman is trapped in an underground prison, trying to avoid monsters, eating cherry for energy supply, and seeking for an opportunity fight back.
+
+## Detailed Game Description: (Siqi Chai)
+This is an implementatio of the classic arcade game Ms. Pacman on the Android plateform. This newer version holds the same spirit as the old one.
+The pacman will be trapped in a underground prison with highly complicated paths. There are monsters that runs after the pacman, and once the pacman
+bumps into a monster, it is died. Of course, the pacman will be able to fight back. The pacman can eat cherries or coins to collect energy or slow down
+the monsters. Once the monsters are slowed down, the pacman will be able to attack back. Instead of controling the pacman with a gamepad, in this Android
+game, the player will direct the pacman with the virtual pointer. 
 
 ## User Stories: (Pacman, Enemy)
 ### Pacman: (Alessandro)
@@ -42,5 +49,11 @@ Possibly accomplish: the user stories 4, 7, 10, 11, 12
 
 ## CRC 
 ### Classes: 
-MainActivity
-Pakman, Enemy, Blocks (grid), Gold, Levels, UserInput
+MainActivity: 	overall game lifecycle
+Pakman:  		how the pacman moves, interacts, and looks like
+Enemy:			how the monsters move, interact, and look like
+Blocks(grid):	Part of the arcade, marks the paths of the characters
+Gold:			controls the reward
+Levels:			controls the hardness of the game: how many monsters, how fast do they move, etc.
+UserInput:		transfrom tapping event into up/down left/right
+Painter:		contrals the display
