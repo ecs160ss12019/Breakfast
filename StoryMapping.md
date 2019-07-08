@@ -57,7 +57,7 @@ MainActivity: 	overall game lifecycle
 
 Pakman:  		how The pac-man moves, interacts, and looks like
 
-Enemy:			how the ghosts move, interact, and look like
+Ghost:			how the ghosts move, interact, and look like
 
 Blocks(grid):	Part of the arcade, marks the paths of the characters
 
