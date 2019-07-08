@@ -1,6 +1,6 @@
 # Story Mapping for Ms. Pac-Man
 
-## BHAG: (Siqi Chai)
+## BHAG: 
 The pacman is trapped in an underground prison, trying to avoid monsters, eating cherry for energy supply, and seeking for an opportunity fight back.
 
 ## Detailed Game Description: (Siqi Chai)
@@ -12,26 +12,26 @@ game, the player will direct the pacman with the virtual pointer.
 
 
 ## User Stories: (Pacman, Enemy)
-### Pacman: (Alessandro)
+### Pacman: 
 1) As a Pacman, I want to earn points by eating pellets and avoiding enemies. 
 2) As a Pacman, I will die if I touch an enemy. 
 3) As a Pacman, if I am in danger, I can eat a power pellets to counterattack my enemies.
 4) As a Pacman, if I want to be the best fugitive, I will have to earn the maximum points possible.
 5) As a Pacman, I have 3 life.
 
-### Enemy:(Xinwei Wu)
+### Enemy:
 6) As an enemy, I want to kill the Pacman through a single touch.
 7) As an enemy, if I see Pacman getting the cherry, I will try to run faster to kill the Pacman.
 8) As an enemy, I can be killed through contact and slow down within 10 seconds after Pacman eats the power pellets.
 9) As an enemy, if I bump to any of my co-workers, I will move to the opposite direction.
 
-### Cherry:(Adila)
+### Cherry:
 10) As a cherry, I may or may not show up after the pacman eats the power pellets.
 11) As a cherry, I will show up more frequently as the game goes on.
 12) As a cherry, I will move around.
 13) As a cherry, I will disappear immediately after pac man dies.
 
-## Sprints (Jian)
+## Sprints 
 ### Sprints Chart
 Epic Story | As Pacman, I will move around to eat all the pellets and avoid being killed by ghosts.  | As Pacman, I will be able to kill ghosts after eating big coins. | As Pacman, I can eat cherry to earn extra points.  | As ghost, I can kill Pacman by touching and I can reborn after being killed by Pacman.  | Grid (Map) 
 --- | --- | --- | --- | --- | ---
