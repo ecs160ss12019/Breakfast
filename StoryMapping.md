@@ -3,7 +3,7 @@
 ## BHAG: 
 The pacman is trapped in an underground prison, trying to avoid monsters, eating cherry for energy supply, and seeking for an opportunity fight back.
 
-## Detailed Game Description: (Siqi Chai)
+## Detailed Game Description: 
 This is an implementatio of the classic arcade game Ms. Pacman on the Android plateform. This newer version holds the same spirit as the old one.
 The pacman will be trapped in a underground prison with highly complicated paths. There are monsters that runs after the pacman, and once the pacman
 bumps into a monster, it is died. Of course, the pacman will be able to fight back. The pacman can eat cherries or coins to collect energy or slow down
