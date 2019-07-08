@@ -36,7 +36,7 @@ game, the player will direct the pacman with the virtual pointer.
 Objects | Pacman | Ghost (Enemy) | Grid | Small Coin | Big Coin |  Cherry 
 --- | --- | --- | --- |--- | --- | ---
 Sprint 1 | Able to move | 4 Ghosts; <br> Able to move; <br> Can kill Pacman by touching | Simple horizonal and vertical grid | One small coin in one grid | N/A | N/A 
-Sprint 2 | Will be able to kill ghosts after eating big coin | Change color for few seconds when Pacman eat big coin; <br> Generate new ghost when there is ghost being killed | Letter grid |  | One big coin in the corner of the grid | N/A 
+Sprint 2 | Will be able to kill ghosts after eating big coin | Enemy can move randomly; <br> Generate new ghost when there is ghost being killed | Letter grid |  | One big coin in the corner of the grid | N/A 
 Sprint 3 | When all pellets are eaten, PacMan is taken to the next level. |Generate the vonerable ghost affects and also sounds.  | More than one grid system (more than one map) |  |  | One cherry will be generated randomly for extra points 
 
 ## Sprints (Jian)
