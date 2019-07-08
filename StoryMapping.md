@@ -9,7 +9,7 @@ The pacman will be trapped in a underground prison with highly complicated paths
 bumps into a monster, it is died. Of course, the pacman will be able to fight back. The pacman can eat cherries or coins to collect energy or slow down
 the monsters. Once the monsters are slowed down, the pacman will be able to attack back. Instead of controling the pacman with a gamepad, in this Android
 game, the player will direct the pacman with the virtual pointer. 
-The player controls Pac-Man through a maze, eating pellets. When all pellets are eaten, PacMan is taken to the next level. 
+
 
 ## User Stories: (Pacman, Enemy)
 ### Pacman: (Alessandro)
@@ -38,7 +38,7 @@ Objects | Pacman | Ghost (Enemy) | Grid | Small Coin | Big Coin |  Cherry
 --- | --- | --- | --- |--- | --- | ---
 Sprint 1 | Able to move | 4 Ghosts; <br> Able to move; <br> Can kill Pacman by touching | Simple horizonal and vertical grid | One small coin in one grid | N/A | N/A 
 Sprint 2 | Will be able to kill ghosts after eating big coin | Change color for few seconds when Pacman eat big coin; <br> Generate new ghost when there is ghost being killed | Letter grid |  | One big coin in the corner of the grid | N/A 
-Sprint 3 |  |  | More than one grid system (more than one map) |  |  | One cherry will be generated randomly for extra points 
+Sprint 3 | When all pellets are eaten, PacMan is taken to the next level. |  | More than one grid system (more than one map) |  |  | One cherry will be generated randomly for extra points 
 
 ## Sprints (Jian)
 ### Sprint 1: 
