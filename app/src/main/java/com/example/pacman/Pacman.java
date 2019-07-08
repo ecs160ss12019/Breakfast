@@ -1,7 +1,20 @@
 package com.example.pacman;
 
-public class Pacman {
+import android.graphics.Canvas;
+
+public class Pacman implements GameObject{
     /*
     * create Pacman here
     */
+
+    @Override
+    public void draw(Canvas canvas) {
+
+    }
+
+    @Override
+    public void updateStatus() {
+
+    }
+    
 }
