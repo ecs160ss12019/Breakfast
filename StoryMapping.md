@@ -1,7 +1,7 @@
 # Story Mapping for Ms. Pac-Man
 
 ## BHAG: (Siqi Chai)
-The pacman is trapped in an underground prison, trying to avoid monsters, eating cherry for energy supply, and seeking for an opportunity fight back.
+The pacman is trapped in an underground prison, trying to avoid monsters, eating cherry for energy supply, and seeking for an opportunity to fight back.
 
 ## Detailed Game Description: (Siqi Chai)
 This is an implementatio of the classic arcade game Ms. Pacman on the Android plateform. This newer version holds the same spirit as the old one.
