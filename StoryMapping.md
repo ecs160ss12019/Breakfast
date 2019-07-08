@@ -33,7 +33,7 @@ game, the player will direct the pacman with the virtual pointer.
 
 ## Sprints (Jian)
 ### Sprints Chart
-Epic Story | As Pacman, I will move around to eat all the pellets and cherry and avoid being killed by ghosts.  | As Pacman, I will be able to kill ghosts after eating big coins. | As Pacman, I can eat cherry to earn extra points.  | Ghost | Grid (Map) 
+Epic Story | As Pacman, I will move around to eat all the pellets and avoid being killed by ghosts.  | As Pacman, I will be able to kill ghosts after eating big coins. | As Pacman, I can eat cherry to earn extra points.  | Ghost | Grid (Map) 
 --- | --- | --- | --- | --- | ---
 Objects | Pacman, Pellets, Ghosts | Pacman, Power Pellets, Ghosts | Pacman, Cherry | Ghost | Grid (Map) 
 Sprint 1 | Able to move | Generate big coins.  | N/A | 4 Ghosts; Able to move; Can kill Pacman by touching | Simple horizonal and vertical grid 
