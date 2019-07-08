@@ -9,6 +9,7 @@ The pacman will be trapped in a underground prison with highly complicated paths
 bumps into a monster, it is died. Of course, the pacman will be able to fight back. The pacman can eat cherries or coins to collect energy or slow down
 the monsters. Once the monsters are slowed down, the pacman will be able to attack back. Instead of controling the pacman with a gamepad, in this Android
 game, the player will direct the pacman with the virtual pointer. 
+The player controls Pac-Man through a maze, eating pellets. When all pellets are eaten, PacMan is taken to the next level. 
 
 ## User Stories: (Pacman, Enemy)
 ### Pacman: (Alessandro)
@@ -29,6 +30,8 @@ game, the player will direct the pacman with the virtual pointer.
 11) As a cherry, I will show up more frequently as the game goes on.
 12) As a cherry, I will move around.
 13) As a cherry, I may be eaten by the pacman.
+14) As a cherry, I will disappear immediately after pac man dies.
+
 
 ## Sprints Chart:
 Objects | Pacman | Ghost (Enemy) | Grid | Small Coin | Big Coin |  Cherry 
