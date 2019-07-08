@@ -36,9 +36,9 @@ game, the player will direct the pacman with the virtual pointer.
 Epic Story | As Pacman, I will move around to eat all the pellets and cherry and avoid being killed by ghosts.  | As Pacman, I will be able to kill ghosts after eating big coins. | Ghost | Grid (Map) 
 --- | --- | --- | --- | ---
 Objects | Pacman, Pellets, Ghosts, Cherry | Pacman, Power Pellets, Ghosts | Ghost | Grid (Map) 
-Sprint 1 | Able to move | 4 Ghosts; <br> Able to move; <br> Can kill Pacman by touching | 4 Ghosts; Able to move; Can kill Pacman by touching | Simple horizonal and vertical grid 
-Sprint 2 | Will be able to kill ghosts after eating big coin | Enemy can move randomly; <br> Generate new ghost when there is ghost being killed | Enemy can move randomly; Generate new ghost when there is ghost being killed | Letter grid 
-Sprint 3 | When all pellets are eaten, PacMan is taken to the next level. |Generate the vonerable ghost affects and also sounds.  | Generate the vonerable ghost affects and also sounds. | More than one grid system (more than one map) 
+Sprint 1 | Able to move | Generate big coins.  | 4 Ghosts; Able to move; Can kill Pacman by touching | Simple horizonal and vertical grid 
+Sprint 2 | Will be able to kill ghosts after eating big coin | Able to eat big coins. | Enemy can move randomly; Generate new ghost when there is ghost being killed | Letter grid 
+Sprint 3 | When all pellets are eaten, PacMan is taken to the next level. | Able to kill ghosts after eating big coins. | Generate the vonerable ghost affects and also sounds. | More than one grid system (more than one map) 
 
 ### Sprint 1: 
 Build Grid (with obstacles). 
