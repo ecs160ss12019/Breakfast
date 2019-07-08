@@ -50,10 +50,17 @@ Possibly accomplish: the user stories 4, 7, 10, 11, 12
 ## CRC 
 ### Classes: 
 MainActivity: 	overall game lifecycle
+
 Pakman:  		how the pacman moves, interacts, and looks like
+
 Enemy:			how the monsters move, interact, and look like
+
 Blocks(grid):	Part of the arcade, marks the paths of the characters
+
 Gold:			controls the reward
+
 Levels:			controls the hardness of the game: how many monsters, how fast do they move, etc.
+
 UserInput:		transfrom tapping event into up/down left/right
+
 Painter:		contrals the display
