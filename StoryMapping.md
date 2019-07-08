@@ -33,7 +33,7 @@ game, the player will direct the pacman with the virtual pointer.
 
 ## Sprints (Jian)
 ### Sprints Chart
-Objects | Pacman | Ghost (Enemy) | Grid | Small Coin | Big Coin |  Cherry 
+Objects | Pacman | Ghost (Enemy) | Grid (Map) | Small Coin | Big Coin |  Cherry 
 --- | --- | --- | --- |--- | --- | ---
 Sprint 1 | Able to move | 4 Ghosts; <br> Able to move; <br> Can kill Pacman by touching | Simple horizonal and vertical grid | One small coin in one grid | N/A | N/A 
 Sprint 2 | Will be able to kill ghosts after eating big coin | Enemy can move randomly; <br> Generate new ghost when there is ghost being killed | Letter grid |  | One big coin in the corner of the grid | N/A 
@@ -43,14 +43,14 @@ Sprint 3 | When all pellets are eaten, PacMan is taken to the next level. |Gener
 Build Grid (with obstacles). 
 Implement the figures, such as Pacman, enemies, pellets, power pellets, cherry, etc.
 Pacman can move by user input (input management).
-Enemy can move randomly.
+Enemy can move randomly.  
 Possibly accomplish: the user stories 1, 2, 5, 6.
 
 ### Sprint 2: 
 Possibly accomplish: the user stories 1, 2, 5, 6. 3 8 9 
 
 ### Sprint 3: 
-Sound effect 
+Sound effect  
 Possibly accomplish: the user stories 4, 7, 10, 11, 12
 
 ## CRC 
