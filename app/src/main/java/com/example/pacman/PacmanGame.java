@@ -61,6 +61,15 @@ class PacmanGame extends SurfaceView implements Runnable {
         // mPlaying must be true AND
         // the thread running for the main loop to execute
         while (mPlaying) {
+            /*
+            while the game is not paused, update
+             */
+            if(!mPaused) {
+                //TODO
+            }
+
+            //draw the updated screen
+            //draw();
 
         }
     }
