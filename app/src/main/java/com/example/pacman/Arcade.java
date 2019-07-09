@@ -50,7 +50,7 @@ public class Arcade implements GameObject{
     }
 
     @Override
-    public void updateStatus() {
+    public void updateStatus(long pfs) {
 
     }
 

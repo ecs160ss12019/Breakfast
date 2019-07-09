@@ -23,7 +23,7 @@ public class ArcadeBlock implements GameObject {
     }
 
     @Override
-    public void updateStatus() {
+    public void updateStatus(long fps) {
 
     }
 
