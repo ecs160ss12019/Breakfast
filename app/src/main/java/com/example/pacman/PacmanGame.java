@@ -38,9 +38,6 @@ class PacmanGame extends SurfaceView implements Runnable {
     //Our pacman!
     private Pacman pacman;
 
-    //Our Arcade!
-    private Arcade arcade;
-
     public PacmanGame(Context context, int x, int y) {
         // Super... calls the parent class
         // constructor of SurfaceView
@@ -59,9 +56,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         mPaint = new Paint();
 
         // Initialize the pacman and ghost
-
-        pacman = new Pacman(context);
-        arcade = new Arcade(context, mScreenX, mScreenY);
+        pacman = new Pacman(context, mScreenX, mScreenY);
     }
 
     // When we start the thread with:
@@ -192,7 +187,6 @@ class PacmanGame extends SurfaceView implements Runnable {
         // Fill the screen with a solid color
         mCanvas.drawColor(Color.argb
                 (255, 255, 255, 255));
-        arcade.draw(canvas);
         pacman.draw(canvas);
     }
 
@@ -203,7 +197,7 @@ class PacmanGame extends SurfaceView implements Runnable {
     public boolean onTouchEvent(MotionEvent motionEvent) {
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_MOVE:
-                case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_DOWN:
                     /*
                     should not really update individually.
                     call update() in the future

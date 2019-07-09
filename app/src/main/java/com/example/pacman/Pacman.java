@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 public class Pacman implements GameObject{
     /*
-    * create Pacman here
-    */
+     * create Pacman here
+     */
     //coordinate
     private float x;
     private float y;
@@ -60,8 +60,10 @@ public class Pacman implements GameObject{
     //direction means the pacman is going up, down, left, or right
     private int direction;
 
-    public Pacman(Context context) {
+    public Pacman(Context context, int sx, int sy) {
         this.context = context;
+        mScreenX = sx;
+        mScreenY = sy;
 
         //currently, the collection is 2*2 with 4 views in total
         numRow = 2;
