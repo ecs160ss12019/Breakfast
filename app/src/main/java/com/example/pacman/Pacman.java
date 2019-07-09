@@ -75,7 +75,7 @@ public class Pacman implements GameObject{
         //resize to fit screen
         int originalWidth = pacmanCollectionView.getWidth();
         int originalHeight = pacmanCollectionView.getHeight();
-        double resizingFactor = 0.08;
+        double resizingFactor = 0.06;
         pacmanCollectionView = Bitmap.createScaledBitmap(pacmanCollectionView, (int)(originalWidth * resizingFactor)
                 , (int)(originalHeight * resizingFactor), true);
 
