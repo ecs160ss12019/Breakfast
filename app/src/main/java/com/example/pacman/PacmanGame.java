@@ -59,12 +59,9 @@ class PacmanGame extends SurfaceView implements Runnable {
         mPaint = new Paint();
 
         // Initialize the pacman and ghost
-<<<<<<< HEAD
+
         pacman = new Pacman(context);
         arcade = new Arcade(context, mScreenX, mScreenY);
-=======
-        pacman = new Pacman(context, mScreenX, mScreenY);
->>>>>>> 7e9ea9a237e12f7a17ae34e495711efa68692eb9
     }
 
     // When we start the thread with:
