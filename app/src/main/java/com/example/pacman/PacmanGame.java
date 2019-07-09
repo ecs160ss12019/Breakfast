@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -28,6 +29,9 @@ class PacmanGame extends SurfaceView implements Runnable {
     private volatile boolean mPlaying;
     private boolean mPaused = true;
 
+    //Our pacman!
+    private Pacman pacman;
+
     public PacmanGame(Context context, int x, int y) {
         // Super... calls the parent class
         // constructor of SurfaceView
@@ -46,6 +50,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         mPaint = new Paint();
 
         // Initialize the pacman and ghost
+        pacman = new Pacman();
     }
 
     // When we start the thread with:
@@ -64,13 +69,26 @@ class PacmanGame extends SurfaceView implements Runnable {
             /*
             while the game is not paused, update
              */
+
             if(!mPaused) {
-                //TODO
+                //this might not be null in the future
+                mCanvas = null;
+
+                /*
+                since this is in the main thread, we should use
+                a try catch block.
+                 */
+                try {
+                    //lock canvas to edit pixels
+                    mCanvas = mOurHolder.lockCanvas();
+                    synchronized (mOurHolder) {
+                        updateGame();
+                        draw(mCanvas);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-
-            //draw the updated screen
-            //draw();
-
         }
     }
 
@@ -100,5 +118,38 @@ class PacmanGame extends SurfaceView implements Runnable {
 
         // Start the thread
         mGameThread.start();
+    }
+
+    /*
+    We do all global update events here,
+    this will be continuously called while
+    the thread is running
+     */
+    public void updateGame() {
+        pacman.updateStatus();
+    }
+
+    /*
+    implement the draw method.
+    In this method, we draw game elements individually
+     */
+    @Override
+    public void draw(Canvas canvas) {
+        super.draw(canvas);
+
+        pacman.draw(canvas);
+    }
+
+    /*
+    implement onTouchEvent to handle user input
+     */
+    @Override
+    public boolean onTouchEvent(MotionEvent motionEvent) {
+        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_MOVE:
+                case MotionEvent.ACTION_DOWN:
+                pacman.updateStatus((int)motionEvent.getX(), (int)motionEvent.getY());
+        }
+        return true;
     }
 }
