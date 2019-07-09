@@ -160,6 +160,12 @@ class PacmanGame extends SurfaceView implements Runnable {
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_MOVE:
                 case MotionEvent.ACTION_DOWN:
+                    /*
+                    should not really update individually.
+                    call update() in the future
+                    Here we are just testing
+                    //TODO
+                     */
                 pacman.updateStatus((int)motionEvent.getX(), (int)motionEvent.getY());
         }
         return true;
