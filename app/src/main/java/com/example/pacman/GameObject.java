@@ -11,5 +11,5 @@ public interface GameObject {
     public void draw(Canvas canvas);
 
     //update coordinate and status
-    public void updateStatus();
+    public void updateStatus(long fps);
 }
