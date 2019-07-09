@@ -17,13 +17,17 @@ public class ArcadeBlock implements GameObject {
     //this marks the type of the block
     private int type;
 
+    public int getType() {
+        return type;
+    }
+
     @Override
     public void draw(Canvas canvas) {
 
     }
 
     @Override
-    public void updateStatus() {
+    public void updateStatus(long fps) {
 
     }
 

@@ -1,7 +1,6 @@
 package com.example.pacman;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -20,6 +19,11 @@ class PacmanGame extends SurfaceView implements Runnable {
     private Canvas mCanvas;
     private Paint mPaint;
 
+    // How many frames per second did we get?
+    private long mFPS;
+    // The number of milliseconds in a second
+    private final int MILLIS_IN_SECOND = 1000;
+
     // Holds the resolution of the screen
     private int mScreenX;
     private int mScreenY;
@@ -33,6 +37,9 @@ class PacmanGame extends SurfaceView implements Runnable {
 
     //Our pacman!
     private Pacman pacman;
+
+    //Our Arcade!
+    private Arcade arcade;
 
     public PacmanGame(Context context, int x, int y) {
         // Super... calls the parent class
@@ -52,7 +59,12 @@ class PacmanGame extends SurfaceView implements Runnable {
         mPaint = new Paint();
 
         // Initialize the pacman and ghost
+<<<<<<< HEAD
         pacman = new Pacman(context);
+        arcade = new Arcade(context, mScreenX, mScreenY);
+=======
+        pacman = new Pacman(context, mScreenX, mScreenY);
+>>>>>>> 7e9ea9a237e12f7a17ae34e495711efa68692eb9
     }
 
     // When we start the thread with:
@@ -71,8 +83,14 @@ class PacmanGame extends SurfaceView implements Runnable {
             /*
             while the game is not paused, update
              */
+            // What time is it now at the start of the loop?
+            long frameStartTime = System.currentTimeMillis();
 
             if(!mPaused) {
+                updateGame();
+                // Now the Pacman and Ghosts are in their new positions
+                // we can see if there have been any collisions
+                detectCollisions();
                 //this might not be null in the future
                 mCanvas = null;
 
@@ -98,7 +116,44 @@ class PacmanGame extends SurfaceView implements Runnable {
                     }
                 }
             }
+
+            // How long did this frame/loop take?
+            // Store the answer in timeThisFrame
+            long timeThisFrame = System.currentTimeMillis() - frameStartTime;
+
+            // Make sure timeThisFrame is at least 1 millisecond
+            // because accidentally dividing by zero crashes the game
+            if (timeThisFrame > 0) {
+                // Store the current frame rate in mFPS
+                // ready to pass to the update methods of
+                // mBat and mBall next frame/loop
+                mFPS = MILLIS_IN_SECOND / timeThisFrame;
+            }
         }
+    }
+
+    /*
+    We do all global update events here,
+    this will be continuously called while
+    the thread is running
+     */
+    public void updateGame() {
+        pacman.updateStatus(mFPS);
+    }
+
+    private void detectCollisions(){
+        // Has the Pacman hit the Ghost?
+
+        // Has the Pacman hit the edge of the screen
+
+        // Bottom
+
+        // Top
+
+        // Left
+
+        // Right
+
     }
 
     // This method is called by PacmanActivity
@@ -130,15 +185,6 @@ class PacmanGame extends SurfaceView implements Runnable {
     }
 
     /*
-    We do all global update events here,
-    this will be continuously called while
-    the thread is running
-     */
-    public void updateGame() {
-        pacman.updateStatus();
-    }
-
-    /*
     implement the draw method.
     In this method, we draw game elements individually
      */
@@ -149,6 +195,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         // Fill the screen with a solid color
         mCanvas.drawColor(Color.argb
                 (255, 255, 255, 255));
+        arcade.draw(canvas);
         pacman.draw(canvas);
     }
 
@@ -166,7 +213,7 @@ class PacmanGame extends SurfaceView implements Runnable {
                     Here we are just testing
                     //TODO
                      */
-                pacman.updateStatus((int)motionEvent.getX(), (int)motionEvent.getY());
+                pacman.updateMovementStatus((int)motionEvent.getX(), (int)motionEvent.getY());
         }
         return true;
     }
