@@ -34,8 +34,8 @@ Epic Story | As a Pacman, I will run around and eat all the coins on my path, wh
 --- | --- | --- | --- | --- | ---
 Objects | Pacman, Pellets, Ghosts | Pacman, Power Pellets, Ghosts | Pacman, Cherry | Ghost, Pacman | Grid (Map) 
 Sprint 1 | Pacman is able to move around and change directions with user inputs | Can generate big coins  | N/A | 4 Ghosts; Able to move around; Can kill the Pac-man | Simple horizonal and vertical grid 
-Sprint 2 | Able to kill the ghosts with a big coin | Able to eat big coins | Can generate cherry | Enemy can move randomly; Generate new ghost when there is ghost being killed | Letter grid 
-Sprint 3 | When all the coins are eaten,the player will go next level | Able to kill ghosts after eating big coins | Able to eat cherry to get extra points | Generate sound effects | More than one grid system (more than one map) 
+Sprint 2 | Able to be killed by the ghosts by collision | Able to eat power pellets | Can generate cherry | Enemy can move randomly; Generate new ghost when there is ghost being killed | Letter grid 
+Sprint 3 | When all the pellets are eaten,the player will go next level | Able to kill ghosts after eating power pellets | Able to eat cherry to get extra points | Generate sound effects | More than one grid system (more than one map) 
 
 ### Sprint 1: 
 Build Grid (with obstacles). 
