@@ -1,7 +1,9 @@
 package com.example.pacman;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -27,7 +29,7 @@ class PacmanGame extends SurfaceView implements Runnable {
     // This volatile vaiable can be accessed
     // from inside and outside the thread
     private volatile boolean mPlaying;
-    private boolean mPaused = true;
+    private boolean mPaused = false;
 
     //Our pacman!
     private Pacman pacman;
@@ -50,7 +52,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         mPaint = new Paint();
 
         // Initialize the pacman and ghost
-        pacman = new Pacman();
+        pacman = new Pacman(context);
     }
 
     // When we start the thread with:
@@ -82,11 +84,18 @@ class PacmanGame extends SurfaceView implements Runnable {
                     //lock canvas to edit pixels
                     mCanvas = mOurHolder.lockCanvas();
                     synchronized (mOurHolder) {
-                        updateGame();
                         draw(mCanvas);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                } finally {
+                    if(mCanvas != null) {
+                        try {
+                            mOurHolder.unlockCanvasAndPost(mCanvas);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
         }
@@ -137,6 +146,9 @@ class PacmanGame extends SurfaceView implements Runnable {
     public void draw(Canvas canvas) {
         super.draw(canvas);
 
+        // Fill the screen with a solid color
+        mCanvas.drawColor(Color.argb
+                (255, 255, 255, 255));
         pacman.draw(canvas);
     }
 
