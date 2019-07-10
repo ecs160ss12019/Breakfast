@@ -41,31 +41,6 @@ class PacmanGame extends SurfaceView implements Runnable {
     //Our Arcade List
     private ArcadeList arcades;
 
-    public PacmanGame(Context context, int x, int y) {
-        // Super... calls the parent class
-        // constructor of SurfaceView
-        // provided by Android
-        super(context);
-
-        // Initialize these two members/fields
-        // With the values passesd in as parameters
-        mScreenX = x;
-        mScreenY = y;
-
-        // Initialize the objects
-        // ready for drawing with
-        // getHolder is a method of SurfaceView
-        mOurHolder = getHolder();
-        mPaint = new Paint();
-
-        // Initialize the pacman and ghost
-        pacman = new Pacman(context, mScreenX, mScreenY);
-
-        //initialize the Arcade list
-        arcades = new ArcadeList(context, mScreenX, mScreenY,
-                R.raw.sample1);
-    }
-
     // When we start the thread with:
     // mGameThread.start();
     // the run method is continuously called by Android
@@ -217,5 +192,33 @@ class PacmanGame extends SurfaceView implements Runnable {
                 pacman.updateMovementStatus((int)motionEvent.getX(), (int)motionEvent.getY());
         }
         return true;
+    }
+
+    //Constructor
+    public PacmanGame(Context context, int x, int y) {
+        // Super... calls the parent class
+        // constructor of SurfaceView
+        // provided by Android
+        super(context);
+
+        // Initialize these two members/fields
+        // With the values passed in as parameters
+        mScreenX = x;
+        mScreenY = y;
+
+        // Initialize the objects
+        // ready for drawing with
+        // getHolder is a method of SurfaceView
+        mOurHolder = getHolder();
+        mPaint = new Paint();
+
+        //initialize the Arcade list
+        arcades = new ArcadeList(context, mScreenX, mScreenY,
+                R.raw.sample1);
+
+        // Initialize the pacman and ghost
+        pacman = new Pacman(context, mScreenX, mScreenY);
+        pacman.initStartingPoint(arcades.getArcadeContainingPacman().getPacmanX_pix(),
+                arcades.getArcadeContainingPacman().getPacmanY_pix());
     }
 }

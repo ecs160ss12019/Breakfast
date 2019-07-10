@@ -91,6 +91,26 @@ public class Arcade implements GameObject{
     private int pacmanX;
     private int pacmanY;
 
+    //pacman start position in pixel
+    private int pacmanX_pix;
+    private int pacmanY_pix;
+
+    public int getPacmanX() {
+        return pacmanX;
+    }
+
+    public int getPacmanY() {
+        return pacmanY;
+    }
+
+    public int getPacmanX_pix() {
+        return pacmanX_pix;
+    }
+
+    public int getPacmanY_pix() {
+        return pacmanY_pix;
+    }
+
     @Override
     public void draw(Canvas canvas) {
         /*
@@ -175,6 +195,17 @@ public class Arcade implements GameObject{
         double matrixHeightInPixel = numRow * blockHeight;
         xReference = (int) (screenWidth - matrixWidthInPixel) / 2;
         yReference = (int) (screenHeight - matrixHeightInPixel) / 2;
+
+        /*
+        initial pacman position referencing to top left corner.
+        We do need to handle margin here since the pacman is center aligned.
+        A visual representation:
+        #----R--|--]----#
+        #----[--|P-]----#
+        #----[--|--]----#
+         */
+        pacmanX_pix = xReference + pacmanX * blockWidth + blockWidth / 2;
+        pacmanY_pix = yReference + pacmanY * blockHeight + blockHeight / 2;
 
         /*
         Now we get the img for each types of block.

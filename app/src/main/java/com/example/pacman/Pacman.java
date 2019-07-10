@@ -60,38 +60,10 @@ public class Pacman implements GameObject{
     //direction means the pacman is going up, down, left, or right
     private int direction;
 
-    public Pacman(Context context, int sx, int sy) {
-        this.context = context;
-        mScreenX = sx;
-        mScreenY = sy;
-
-        //currently, the collection is 2*2 with 4 views in total
-        numRow = 2;
-        numCol = 2;
-
-        //load pacman img from resource
-        Bitmap pacmanCollectionView = BitmapFactory.decodeResource(context.getResources(), R.drawable.pacman);
-
-        //resize to fit screen
-        int originalWidth = pacmanCollectionView.getWidth();
-        int originalHeight = pacmanCollectionView.getHeight();
-        double resizingFactor = 0.06;
-        pacmanCollectionView = Bitmap.createScaledBitmap(pacmanCollectionView, (int)(originalWidth * resizingFactor)
-                , (int)(originalHeight * resizingFactor), true);
-
-        //split the collection into small bitmaps (Left, Right, Up, Down)
-        BitmapDivider divider = new BitmapDivider(pacmanCollectionView);
-        pacmanViewList = divider.split(numRow, numCol);
-
-        /*
-        initialize the size of bitmap after split
-         */
-        bitmapWidth = pacmanViewList.get(0).getWidth();
-        bitmapHeight = pacmanViewList.get(0).getHeight();
-
-        // Configure the speed of the Pacman
-        // This code means the Pacman can cover the width of the screen in 4 second
-        speed = mScreenX/4;
+    //The starting point need to be initialized after construction
+    public void initStartingPoint(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
     @Override
@@ -101,6 +73,7 @@ public class Pacman implements GameObject{
 
     @Override
     public void updateStatus(long fps) {
+        /*
         // Move the bat based on the direction variable
         // and the speed of the previous frame
         if(direction == LEFT) {
@@ -128,7 +101,7 @@ public class Pacman implements GameObject{
         }
         if(y + bitmapHeight/2 > mScreenY){
             y = mScreenY - bitmapHeight/2;
-        }
+        }*/
     }
 
     public void updateMovementStatus(int x, int y) {
@@ -161,15 +134,42 @@ public class Pacman implements GameObject{
                 this.direction = DOWN; //down is the 1's bitmap in pacmanViewList
             }
         }
-
-//        this.x = x;
-//        this.y = y;
     }
-/*
-    public Bitmap getCurrentView(){
-        return new Bitmap();
-    }
-*/
 
+    //Constructor
+    public Pacman(Context context, int sx, int sy) {
+        this.context = context;
+        mScreenX = sx;
+        mScreenY = sy;
+        this.direction = RIGHT;
+
+        //currently, the collection is 2*2 with 4 views in total
+        numRow = 2;
+        numCol = 2;
+
+        //load pacman img from resource
+        Bitmap pacmanCollectionView = BitmapFactory.decodeResource(context.getResources(), R.drawable.pacman);
+
+        //resize to fit screen
+        int originalWidth = pacmanCollectionView.getWidth();
+        int originalHeight = pacmanCollectionView.getHeight();
+        double resizingFactor = 0.05;
+        pacmanCollectionView = Bitmap.createScaledBitmap(pacmanCollectionView, (int)(originalWidth * resizingFactor)
+                , (int)(originalHeight * resizingFactor), true);
+
+        //split the collection into small bitmaps (Left, Right, Up, Down)
+        BitmapDivider divider = new BitmapDivider(pacmanCollectionView);
+        pacmanViewList = divider.split(numRow, numCol);
+
+        /*
+        initialize the size of bitmap after split
+         */
+        bitmapWidth = pacmanViewList.get(0).getWidth();
+        bitmapHeight = pacmanViewList.get(0).getHeight();
+
+        // Configure the speed of the Pacman
+        // This code means the Pacman can cover the width of the screen in 4 second
+        speed = mScreenX/4;
+    }
 }
 

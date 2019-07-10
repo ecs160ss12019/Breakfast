@@ -8,6 +8,15 @@ import java.util.ArrayList;
 
 public class ArcadeList {
     private ArrayList<Arcade> arcades;
+
+    /*
+    onDisplay list marks all the arcades that
+    should be displayed on the screen.
+     */
+    private ArrayList<Integer> onDisplayArcadeID;
+
+    //which arcade is the pacman in?
+    private int containsPacman;
     private Context context;
 
     //screen res
@@ -36,6 +45,10 @@ public class ArcadeList {
         return (int) (screenHeight - matrixHeightInPixel) / 2;
     }
 
+    public Arcade getArcadeContainingPacman() {
+        return arcades.get(containsPacman);
+    }
+
 
     /*
     Traverse through all Arcade,
@@ -62,6 +75,11 @@ public class ArcadeList {
         this.context = context;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+
+        this.onDisplayArcadeID = new ArrayList<>();
+        this.onDisplayArcadeID.add(0);
+
+        this.containsPacman = 0;
 
         /*
         Now we extract Arcades from the JSON file,
