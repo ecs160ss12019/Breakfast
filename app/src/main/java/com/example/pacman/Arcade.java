@@ -5,12 +5,46 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /*
 this class is the arcade that the pacman
 and other game characters walk on.
-There is only 1 arcade in each game.
+There may be many arcades in each game.
+
+We use JSON file format to document a list of
+Arcade. Now this is how one Arcade in that
+list should look like.
+    {
+    "name": "Sample Arcade 1",
+    "numRow": 19,
+    "numCol": 19,
+    "imgFileRow": 1,
+    "imgFileCol": 3,
+    "inUse": true,
+    "pacmanX": 10,
+    "pacmanY": 9,
+    "matrix": [ [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,1,1,1,2,1,1,1,1,2,1,1,1,1,2,1,1,1,0],
+                [0,1,2,1,2,1,2,2,1,2,1,2,2,1,2,1,2,1,0],
+                [0,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,0],
+                [0,1,2,2,2,2,1,2,2,2,2,2,1,2,2,2,2,1,0],
+                [1,1,2,2,2,2,1,1,1,1,1,1,1,2,2,2,2,1,1],
+                [0,1,1,1,1,1,1,2,2,2,2,2,1,1,1,1,1,1,0],
+                [0,1,2,1,2,2,1,2,2,2,2,2,1,2,2,1,2,1,0],
+                [0,1,2,1,2,1,1,1,1,1,1,1,1,1,2,1,2,1,0],
+                [0,1,2,1,1,1,2,1,2,2,2,1,2,1,1,1,2,1,0],
+                [0,1,2,2,2,1,2,1,1,1,1,1,2,1,2,2,2,1,0],
+                [0,1,1,1,1,1,2,1,2,1,2,1,2,1,1,1,1,1,0],
+                [1,1,2,2,2,1,2,1,2,1,2,1,2,1,2,2,2,1,1],
+                [0,1,1,1,1,1,1,1,2,1,2,1,1,1,1,1,1,1,0],
+                [0,1,2,2,2,1,2,2,2,1,2,2,2,1,2,2,2,1,0],
+                [0,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,0],
+                [0,1,2,1,2,2,2,1,2,2,2,1,2,2,2,1,2,1,0],
+                [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]	]
+    }
  */
 public class Arcade implements GameObject{
     private Context context;
@@ -18,40 +52,44 @@ public class Arcade implements GameObject{
     //the matrix of building blocks
     private ArrayList<ArrayList<ArcadeBlock>> blocks = new ArrayList<>();
 
-    //screen res
-    private int screenWidth;
-    private int screenHeight;
-
     //block num
     private int numRow;
     private int numCol;
-
-    private ArrayList<Bitmap> blockViewList;
 
     /*
     The img in the source folder is a collection of
     block views. We need to cut them into a list of
     3 views. We take the original collection file as
-    a matrix of oriFileRow * oriFileCol
+    a matrix of imgFileRow * imgFileCol
      */
-    private int oriFileRow;
-    private int oriFileCol;
+    private int imgFileRow;
+    private int imgFileCol;
 
     /*
     individual block view height/width
     this is crucial to centering the block
     on the coordinates
      */
-    private int bitmapWidth;
-    private int bitmapHeight;
+    private int blockWidth;
+    private int blockHeight;
+
+    //A list of block imgs cut from the img source file
+    private ArrayList<Bitmap> blockViewList;
+
+    //is this Arcade in use?
+    boolean inUse;
 
     /*
     When we draw the Arcade, we want to make sure it is
     at the middle of the screen. We keep the coordinate
     , in pixels, of the the top left hand corner.
      */
-    private int leftMostX;
-    private int topMostY;
+    private int xReference;
+    private int yReference;
+
+    //where the pacman should start from
+    private int pacmanX;
+    private int pacmanY;
 
     @Override
     public void draw(Canvas canvas) {
@@ -84,8 +122,8 @@ public class Arcade implements GameObject{
          */
         for (int i = 0; i < numRow; i++) {
             for (int j = 0; j < numCol; j++) {
-                int X = leftMostX + bitmapWidth * i;
-                int Y = topMostY + bitmapHeight * j;
+                int X = xReference + blockWidth * i;
+                int Y = yReference + blockHeight * j;
 
                 //TODO
                 /*
@@ -106,50 +144,16 @@ public class Arcade implements GameObject{
 
     }
 
-    public Arcade(Context context, int horizontalPix, int verticalPix) {
-        this.context = context;
-        this.screenWidth = horizontalPix;
-        this.screenHeight = verticalPix;
+    /*
+    Instead of deploying these variables from the constructor,
+    we should do it here.
 
-        /*
-        we use an csv encoding file to specify the arcade.
-        in this file,   '0' means path
-                        '1' means outer boundaries
-                        '2' means inner boundaries
-                        '3' means round corners (not implemented now)
-        In fact, this file might be preprocessed somewhere
-        and passed in this constructor. However, here we are
-        just prototyping, thus we are placing the parsed matrix information
-        right here //TODO
-        */
-
-        int[][] encodingMatrix ={
-                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                {0,2,2,2,1,2,2,2,2,1,2,2,2,2,1,2,2,2,0},
-                {0,2,1,2,1,2,1,1,2,1,2,1,1,2,1,2,1,2,0},
-                {0,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2,0},
-                {0,2,1,1,1,1,2,1,1,1,1,1,2,1,1,1,1,2,0},
-                {2,2,1,1,1,1,2,2,2,2,2,2,2,1,1,1,1,2,2},
-                {0,2,2,2,2,2,2,1,1,1,1,1,2,2,2,2,2,2,0},
-                {0,2,1,2,1,1,2,1,1,1,1,1,2,1,1,2,1,2,0},
-                {0,2,1,2,1,2,2,2,2,2,2,2,2,2,1,2,1,2,0},
-                {0,2,1,2,2,2,1,2,1,1,1,2,1,2,2,2,1,2,0},
-                {0,2,1,1,1,2,1,2,2,2,2,2,1,2,1,1,1,2,0},
-                {0,2,2,2,2,2,1,2,1,2,1,2,1,2,2,2,2,2,0},
-                {2,2,1,1,1,2,1,2,1,2,1,2,1,2,1,1,1,2,2},
-                {0,2,2,2,2,2,2,2,1,2,1,2,2,2,2,2,2,2,0},
-                {0,2,1,1,1,2,1,1,1,2,1,1,1,2,1,1,1,2,0},
-                {0,2,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,0},
-                {0,2,1,2,1,1,1,2,1,1,1,2,1,1,1,2,1,2,0},
-                {0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0},
-                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        };
-
-        //initialize block num
-        this.numRow = encodingMatrix.length;
-        this.numCol = encodingMatrix[0].length;
-
-        /*
+    This func should be called as soon as the Arcade is initialized.
+    Do not use any function of the Arcade before deploying the
+    parameters
+     */
+    public void deployParameter(int screenWidth, int screenHeight, String imgFile) {
+       /*
         calculate proper block size
         Since the arcade is in square shape, we will assign
         the width to be the same as the height.
@@ -159,8 +163,7 @@ public class Arcade implements GameObject{
         We fill the height, thus the optimal size is 1/numCol percent
         for each block.
          */
-
-        this.bitmapWidth = this.bitmapHeight = verticalPix / numRow;
+        this.blockWidth = this.blockHeight = screenHeight / numRow;
 
         /*
         now we are able to calculate the top left corner coordinate.
@@ -168,16 +171,52 @@ public class Arcade implements GameObject{
         '['. The coordinate should be half ot horizontal length - half
         of the matrix width in pixels.
          */
-        double matrixWidthInPixel = numCol * bitmapWidth;
-        double matrixHeightInPixel = numRow * bitmapHeight;
-        leftMostX = (int) (horizontalPix - matrixWidthInPixel) / 2;
-        topMostY = (int) (verticalPix - matrixHeightInPixel) / 2;
+        double matrixWidthInPixel = numCol * blockWidth;
+        double matrixHeightInPixel = numRow * blockHeight;
+        xReference = (int) (screenWidth - matrixWidthInPixel) / 2;
+        yReference = (int) (screenHeight - matrixHeightInPixel) / 2;
+
+        /*
+        Now we get the img for each types of block.
+        While now we are doing it in this class, same as we did
+        in Pacman, we eventually should implement a imgManager
+        to help edit this imgs.
+         */
+
+        //load pacman img from resource
+        //FIXME refer to id by filename?
+        Bitmap blockCollectionView = BitmapFactory.decodeResource(context.getResources(), R.drawable.blocks);
+
+        /*
+        resize the original file.
+        We know that the height should be the same as blockHeight.
+        Since this is the source file, we need to resize based on
+        the oriFile height, width ratio
+         */
+        double ratio = blockCollectionView.getWidth() / blockCollectionView.getHeight();
+        blockCollectionView = Bitmap.createScaledBitmap(blockCollectionView, (int)(ratio * blockHeight),
+                blockHeight, true);
+
+        BitmapDivider divider = new BitmapDivider(blockCollectionView);
+        blockViewList = divider.split(imgFileRow,imgFileCol);
+    }
+
+    public Arcade(Context context, ArrayList<ArrayList<Integer>> matrix,
+                  int numRow, int numCol,
+                  int imgFileRow, int imgFileCol,
+                  int pacmanX, int pacmanY,
+                  boolean inUse) {
+        this.context = context;
+
+        //initialize block num
+        this.numRow = numRow;
+        this.numCol = numCol;
 
         //Now we initialize the matrix of blocks, and assign property to each
         for (int i = 0; i < numRow; i++) {
             ArrayList<ArcadeBlock> newLine = new ArrayList<>(numCol);
             for (int j = 0; j < numCol; j++) {
-                ArcadeBlock newBlock = new ArcadeBlock(i, j, encodingMatrix[i][j]);
+                ArcadeBlock newBlock = new ArcadeBlock(i, j, matrix.get(i).get(j));
                 newLine.add(newBlock);
             }
             blocks.add(newLine);
@@ -191,24 +230,13 @@ public class Arcade implements GameObject{
          */
 
         //currently, the png file is a 1*3 matrix
-        oriFileRow = 1;
-        oriFileCol = 3;
+        this.imgFileRow = imgFileRow;
+        this.imgFileCol = imgFileCol;
 
-        //load pacman img from resource
-        Bitmap blockCollectionView = BitmapFactory.decodeResource(context.getResources(), R.drawable.blocks);
+        this.pacmanX = pacmanX;
+        this.pacmanY = pacmanY;
 
-        /*
-        resize the original file.
-        We know that the height should be the same as blockHeight.
-        Since this is the source file, we need to resize based on
-        the oriFile height, width ratio
-         */
-        double ratio = blockCollectionView.getWidth() / blockCollectionView.getHeight();
-        blockCollectionView = Bitmap.createScaledBitmap(blockCollectionView, (int)(ratio * bitmapHeight),
-                bitmapHeight, true);
-
-        BitmapDivider divider = new BitmapDivider(blockCollectionView);
-        blockViewList = divider.split(1,3);
+        this.inUse = inUse;
     }
 
 }

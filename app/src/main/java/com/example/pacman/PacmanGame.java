@@ -38,8 +38,8 @@ class PacmanGame extends SurfaceView implements Runnable {
     //Our pacman!
     private Pacman pacman;
 
-    //Our Arcade
-    private Arcade arcade;
+    //Our Arcade List
+    private ArcadeList arcades;
 
     public PacmanGame(Context context, int x, int y) {
         // Super... calls the parent class
@@ -60,7 +60,10 @@ class PacmanGame extends SurfaceView implements Runnable {
 
         // Initialize the pacman and ghost
         pacman = new Pacman(context, mScreenX, mScreenY);
-        arcade = new Arcade(context, mScreenX, mScreenY);
+
+        //initialize the Arcade list
+        arcades = new ArcadeList(context, mScreenX, mScreenY,
+                R.raw.sample1);
     }
 
     // When we start the thread with:
@@ -191,7 +194,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         // Fill the screen with a solid color
         mCanvas.drawColor(Color.argb
                 (255, 255, 255, 255));
-        arcade.draw(canvas);
+        arcades.draw(canvas);
         pacman.draw(canvas);
 
 

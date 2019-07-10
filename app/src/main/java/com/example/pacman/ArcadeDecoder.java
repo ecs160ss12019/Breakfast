@@ -104,8 +104,86 @@ public class ArcadeDecoder {
     do use try catch block.
      */
     public Arcade decodeArcade(JsonReader reader) throws IOException {
-        //temp Arcade for return
-        Arcade arcade = new Arcade(context, );
+        /*
+        things we need to extract
+         */
+        ArrayList<ArrayList<Integer>> matrix = new ArrayList<ArrayList<Integer>>();
+        int numRow = 0;
+        int numCol = 0;
+        int imgFileRow = 0;
+        int imgFileCol = 0;
+        boolean inUse = false;
+        int pacmanX = 0;
+        int pacmanY = 0;
+
+        /*
+        start extraction
+         */
+        reader.beginObject();
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            //check and assign
+            if(name.equals("numRow")) {
+                numRow = reader.nextInt();
+            } else if(name.equals("numCol")) {
+                numCol = reader.nextInt();
+            } else if(name.equals("imgFileRow")) {
+                imgFileRow = reader.nextInt();
+            } else if(name.equals("imgFileCol")) {
+                imgFileCol = reader.nextInt();
+            } else if(name.equals("inUse")) {
+                inUse = reader.nextBoolean();
+            } else if(name.equals("pacmanX")) {
+                pacmanX = reader.nextInt();
+            } else if(name.equals("pacmanY")) {
+                pacmanY = reader.nextInt();
+            } else if(name.equals("matrix")) {
+                matrix = readMatrix(reader);
+            } else {
+                reader.skipValue();
+            }
+        }
+        //close obj
+        reader.endObject();
+
+        return new Arcade(context, matrix, numRow, numCol,
+                imgFileRow, imgFileCol, pacmanX, pacmanY, inUse);
+    }
+
+    /*
+    Here we parse the encoding matrix.
+
+    Note that this func may throw IOExp, thus
+    do use try catch block.
+     */
+    public ArrayList<ArrayList<Integer>> readMatrix(JsonReader reader) throws IOException {
+        ArrayList<ArrayList<Integer>> matrix = new ArrayList<>();
+        reader.beginArray();
+        while (reader.hasNext()) {
+            //read each line
+            matrix.add(readArray(reader));
+        }
+
+        reader.endArray();
+        return matrix;
+    }
+
+    /*
+    Here we parse each the encoding array.
+
+    Note that this func may throw IOExp, thus
+    do use try catch block.
+     */
+    public ArrayList<Integer> readArray(JsonReader reader) throws IOException {
+        ArrayList<Integer> line = new ArrayList<>();
+        reader.beginArray();
+        while (reader.hasNext()) {
+            //read each line
+            line.add(reader.nextInt());
+        }
+
+        reader.endArray();
+        return line;
     }
 
 
