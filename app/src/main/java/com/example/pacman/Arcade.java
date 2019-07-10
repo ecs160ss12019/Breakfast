@@ -53,13 +53,6 @@ public class Arcade implements GameObject{
     private int leftMostX;
     private int topMostY;
 
-    /*
-    The pacman starting coordinates.
-    The coordinated is referenced to the top left block
-     */
-    private int pacmanStartX;
-    private int pacmanStartY;
-
     @Override
     public void draw(Canvas canvas) {
         /*
@@ -120,9 +113,9 @@ public class Arcade implements GameObject{
 
         /*
         we use an csv encoding file to specify the arcade.
-        in this file,   '0' means outer boundaries
-                        '1' means inner boundaries
-                        '2' means path
+        in this file,   '0' means path
+                        '1' means outer boundaries
+                        '2' means inner boundaries
                         '3' means round corners (not implemented now)
         In fact, this file might be preprocessed somewhere
         and passed in this constructor. However, here we are
@@ -155,16 +148,6 @@ public class Arcade implements GameObject{
         //initialize block num
         this.numRow = encodingMatrix.length;
         this.numCol = encodingMatrix[0].length;
-
-        /*
-        Another spec that should be included in the arcade file
-        is the starting point of the pacman and the ghosts.
-        This should be specified as coordinates.
-        Now, we are only specifying the decoded spacman
-        starting coordinates
-         */
-        this.pacmanStartX = 10;
-        this.pacmanStartY = 9;
 
         /*
         calculate proper block size
