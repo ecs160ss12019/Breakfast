@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.Button;
 
 class PacmanGame extends SurfaceView implements Runnable {
     // Are we debugging?
@@ -118,10 +117,15 @@ class PacmanGame extends SurfaceView implements Runnable {
     the thread is running
      */
     public void updateGame() {
-        float currInputX = userInput.getX();
-        float currInputY = userInput.getY();
+        int direction = navigationButtons.checkAndUpdate(userInput);
 
-        pacman.updateMovementStatus(currInputX, currInputY, mFPS);
+        /*
+        if player touched or is continuous touching
+        updated pacman position and etc.
+         */
+        if(!(direction < 0)) {
+            pacman.updateMovementStatus(direction, mFPS);
+        }
     }
 
     private void detectCollisions(){
@@ -189,10 +193,14 @@ class PacmanGame extends SurfaceView implements Runnable {
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-            //case MotionEvent.ACTION_MOVE:
+            case MotionEvent.ACTION_MOVE:
             case MotionEvent.ACTION_DOWN:
                 //update UserInput only, update other game objects somewhere else
                 userInput.updateUserInput(motionEvent.getX(), motionEvent.getY());
+                break;
+            case MotionEvent.ACTION_UP:
+                userInput.updateUserInput(Float.MAX_VALUE, Float.MAX_VALUE);
+                break;
         }
         return true;
     }
@@ -226,6 +234,8 @@ class PacmanGame extends SurfaceView implements Runnable {
 
         //FIXME
         userInput = new UserInput();
+
+        //init Nav Buttons
         navigationButtons = new NavigationButtons(context, mScreenX, mScreenY);
     }
 }

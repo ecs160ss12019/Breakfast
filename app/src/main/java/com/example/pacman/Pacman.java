@@ -106,33 +106,37 @@ public class Pacman implements GameObject{
                 y = mScreenY - bitmapHeight / 2;
             }
         }
+
+        moved = false;
     }
 
-    public void updateMovementStatus(float x, float y, long fps) {
+    public void updateMovementStatus(int inputDirection, long fps) {
         /*
         We want to know where is the player heading,
         so we can update the direction of pacman
          */
+
+        /*
         int roundedX = (int) x;
         int roundedY = (int) y;
         int diffX = (int)this.x - roundedX;
         int diffY = (int)this.y - roundedY;
         moved = false;
 
-        /*
+
         We are not moving at all, we
         do not need to change direction.
-         */
+
         if(!(diffX == 0 && diffY == 0)) {
             moved = true;
             int absDiffX = Math.abs(diffX);
             int absDiffY = Math.abs(diffY);
 
-            /*
+
             If change in X axis is greater than that in Y,
             the pacman is either heading left or right.
             Otherwise, the pacman is either heading up or down
-             */
+
             if (absDiffX > absDiffY) {
                 //if diffX negative, moving left. Otherwise, right.
                 if (diffX > 0) {
@@ -148,6 +152,29 @@ public class Pacman implements GameObject{
                     this.direction = DOWN; //down is the 1's bitmap in pacmanViewList
                 }
             }
+        }
+        */
+
+        /*
+        We are not using buttons thus there is
+        no need to calculate the direction.
+
+        Later we will align Pacman direction with
+        button direction
+         */
+        moved = true;
+        switch (inputDirection) {
+            case 0:
+                direction = UP;
+                break;
+            case 1:
+                direction = DOWN;
+                break;
+            case 2:
+                direction = LEFT;
+                break;
+            case 3:
+                direction = RIGHT;
         }
 
         updateStatus(fps);

@@ -37,9 +37,18 @@ public class NavigationButtons {
     private ArrayList<ArrayList<Double>> buttonRange;
 
     public int checkAndUpdate(UserInput userInput) {
+        //FIXME
+/*
+        System.out.println("####################");
+        System.out.println(userInput.getX() + " | " + userInput.getY());
+        for(int i = 0; i < 4; i++) {
+            System.out.println(buttonRange.get(i));
+        }
+
+*/
         this.buttonPressed = new boolean[]{false, false, false, false};
 
-        for(int i = 0; i < buttonRange.size(); i++) {
+        for(int i = 0; i < 4; i++) {
             if(check(userInput, buttonRange.get(i))) {
                 buttonPressed[i] = true;
                 return i;
@@ -170,14 +179,14 @@ public class NavigationButtons {
         //LEFT
         rangeLeft.add(centerOfButtonsX - gap * buttonWidth);
         rangeLeft.add(centerOfButtonsX - farest * buttonWidth);
-        rangeLeft.add(centerOfButtonsY - half * buttonHeight);
         rangeLeft.add(centerOfButtonsY + half * buttonHeight);
+        rangeLeft.add(centerOfButtonsY - half * buttonHeight);
 
         //RIGHT
         rangeRight.add(centerOfButtonsX + farest * buttonWidth);
         rangeRight.add(centerOfButtonsX + gap * buttonWidth);
-        rangeRight.add(centerOfButtonsY - half * buttonHeight);
         rangeRight.add(centerOfButtonsY + half * buttonHeight);
+        rangeRight.add(centerOfButtonsY - half * buttonHeight);
 
         buttonRange.add(rangeUp);
         buttonRange.add(rangeDown);
