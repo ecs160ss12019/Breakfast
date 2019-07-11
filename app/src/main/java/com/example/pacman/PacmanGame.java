@@ -30,10 +30,13 @@ class PacmanGame extends SurfaceView implements Runnable {
 
     // Here is the Thread and two control variables
     private Thread mGameThread = null;
-    // This volatile vaiable can be accessed
+    // This volatile variable can be accessed
     // from inside and outside the thread
     private volatile boolean mPlaying;
     private boolean mPaused = false;
+
+    //our UserInput object
+    private UserInput userInput;
 
     //Our pacman!
     private Pacman pacman;
@@ -112,7 +115,9 @@ class PacmanGame extends SurfaceView implements Runnable {
     the thread is running
      */
     public void updateGame() {
-        pacman.updateStatus(mFPS);
+        float currInputX = userInput.getX();
+        float currInputY = userInput.getY();
+        pacman.updateMovementStatus1(currInputX, currInputY, mFPS);
     }
 
     private void detectCollisions(){
@@ -183,13 +188,8 @@ class PacmanGame extends SurfaceView implements Runnable {
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_MOVE:
             case MotionEvent.ACTION_DOWN:
-                    /*
-                    should not really update individually.
-                    call update() in the future
-                    Here we are just testing
-                    //TODO
-                     */
-                pacman.updateMovementStatus((int)motionEvent.getX(), (int)motionEvent.getY());
+                //update UserInput only, update other game objects somewhere else
+                userInput.updateUserInput(motionEvent.getX(), motionEvent.getY());
         }
         return true;
     }
@@ -220,5 +220,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         pacman = new Pacman(context, mScreenX, mScreenY);
         pacman.initStartingPoint(arcades.getArcadeContainingPacman().getPacmanX_pix(),
                 arcades.getArcadeContainingPacman().getPacmanY_pix());
+
+        userInput = new UserInput();
     }
 }

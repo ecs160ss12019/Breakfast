@@ -60,80 +60,141 @@ public class Pacman implements GameObject{
     //direction means the pacman is going up, down, left, or right
     private int direction;
 
+    //did the pacman move?
+    private boolean moved = false;
+
     //The starting point need to be initialized after construction
-    public void initStartingPoint(int x, int y) {
+    public void initStartingPoint(float x, float y) {
         this.x = x;
         this.y = y;
     }
 
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(pacmanViewList.get(direction), (int)(x - (bitmapWidth/2)), (int)(y - (bitmapHeight/2)), null);
+        canvas.drawBitmap(pacmanViewList.get(direction), x - (bitmapWidth/2), y - (bitmapHeight/2), null);
     }
 
     @Override
     public void updateStatus(long fps) {
-        /*
-        // Move the bat based on the direction variable
-        // and the speed of the previous frame
-        if(direction == LEFT) {
-            x = x - speed / fps;
-        }
-        if(direction == RIGHT) {
-            x = x + speed / fps;
-        }
-        if(direction == UP) {
-            y = y - speed / fps;
-        }
-        if(direction == DOWN) {
-            y = y + speed / fps;
-        }
+        if (moved) {
+            // Move the pacman based on the direction variable
+            // and the speed of the previous frame
+            if (direction == LEFT) {
+                x = x - speed / fps;
+            }
+            if (direction == RIGHT) {
+                x = x + speed / fps;
+            }
+            if (direction == UP) {
+                y = y - speed / fps;
+            }
+            if (direction == DOWN) {
+                y = y + speed / fps;
+            }
 
-        // Stop the Pacman going off the screen
-        if(x - bitmapWidth/2 < 0){
-            x = bitmapWidth/2;
+            // Stop the Pacman going off the screen
+            if (x - bitmapWidth / 2 < 0) {
+                x = bitmapWidth / 2;
+            }
+            if (x + bitmapWidth / 2 > mScreenX) {
+                x = mScreenX - bitmapWidth / 2;
+            }
+            if (y - bitmapHeight / 2 < 0) {
+                y = bitmapHeight / 2;
+            }
+            if (y + bitmapHeight / 2 > mScreenY) {
+                y = mScreenY - bitmapHeight / 2;
+            }
         }
-        if(x + bitmapWidth/2 > mScreenX){
-            x = mScreenX - bitmapWidth/2;
-        }
-        if(y - bitmapHeight/2 < 0){
-            y = bitmapHeight/2;
-        }
-        if(y + bitmapHeight/2 > mScreenY){
-            y = mScreenY - bitmapHeight/2;
-        }*/
     }
 
-    public void updateMovementStatus(int x, int y) {
+    public void updateMovementStatus(float x, float y, long fps) {
         /*
         We want to know where is the player heading,
         so we can update the direction of pacman
          */
         float diffX = this.x - x;
         float diffY = this.y - y;
-        float absDiffX = Math.abs(diffX);
-        float absDiffY = Math.abs(diffY);
+        moved = false;
 
         /*
-        If change in X axis is greater than that in Y,
-        the pacman is either heading left or right.
-        Otherwise, the pacman is either heading up or down
+        We are not moving at all, we
+        do not need to change direction.
          */
-        if(absDiffX > absDiffY) {
-            //if diffX negative, moving left. Otherwise, right.
-            if(diffX > 0) {
-                this.direction = LEFT; //left is the 0's bitmap in pacmanViewList
+        if(!(Float.compare(diffX, 0) == 0 && Float.compare(diffY, 0) == 0)) {
+            moved = true;
+            float absDiffX = Math.abs(diffX);
+            float absDiffY = Math.abs(diffY);
+
+            /*
+            If change in X axis is greater than that in Y,
+            the pacman is either heading left or right.
+            Otherwise, the pacman is either heading up or down
+             */
+            if (absDiffX > absDiffY) {
+                //if diffX negative, moving left. Otherwise, right.
+                if (diffX > 0) {
+                    this.direction = LEFT; //left is the 0's bitmap in pacmanViewList
+                } else {
+                    this.direction = RIGHT; //right is the 1's bitmap in pacmanViewList
+                }
             } else {
-                this.direction = RIGHT; //right is the 1's bitmap in pacmanViewList
-            }
-        } else {
-            //if diffY negative, moving down. Otherwise, up.
-            if(diffY > 0) {
-                this.direction = UP; //up is the 0's bitmap in pacmanViewList
-            } else {
-                this.direction = DOWN; //down is the 1's bitmap in pacmanViewList
+                //if diffY negative, moving down. Otherwise, up.
+                if (diffY > 0) {
+                    this.direction = UP; //up is the 0's bitmap in pacmanViewList
+                } else {
+                    this.direction = DOWN; //down is the 1's bitmap in pacmanViewList
+                }
             }
         }
+
+        updateStatus(fps);
+    }
+
+    //FIXME
+    public void updateMovementStatus1(float x, float y, long fps) {
+        /*
+        We want to know where is the player heading,
+        so we can update the direction of pacman
+         */
+        int roundedX = (int) x;
+        int roundedY = (int) y;
+        int diffX = (int)this.x - roundedX;
+        int diffY = (int)this.y - roundedY;
+        moved = false;
+
+        /*
+        We are not moving at all, we
+        do not need to change direction.
+         */
+        if(!(diffX == 0 && diffY == 0)) {
+            moved = true;
+            int absDiffX = Math.abs(diffX);
+            int absDiffY = Math.abs(diffY);
+
+            /*
+            If change in X axis is greater than that in Y,
+            the pacman is either heading left or right.
+            Otherwise, the pacman is either heading up or down
+             */
+            if (absDiffX > absDiffY) {
+                //if diffX negative, moving left. Otherwise, right.
+                if (diffX > 0) {
+                    this.direction = LEFT; //left is the 0's bitmap in pacmanViewList
+                } else {
+                    this.direction = RIGHT; //right is the 1's bitmap in pacmanViewList
+                }
+            } else {
+                //if diffY negative, moving down. Otherwise, up.
+                if (diffY > 0) {
+                    this.direction = UP; //up is the 0's bitmap in pacmanViewList
+                } else {
+                    this.direction = DOWN; //down is the 1's bitmap in pacmanViewList
+                }
+            }
+        }
+
+        updateStatus(fps);
     }
 
     //Constructor
