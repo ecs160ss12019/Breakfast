@@ -113,50 +113,6 @@ public class Pacman implements GameObject{
         We want to know where is the player heading,
         so we can update the direction of pacman
          */
-        float diffX = this.x - x;
-        float diffY = this.y - y;
-        moved = false;
-
-        /*
-        We are not moving at all, we
-        do not need to change direction.
-         */
-        if(!(Float.compare(diffX, 0) == 0 && Float.compare(diffY, 0) == 0)) {
-            moved = true;
-            float absDiffX = Math.abs(diffX);
-            float absDiffY = Math.abs(diffY);
-
-            /*
-            If change in X axis is greater than that in Y,
-            the pacman is either heading left or right.
-            Otherwise, the pacman is either heading up or down
-             */
-            if (absDiffX > absDiffY) {
-                //if diffX negative, moving left. Otherwise, right.
-                if (diffX > 0) {
-                    this.direction = LEFT; //left is the 0's bitmap in pacmanViewList
-                } else {
-                    this.direction = RIGHT; //right is the 1's bitmap in pacmanViewList
-                }
-            } else {
-                //if diffY negative, moving down. Otherwise, up.
-                if (diffY > 0) {
-                    this.direction = UP; //up is the 0's bitmap in pacmanViewList
-                } else {
-                    this.direction = DOWN; //down is the 1's bitmap in pacmanViewList
-                }
-            }
-        }
-
-        updateStatus(fps);
-    }
-
-    //FIXME
-    public void updateMovementStatus1(float x, float y, long fps) {
-        /*
-        We want to know where is the player heading,
-        so we can update the direction of pacman
-         */
         int roundedX = (int) x;
         int roundedY = (int) y;
         int diffX = (int)this.x - roundedX;

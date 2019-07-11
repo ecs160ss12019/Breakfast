@@ -8,9 +8,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Button;
 
 class PacmanGame extends SurfaceView implements Runnable {
-
     // Are we debugging?
     private final boolean DEBUGGING = true;
 
@@ -43,6 +43,9 @@ class PacmanGame extends SurfaceView implements Runnable {
 
     //Our Arcade List
     private ArcadeList arcades;
+
+    //Our Navigation Buttons!
+    NavigationButtons navigationButtons;
 
     // When we start the thread with:
     // mGameThread.start();
@@ -117,7 +120,8 @@ class PacmanGame extends SurfaceView implements Runnable {
     public void updateGame() {
         float currInputX = userInput.getX();
         float currInputY = userInput.getY();
-        pacman.updateMovementStatus1(currInputX, currInputY, mFPS);
+
+        pacman.updateMovementStatus(currInputX, currInputY, mFPS);
     }
 
     private void detectCollisions(){
@@ -176,8 +180,7 @@ class PacmanGame extends SurfaceView implements Runnable {
                 (255, 255, 255, 255));
         arcades.draw(canvas);
         pacman.draw(canvas);
-
-
+        navigationButtons.draw(canvas);
     }
 
     /*
@@ -186,7 +189,7 @@ class PacmanGame extends SurfaceView implements Runnable {
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_MOVE:
+            //case MotionEvent.ACTION_MOVE:
             case MotionEvent.ACTION_DOWN:
                 //update UserInput only, update other game objects somewhere else
                 userInput.updateUserInput(motionEvent.getX(), motionEvent.getY());
@@ -221,6 +224,8 @@ class PacmanGame extends SurfaceView implements Runnable {
         pacman.initStartingPoint(arcades.getArcadeContainingPacman().getPacmanX_pix(),
                 arcades.getArcadeContainingPacman().getPacmanY_pix());
 
+        //FIXME
         userInput = new UserInput();
+        navigationButtons = new NavigationButtons(context, mScreenX, mScreenY);
     }
 }
