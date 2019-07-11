@@ -2,6 +2,7 @@ package com.example.pacman;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.util.Pair;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,6 +48,12 @@ public class ArcadeList {
 
     public Arcade getArcadeContainingPacman() {
         return arcades.get(containsPacman);
+    }
+
+    //Use this to resize pacman on every new arcade
+    public Pair<Integer, Integer> getOptimalPacmanSize() {
+        return new Pair<>(arcades.get(containsPacman).getBlockWidth(),
+                arcades.get(containsPacman).getBlockHeight());
     }
 
 

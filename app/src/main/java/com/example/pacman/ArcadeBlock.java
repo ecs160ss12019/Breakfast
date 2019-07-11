@@ -11,6 +11,7 @@ It might be one of these:
                 'corner'
  */
 public class ArcadeBlock implements GameObject {
+    //This is the index in block matrix, unit is not in pixel
     private int x;
     private int y;
 

@@ -37,15 +37,6 @@ public class NavigationButtons {
     private ArrayList<ArrayList<Double>> buttonRange;
 
     public int checkAndUpdate(UserInput userInput) {
-        //FIXME
-/*
-        System.out.println("####################");
-        System.out.println(userInput.getX() + " | " + userInput.getY());
-        for(int i = 0; i < 4; i++) {
-            System.out.println(buttonRange.get(i));
-        }
-
-*/
         this.buttonPressed = new boolean[]{false, false, false, false};
 
         for(int i = 0; i < 4; i++) {

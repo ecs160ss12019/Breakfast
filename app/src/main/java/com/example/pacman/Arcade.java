@@ -95,20 +95,58 @@ public class Arcade implements GameObject{
     private int pacmanX_pix;
     private int pacmanY_pix;
 
-    public int getPacmanX() {
-        return pacmanX;
-    }
-
-    public int getPacmanY() {
-        return pacmanY;
-    }
-
     public int getPacmanX_pix() {
         return pacmanX_pix;
     }
 
     public int getPacmanY_pix() {
         return pacmanY_pix;
+    }
+
+    //getBlockSize
+
+
+    public int getBlockWidth() {
+        return blockWidth;
+    }
+
+    public int getBlockHeight() {
+        return blockHeight;
+    }
+
+    /*
+        We take an coordinate, and we want to know what are the
+        obstacles surrounding it. The reason we cannot scan through
+        the whole arcade and return all obstacles is because that will
+        essentially take O(n^2) time to check collision in the update method.
+        We restrict the update time complexity to O(1) by giving a bounded amount
+        of obstacles for check.
+
+        Note that we want to restrict the origin object size to be the same as the
+        ArcadeBlock.
+         */
+    public ArrayList<Obstacle> getObstacleList(int originX, int originY) {
+        ArrayList<Obstacle> obstacles = new ArrayList<>();
+        for (int i = 0; i < numRow; i++) {
+            for (int j = 0; j < numCol; j++) {
+                //if this block is a path, ignore it
+                if(blocks.get(i).get(j).getType() != 2) {
+                    //center of the block
+                    int block_centerX_pix = xReference + blockWidth * j;
+                    int block_centerY_pix = yReference + blockHeight * i;
+
+                    //Diff center
+                    int diffX = Math.abs(originX - block_centerX_pix);
+                    int diffY = Math.abs(originY - block_centerY_pix);
+                    if (diffX < blockWidth && diffY < blockHeight) {
+                        System.out.println("ADDED i: " + i + " " + "j: " + j);
+                        obstacles.add(new Obstacle(block_centerX_pix, block_centerY_pix, blockWidth, blockHeight));
+                    }
+                }
+            }
+        }
+
+        return obstacles;
     }
 
     @Override
@@ -136,14 +174,14 @@ public class Arcade implements GameObject{
         #----[-P-|---]----#
         #----[---|---]----#
         For block P, the position in pixel is calculated by:
-        X = referenceX + blockWidth * i
-        Y = referenceY + blockHeight * j
+        X = referenceX + blockWidth * i - blockWidth / 2
+        Y = referenceY + blockHeight * j - blockHeight / 2
         No need to handle margin since we are aligning edges
          */
         for (int i = 0; i < numRow; i++) {
             for (int j = 0; j < numCol; j++) {
-                int X = xReference + blockWidth * i;
-                int Y = yReference + blockHeight * j;
+                int X = xReference + blockWidth * j - blockWidth / 2;
+                int Y = yReference + blockHeight * i - blockHeight / 2;
 
                 //TODO
                 /*
@@ -152,7 +190,7 @@ public class Arcade implements GameObject{
                 I do not know, that is wrong.
                 Strange.
                  */
-                int type = blocks.get(j).get(i).getType();
+                int type = blocks.get(i).get(j).getType();
                 canvas.drawBitmap(blockViewList.get(type), X, Y, null);
             }
         }
@@ -186,26 +224,25 @@ public class Arcade implements GameObject{
         this.blockWidth = this.blockHeight = screenHeight / numRow;
 
         /*
-        now we are able to calculate the top left corner coordinate.
+        now we are able to calculate the top left corner center coordinate.
         left most is #----[--|--]----# at the position of
         '['. The coordinate should be half ot horizontal length - half
         of the matrix width in pixels.
          */
         double matrixWidthInPixel = numCol * blockWidth;
         double matrixHeightInPixel = numRow * blockHeight;
-        xReference = (int) (screenWidth - matrixWidthInPixel) / 2;
-        yReference = (int) (screenHeight - matrixHeightInPixel) / 2;
+        xReference = (int) (screenWidth - matrixWidthInPixel) / 2 + blockWidth / 2;
+        yReference = (int) (screenHeight - matrixHeightInPixel) / 2 + blockHeight / 2;
 
         /*
         initial pacman position referencing to top left corner.
-        We do need to handle margin here since the pacman is center aligned.
         A visual representation:
         #----R--|--]----#
         #----[--|P-]----#
         #----[--|--]----#
          */
-        pacmanX_pix = xReference + pacmanX * blockWidth + blockWidth / 2;
-        pacmanY_pix = yReference + pacmanY * blockHeight + blockHeight / 2;
+        pacmanX_pix = xReference + pacmanX * blockWidth;
+        pacmanY_pix = yReference + pacmanY * blockHeight;
 
         /*
         Now we get the img for each types of block.

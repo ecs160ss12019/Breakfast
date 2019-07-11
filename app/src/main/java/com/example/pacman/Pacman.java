@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.util.Pair;
 
 import java.util.ArrayList;
 
@@ -12,8 +13,8 @@ public class Pacman implements GameObject{
      * create Pacman here
      */
     //coordinate
-    private float x;
-    private float y;
+    private int x;
+    private int y;
     private float speed;
     private int mScreenX;
     private int mScreenY;
@@ -64,9 +65,26 @@ public class Pacman implements GameObject{
     private boolean moved = false;
 
     //The starting point need to be initialized after construction
-    public void initStartingPoint(float x, float y) {
+    //if collision, use this to roll back
+    public void set(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    public int getX() {
+        return (int)x;
+    }
+
+    public int getY() {
+        return (int)y;
+    }
+
+    public int getBitmapWidth() {
+        return bitmapWidth;
+    }
+
+    public int getBitmapHeight() {
+        return bitmapHeight;
     }
 
     @Override
@@ -80,16 +98,16 @@ public class Pacman implements GameObject{
             // Move the pacman based on the direction variable
             // and the speed of the previous frame
             if (direction == LEFT) {
-                x = x - speed / fps;
+                x = (int)(x - speed / fps);
             }
             if (direction == RIGHT) {
-                x = x + speed / fps;
+                x = (int)(x + speed / fps);
             }
             if (direction == UP) {
-                y = y - speed / fps;
+                y = (int)(y - speed / fps);
             }
             if (direction == DOWN) {
-                y = y + speed / fps;
+                y = (int)(y + speed / fps);
             }
 
             // Stop the Pacman going off the screen
@@ -181,7 +199,7 @@ public class Pacman implements GameObject{
     }
 
     //Constructor
-    public Pacman(Context context, int sx, int sy) {
+    public Pacman(Context context, int sx, int sy, Pair<Integer, Integer> optimalSize) {
         this.context = context;
         mScreenX = sx;
         mScreenY = sy;
@@ -194,16 +212,19 @@ public class Pacman implements GameObject{
         //load pacman img from resource
         Bitmap pacmanCollectionView = BitmapFactory.decodeResource(context.getResources(), R.drawable.pacman);
 
-        //resize to fit screen
-        int originalWidth = pacmanCollectionView.getWidth();
-        int originalHeight = pacmanCollectionView.getHeight();
-        double resizingFactor = 0.05;
-        pacmanCollectionView = Bitmap.createScaledBitmap(pacmanCollectionView, (int)(originalWidth * resizingFactor)
-                , (int)(originalHeight * resizingFactor), true);
-
-        //split the collection into small bitmaps (Left, Right, Up, Down)
+        /*
+        resize to fit screen and
+        split the collection into small bitmaps (Left, Right, Up, Down)
+        */
         BitmapDivider divider = new BitmapDivider(pacmanCollectionView);
-        pacmanViewList = divider.split(numRow, numCol);
+        ArrayList<Bitmap> unsizedPacmanViewList = divider.split(numRow, numCol);
+
+        pacmanViewList = new ArrayList<>();
+        for (int i = 0; i < unsizedPacmanViewList.size(); i++) {
+            Bitmap bitmap = Bitmap.createScaledBitmap(unsizedPacmanViewList.get(i),
+                    optimalSize.first, optimalSize.second, true);
+            pacmanViewList.add(bitmap);
+        }
 
         /*
         initialize the size of bitmap after split

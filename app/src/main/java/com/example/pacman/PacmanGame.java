@@ -9,6 +9,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
+
 class PacmanGame extends SurfaceView implements Runnable {
     // Are we debugging?
     private final boolean DEBUGGING = true;
@@ -46,6 +48,10 @@ class PacmanGame extends SurfaceView implements Runnable {
     //Our Navigation Buttons!
     NavigationButtons navigationButtons;
 
+    //Our CollisionDestructor
+    CollisionDetector collisionDetector;
+
+
     // When we start the thread with:
     // mGameThread.start();
     // the run method is continuously called by Android
@@ -67,9 +73,7 @@ class PacmanGame extends SurfaceView implements Runnable {
 
             if(!mPaused) {
                 updateGame();
-                // Now the Pacman and Ghosts are in their new positions
-                // we can see if there have been any collisions
-                detectCollisions();
+
                 //this might not be null in the future
                 mCanvas = null;
 
@@ -124,23 +128,67 @@ class PacmanGame extends SurfaceView implements Runnable {
         updated pacman position and etc.
          */
         if(!(direction < 0)) {
+            /*
+            We first do the unit update, then check collision.
+            We do need to keep the previous location so that
+            if there is a collision, we prevent it from moving and
+            roll back.
+             */
+            int prevX = pacman.getX();
+            int prevY = pacman.getY();
             pacman.updateMovementStatus(direction, mFPS);
+
+            //get surrounding obstacles
+            int currX = pacman.getX();
+            int currY = pacman.getY();
+            ArrayList<Obstacle> obstacles_Arcade_Pacman =
+                    arcades.getArcadeContainingPacman().getObstacleList(currX, currY);
+            //check
+            Obstacle pacmanReference = new Obstacle(currX, currY,
+                    (int)(pacman.getBitmapWidth() * 0.8), (int)(pacman.getBitmapHeight() * 0.8));
+            //FIXME
+
+            /*
+            System.out.println("##################################");
+            System.out.println("Pacman: "+ currX + " | " + currY);
+            System.out.println("Reference center: "
+                    + pacmanReference.x_pix + " | "
+                    + pacmanReference.y_pix);
+            System.out.println("Reference Size: "
+                    + pacmanReference.boundingWidth + " | "
+                    + pacmanReference.boundingHeight);
+            System.out.println("Reference Rect: "
+                    + pacmanReference.xMin() + " | "
+                    + pacmanReference.yMin() + " | "
+                    + pacmanReference.xMax() + " | "
+                    + pacmanReference.yMax());
+
+            System.out.println("...................................");
+            System.out.println("THERE are " + obstacles_Arcade_Pacman.size() + " OBS");
+            for (int i = 0; i < obstacles_Arcade_Pacman.size(); i++) {
+                System.out.println("Obs " + i + " ....");
+                System.out.println("Obs " + i + " " + "center: "
+                        + obstacles_Arcade_Pacman.get(i).x_pix + " | "
+                        + obstacles_Arcade_Pacman.get(i).y_pix);
+                System.out.println("Obs " + i + " " + "Size: "
+                        + obstacles_Arcade_Pacman.get(i).boundingWidth + " | "
+                        + obstacles_Arcade_Pacman.get(i).boundingHeight);
+                System.out.println("Obs " + i + " " +  "Rect: "
+                        + obstacles_Arcade_Pacman.get(i).xMin() + " | "
+                        + obstacles_Arcade_Pacman.get(i).yMin() + " | "
+                        + obstacles_Arcade_Pacman.get(i).xMax() + " | "
+                        + obstacles_Arcade_Pacman.get(i).yMax());
+            }
+            System.out.println();
+            */
+
+            boolean collision = collisionDetector.collisionExist(pacmanReference, obstacles_Arcade_Pacman);
+            if(collision) {
+                System.out.println(collision);
+                //there is a collision, roll back
+                pacman.set(prevX, prevY);
+            }
         }
-    }
-
-    private void detectCollisions(){
-        // Has the Pacman hit the Ghost?
-
-        // Has the Pacman hit the edge of the screen
-
-        // Bottom
-
-        // Top
-
-        // Left
-
-        // Right
-
     }
 
     // This method is called by PacmanActivity
@@ -228,11 +276,13 @@ class PacmanGame extends SurfaceView implements Runnable {
                 R.raw.sample1);
 
         // Initialize the pacman and ghost
-        pacman = new Pacman(context, mScreenX, mScreenY);
-        pacman.initStartingPoint(arcades.getArcadeContainingPacman().getPacmanX_pix(),
+        pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize());
+        pacman.set(arcades.getArcadeContainingPacman().getPacmanX_pix(),
                 arcades.getArcadeContainingPacman().getPacmanY_pix());
 
-        //FIXME
+        collisionDetector = new CollisionDetector();
+
+        //userInput handler
         userInput = new UserInput();
 
         //init Nav Buttons
