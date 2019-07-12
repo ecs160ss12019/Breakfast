@@ -1,5 +1,12 @@
 package com.example.pacman;
 
+/*
+Every GameObject can be considered as an Obstacle.
+This class will assist collision detection.
+The reason we want this class is to calculate the
+dimension of the bounding box of a moving or stationary
+GameObject.
+ */
 public class Obstacle {
     int x_pix;
     int y_pix;
@@ -7,6 +14,10 @@ public class Obstacle {
     int boundingWidth;
     int boundingHeight;
 
+    /*
+    We calculate the left, right, up, bottom
+    boundaries of the bounding rectangle.
+     */
     public double xMax() {
         return x_pix + boundingWidth / 2;
     }
