@@ -117,13 +117,27 @@ public class Arcade implements GameObject{
     /*
         We take an coordinate, and we want to know what are the
         obstacles surrounding it. The reason we cannot scan through
-        the whole arcade and return all obstacles is because that will
-        essentially take O(n^2) time to check collision in the update method.
-        We restrict the update time complexity to O(1) by giving a bounded amount
-        of obstacles for check.
+        the whole arcade and return all obstacles is because doing so will
+        essentially take O(n^2) time to check collision in the update() method.
+
+        We need a faster algorithm to make sure there is no delay in the main thread.
+        To achieve this, we need to restrict the obstacle list to be as small as possible.
+
+        We know that an object cannot possibly collide into an obstacle if the
+        distance between there centers is longer than the sum of distances between
+        each object's center and its farest point on boundary.
+        d > sigma(L) = l1 + l2 = distance(center1, vertex1) + distance(center2, vertex2).
+
+        We use this property to filter out blocks that are too far to become obstacles.
+        Further, note that both GameObject and ArcadeBlock, at least for now,
+        are bounded by square, we can reduce the calculation to merely evaluating
+        abs(diff(center1, center2)).
 
         Note that we want to restrict the origin object size to be the same as the
         ArcadeBlock.
+
+        Note that this obstacle list can be empty. Thus, do handle
+        the empty case in the caller function.
          */
     public ArrayList<Obstacle> getObstacleList(int originX, int originY) {
         ArrayList<Obstacle> obstacles = new ArrayList<>();
@@ -132,6 +146,7 @@ public class Arcade implements GameObject{
                 //if this block is a path, ignore it
                 if(blocks.get(i).get(j).getType() != 2) {
                     //center of the block
+                    //Note that we use width * j and height * i, not vice-versa.
                     int block_centerX_pix = xReference + blockWidth * j;
                     int block_centerY_pix = yReference + blockHeight * i;
 
@@ -139,7 +154,7 @@ public class Arcade implements GameObject{
                     int diffX = Math.abs(originX - block_centerX_pix);
                     int diffY = Math.abs(originY - block_centerY_pix);
                     if (diffX < blockWidth && diffY < blockHeight) {
-                        System.out.println("ADDED i: " + i + " " + "j: " + j);
+                        //Add to obstacle list
                         obstacles.add(new Obstacle(block_centerX_pix, block_centerY_pix, blockWidth, blockHeight));
                     }
                 }
@@ -174,22 +189,21 @@ public class Arcade implements GameObject{
         #----[-P-|---]----#
         #----[---|---]----#
         For block P, the position in pixel is calculated by:
-        X = referenceX + blockWidth * i - blockWidth / 2
-        Y = referenceY + blockHeight * j - blockHeight / 2
+        X = referenceX + blockWidth * j - blockWidth / 2
+        Y = referenceY + blockHeight * i - blockHeight / 2
         No need to handle margin since we are aligning edges
+
+        Note that it is crucial to apply the correct formula as
+        above when calculating the coordinates.We want to use
+        width * j and height * i. This is because that j is the col
+        num and i is the row num. If we mistakenly multiplied width
+        to i and height to j, we will get an up side down Arcade!!
          */
         for (int i = 0; i < numRow; i++) {
             for (int j = 0; j < numCol; j++) {
                 int X = xReference + blockWidth * j - blockWidth / 2;
                 int Y = yReference + blockHeight * i - blockHeight / 2;
 
-                //TODO
-                /*
-                THIS seems to be a bug,
-                it should be get(i).get(j), but for some reasons
-                I do not know, that is wrong.
-                Strange.
-                 */
                 int type = blocks.get(i).get(j).getType();
                 canvas.drawBitmap(blockViewList.get(type), X, Y, null);
             }
@@ -225,8 +239,18 @@ public class Arcade implements GameObject{
 
         /*
         now we are able to calculate the top left corner center coordinate.
-        left most is #----[--|--]----# at the position of
-        '['. The coordinate should be half ot horizontal length - half
+        #----R--|--]----#
+        #----[--|--]----#
+        #----[--|--]----#
+        As shown above, the #'s are the screen boundaries, the '[' and ']' are
+        the outer boundaries of the Arcade. Here, the top left block refers to
+        the '[' block in row 0.
+
+        We want to know the coordinate of its center. The reason is that if we
+        keep the record of this coordinate, we can easily iterate through all blocks
+        and calculate there center coordinates. This helps us in drawing the arcade.
+
+        The coordinate should be half ot horizontal length - half + margin
         of the matrix width in pixels.
          */
         double matrixWidthInPixel = numCol * blockWidth;
