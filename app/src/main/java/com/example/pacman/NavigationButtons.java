@@ -20,6 +20,14 @@ public class NavigationButtons {
     private ArrayList<Bitmap> buttons;
     private ArrayList<Bitmap> pressedButtons;
 
+    /*
+    This flag is used to check if the user
+    have ever input anything. Once there is
+    a input, this will be set to true for the
+    rest of the lifecycle
+     */
+    public boolean initialInputFlag;
+
     private boolean[] buttonPressed;
 
     final int UP = 0;
@@ -41,6 +49,12 @@ public class NavigationButtons {
 
         for(int i = 0; i < 4; i++) {
             if(check(userInput, buttonRange.get(i))) {
+                /*
+                once there is a touch on any button, set initialInputFlag to true.
+                This variable will never be modified again.
+                 */
+                initialInputFlag = true;
+
                 buttonPressed[i] = true;
                 return i;
             }
@@ -73,6 +87,8 @@ public class NavigationButtons {
 
     //Constructor
     public NavigationButtons(Context context, int screenWidth, int screenHeight) {
+        initialInputFlag = false;
+
         //retrieve the collection view files
         Bitmap arrowsImg = BitmapFactory.decodeResource(context.getResources(), R.drawable.arrows);
         Bitmap pressedArrowsImg = BitmapFactory.decodeResource(context.getResources(), R.drawable.pressed_arrows);

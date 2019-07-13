@@ -58,11 +58,17 @@ public class Pacman implements GameObject{
     final int UP = 2;
     final int DOWN = 3;
 
-    //direction means the pacman is going up, down, left, or right
-    private int direction;
+    //currDirection means the pacman is going up, down, left, or right
+    private int currDirection;
+
+    /*
+    nextDirection means the user wants to head to this direction.
+    We need to verify if this direction is okay to goto.
+     */
+    private int nextDirection;;
 
     //did the pacman move?
-    private boolean moved = false;
+    private boolean moved;
 
     //The starting point need to be initialized after construction
     //if collision, use this to roll back
@@ -89,49 +95,133 @@ public class Pacman implements GameObject{
 
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(pacmanViewList.get(direction), x - (bitmapWidth/2), y - (bitmapHeight/2), null);
+        canvas.drawBitmap(pacmanViewList.get(currDirection),
+                x - (bitmapWidth/2), y - (bitmapHeight/2), null);
+    }
+
+    /*
+    We use this func to calculate the after move location in a direction,
+    no matter the direction is valid or not.
+     */
+    private Pair<Integer, Integer> move(int direction, long fps) {
+        int nextX = this.x;
+        int nextY = this.y;
+
+        // Move the pacman based on the direction variable
+        // and the speed of the previous frame
+        if (direction == LEFT) {
+            nextX = (int)(nextX - speed / fps);
+        }
+        if (direction == RIGHT) {
+            nextX = (int)(nextX + speed / fps);
+        }
+        if (direction == UP) {
+            nextY = (int)(nextY - speed / fps);
+        }
+        if (direction == DOWN) {
+            nextY = (int)(nextY + speed / fps);
+        }
+
+        // Stop the Pacman going off the screen
+        if (nextX - bitmapWidth / 2 < 0) {
+            nextX = bitmapWidth / 2;
+        }
+        if (nextX + bitmapWidth / 2 > mScreenX) {
+            nextX = mScreenX - bitmapWidth / 2;
+        }
+        if (nextY - bitmapHeight / 2 < 0) {
+            nextY = bitmapHeight / 2;
+        }
+        if (nextY + bitmapHeight / 2 > mScreenY) {
+            nextY = mScreenY - bitmapHeight / 2;
+        }
+
+        return new Pair<>(nextX, nextY);
     }
 
     @Override
-    public void updateStatus(long fps) {
-        if (moved) {
-            // Move the pacman based on the direction variable
-            // and the speed of the previous frame
-            if (direction == LEFT) {
-                x = (int)(x - speed / fps);
-            }
-            if (direction == RIGHT) {
-                x = (int)(x + speed / fps);
-            }
-            if (direction == UP) {
-                y = (int)(y - speed / fps);
-            }
-            if (direction == DOWN) {
-                y = (int)(y + speed / fps);
-            }
+    public void updateStatus(long fps){
 
-            // Stop the Pacman going off the screen
-            if (x - bitmapWidth / 2 < 0) {
-                x = bitmapWidth / 2;
-            }
-            if (x + bitmapWidth / 2 > mScreenX) {
-                x = mScreenX - bitmapWidth / 2;
-            }
-            if (y - bitmapHeight / 2 < 0) {
-                y = bitmapHeight / 2;
-            }
-            if (y + bitmapHeight / 2 > mScreenY) {
-                y = mScreenY - bitmapHeight / 2;
+    }
+
+    public void updateStatus(long fps, Arcade arcade) {
+        /*
+        We cannot update is the fps is -1,
+        otherwise there will be a overflow
+        in speed/fps.
+         */
+        if (fps == -1) {
+            return;
+        }
+
+        CollisionDetector collisionDetector = new CollisionDetector();
+
+        int nextX = 0;
+        int nextY = 0;
+
+        /*
+        if nextDirection is not -1, try to
+        move in that direction.
+        If it works, update currDirection,
+        return.
+         */
+
+        /*
+        We first do the unit update, then check collision.
+        We do need to keep the previous location so that
+        if there is a collision, we prevent it from moving and
+        roll back.
+
+        This piece of code is working but need
+        to be rewrite. It is now too crowded and
+        ugly.
+         */
+        if (nextDirection != -1) {
+            Pair<Integer, Integer> next = move(nextDirection, fps);
+            nextX = next.first;
+            nextY = next.second;
+
+            //Check collision
+            ArrayList<Obstacle> obstacles =arcade.getObstacleList(nextX, nextY);
+            Obstacle pacmanReference = new Obstacle(nextX, nextY,
+                    (int)(bitmapWidth * 0.8), (int)(bitmapHeight * 0.8));
+
+            boolean collision = collisionDetector.collisionExist(pacmanReference, obstacles);
+            if(!collision) {
+                //there is no collision, update and return
+                set(nextX, nextY);
+                currDirection = nextDirection;
+                return;
             }
         }
 
-        moved = false;
+        /*
+        Either there is no new user input direction,
+        or that direction does not work.
+        Try moving in current direction, if it do
+        not work as well, stay in current position
+         */
+        Pair<Integer, Integer> next = move(currDirection, fps);
+        nextX = next.first;
+        nextY = next.second;
+
+        //Check collision
+        ArrayList<Obstacle> obstacles = arcade.getObstacleList(nextX, nextY);
+        Obstacle pacmanReference = new Obstacle(nextX, nextY,
+                (int)(bitmapWidth * 0.8), (int)(bitmapHeight * 0.8));
+
+        boolean collision = collisionDetector.collisionExist(pacmanReference, obstacles);
+        if(!collision) {
+            //there is no collision, update and return
+            set(nextX, nextY);
+        }
     }
 
-    public void updateMovementStatus(int inputDirection, long fps) {
+    public void updateMovementStatus(int inputDirection, long fps,
+                                     Arcade arcade) {
         /*
         We want to know where is the player heading,
-        so we can update the direction of pacman
+        so we can update the currDirection of pacman
          */
 
         /*
@@ -143,7 +233,7 @@ public class Pacman implements GameObject{
 
 
         We are not moving at all, we
-        do not need to change direction.
+        do not need to change currDirection.
 
         if(!(diffX == 0 && diffY == 0)) {
             moved = true;
@@ -158,16 +248,16 @@ public class Pacman implements GameObject{
             if (absDiffX > absDiffY) {
                 //if diffX negative, moving left. Otherwise, right.
                 if (diffX > 0) {
-                    this.direction = LEFT; //left is the 0's bitmap in pacmanViewList
+                    this.currDirection = LEFT; //left is the 0's bitmap in pacmanViewList
                 } else {
-                    this.direction = RIGHT; //right is the 1's bitmap in pacmanViewList
+                    this.currDirection = RIGHT; //right is the 1's bitmap in pacmanViewList
                 }
             } else {
                 //if diffY negative, moving down. Otherwise, up.
                 if (diffY > 0) {
-                    this.direction = UP; //up is the 0's bitmap in pacmanViewList
+                    this.currDirection = UP; //up is the 0's bitmap in pacmanViewList
                 } else {
-                    this.direction = DOWN; //down is the 1's bitmap in pacmanViewList
+                    this.currDirection = DOWN; //down is the 1's bitmap in pacmanViewList
                 }
             }
         }
@@ -175,27 +265,38 @@ public class Pacman implements GameObject{
 
         /*
         We are not using buttons thus there is
-        no need to calculate the direction.
+        no need to calculate the currDirection.
 
-        Later we will align Pacman direction with
-        button direction
+        Later we will align Pacman currDirection with
+        button currDirection
          */
-        moved = true;
+
+        /*
+        The user wants to change direction if
+        there is a touch on the NavigationButton
+        and input Direction != -1.
+
+        There is no need to update nextDirection if
+        input is -1.
+         */
         switch (inputDirection) {
+            case -1:
+                //nextDirection = -1;
+                break;
             case 0:
-                direction = UP;
+                nextDirection = UP;
                 break;
             case 1:
-                direction = DOWN;
+                nextDirection = DOWN;
                 break;
             case 2:
-                direction = LEFT;
+                nextDirection = LEFT;
                 break;
             case 3:
-                direction = RIGHT;
+                nextDirection = RIGHT;
+                break;
         }
-
-        updateStatus(fps);
+        updateStatus(fps, arcade);
     }
 
     //Constructor
@@ -203,7 +304,8 @@ public class Pacman implements GameObject{
         this.context = context;
         mScreenX = sx;
         mScreenY = sy;
-        this.direction = RIGHT;
+        this.currDirection = RIGHT;
+        this.nextDirection = -1;
 
         //currently, the collection is 2*2 with 4 views in total
         numRow = 2;

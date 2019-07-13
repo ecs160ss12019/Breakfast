@@ -72,8 +72,13 @@ class PacmanGame extends SurfaceView implements Runnable {
             long frameStartTime = System.currentTimeMillis();
 
             if(!mPaused) {
+                /*
+                We want to prevent from updating any
+                motion related stuff if the fps is -1.
+                Other wise there will be a moving speed
+                overflow.
+                 */
                 updateGame();
-
                 //this might not be null in the future
                 mCanvas = null;
 
@@ -88,13 +93,13 @@ class PacmanGame extends SurfaceView implements Runnable {
                         draw(mCanvas);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 } finally {
-                    if(mCanvas != null) {
+                    if (mCanvas != null) {
                         try {
                             mOurHolder.unlockCanvasAndPost(mCanvas);
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            //e.printStackTrace();
                         }
                     }
                 }
@@ -127,68 +132,21 @@ class PacmanGame extends SurfaceView implements Runnable {
         if player touched or is continuous touching
         updated pacman position and etc.
          */
-        if(!(direction < 0)) {
-            /*
-            We first do the unit update, then check collision.
-            We do need to keep the previous location so that
-            if there is a collision, we prevent it from moving and
-            roll back.
-             */
-            int prevX = pacman.getX();
-            int prevY = pacman.getY();
-            pacman.updateMovementStatus(direction, mFPS);
 
-            //get surrounding obstacles
-            int currX = pacman.getX();
-            int currY = pacman.getY();
-            ArrayList<Obstacle> obstacles_Arcade_Pacman =
-                    arcades.getArcadeContainingPacman().getObstacleList(currX, currY);
-            //check
-            Obstacle pacmanReference = new Obstacle(currX, currY,
-                    (int)(pacman.getBitmapWidth() * 0.8), (int)(pacman.getBitmapHeight() * 0.8));
-            //FIXME
+        /*
+        1. If we want un-continuous movement: only move if pressed,
+        we use this if condition
+        if(!(direction < 0)
 
-            /*
-            System.out.println("##################################");
-            System.out.println("Pacman: "+ currX + " | " + currY);
-            System.out.println("Reference center: "
-                    + pacmanReference.x_pix + " | "
-                    + pacmanReference.y_pix);
-            System.out.println("Reference Size: "
-                    + pacmanReference.boundingWidth + " | "
-                    + pacmanReference.boundingHeight);
-            System.out.println("Reference Rect: "
-                    + pacmanReference.xMin() + " | "
-                    + pacmanReference.yMin() + " | "
-                    + pacmanReference.xMax() + " | "
-                    + pacmanReference.yMax());
+        2. If we want continuous movement: always moving once pressed,
+        we use this if condition
+        if(navigationButtons.initialInputFlag)
+         */
+        //FIXME
+        //if(navigationButtons.initialInputFlag) {
+            pacman.updateMovementStatus(direction, mFPS, arcades.getArcadeContainingPacman());
 
-            System.out.println("...................................");
-            System.out.println("THERE are " + obstacles_Arcade_Pacman.size() + " OBS");
-            for (int i = 0; i < obstacles_Arcade_Pacman.size(); i++) {
-                System.out.println("Obs " + i + " ....");
-                System.out.println("Obs " + i + " " + "center: "
-                        + obstacles_Arcade_Pacman.get(i).x_pix + " | "
-                        + obstacles_Arcade_Pacman.get(i).y_pix);
-                System.out.println("Obs " + i + " " + "Size: "
-                        + obstacles_Arcade_Pacman.get(i).boundingWidth + " | "
-                        + obstacles_Arcade_Pacman.get(i).boundingHeight);
-                System.out.println("Obs " + i + " " +  "Rect: "
-                        + obstacles_Arcade_Pacman.get(i).xMin() + " | "
-                        + obstacles_Arcade_Pacman.get(i).yMin() + " | "
-                        + obstacles_Arcade_Pacman.get(i).xMax() + " | "
-                        + obstacles_Arcade_Pacman.get(i).yMax());
-            }
-            System.out.println();
-            */
-
-            boolean collision = collisionDetector.collisionExist(pacmanReference, obstacles_Arcade_Pacman);
-            if(collision) {
-                System.out.println(collision);
-                //there is a collision, roll back
-                pacman.set(prevX, prevY);
-            }
-        }
+        //}
     }
 
     // This method is called by PacmanActivity
@@ -270,6 +228,9 @@ class PacmanGame extends SurfaceView implements Runnable {
         // getHolder is a method of SurfaceView
         mOurHolder = getHolder();
         mPaint = new Paint();
+
+        //Init fps to -1 so that we will know if the canvas is not ready
+        mFPS = -1;
 
         //initialize the Arcade list
         arcades = new ArcadeList(context, mScreenX, mScreenY,
