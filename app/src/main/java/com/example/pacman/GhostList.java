@@ -5,24 +5,25 @@ import android.graphics.Canvas;
 
 import java.util.ArrayList;
 
+// One GhostList contains 4 ghosts associated with one Arcade
 public class GhostList {
-    private ArrayList<Ghost> ghosts;
+    ArrayList<Ghost> ghosts;
     private final int GHOSTS_NUM = 4;
+    private Arcade arcade; // the arcade which the 4 ghosts are in.
 
     private int mScreenX;
     private int mScreenY;
     //context of the game, used access Resource ptr
     private Context context;
 
-    public GhostList(Context context, int sx, int sy, ArcadeList arcades) {
+    public GhostList(Context context, int sx, int sy, Arcade arcade) {
         this.context = context;
         mScreenX = sx;
         mScreenY = sy;
+        this.arcade = arcade;
         ghosts = new ArrayList<>();
         for (int i=0; i<GHOSTS_NUM; i++) {
-            Ghost ghost = new Ghost(context, sx, sy, arcades.getOptimalPacmanSize(), i);
-            ghost.set(arcades.getArcadeContainingPacman().getGhostX_pix(),
-                    arcades.getArcadeContainingPacman().getGhostY_pix());
+            Ghost ghost = new Ghost(context, sx, sy, arcade, i);
             ghosts.add(ghost);
         }
     }

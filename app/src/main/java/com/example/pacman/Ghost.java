@@ -18,8 +18,8 @@ public class Ghost implements GameObject {
     boolean alive;
 
     //coordinate
-    private int x;
-    private int y;
+    int x;
+    int y;
     private float speed;
     private int mScreenX;
     private int mScreenY;
@@ -37,7 +37,7 @@ public class Ghost implements GameObject {
 
     private boolean collision;
 
-    public Ghost(Context context, int sx, int sy, Pair<Integer, Integer> optimalSize, int direction) {
+    public Ghost(Context context, int sx, int sy, Arcade arcade, int direction) {
         this.context = context;
         mScreenX = sx;
         mScreenY = sy;
@@ -50,6 +50,9 @@ public class Ghost implements GameObject {
         bitmapHeight = ghostView.getHeight();
 
         speed = mScreenX / 10;
+
+        this.x = arcade.getGhostX_pix();
+        this.y = arcade.getGhostY_pix();
     }
 
     //The starting point need to be initialized after construction

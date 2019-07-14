@@ -237,13 +237,12 @@ class PacmanGame extends SurfaceView implements Runnable {
         arcades = new ArcadeList(context, mScreenX, mScreenY,
                 R.raw.sample2);
 
-        // Initialize the pacman and ghost
+        // Initialize the pacman
         pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize());
         pacman.set(arcades.getArcadeContainingPacman().getPacmanX_pix(),
                 arcades.getArcadeContainingPacman().getPacmanY_pix());
-
-        ghosts = new GhostList(context, mScreenX, mScreenY, arcades);
-
+        // Initialize the 4 ghosts in the arcade which contains Pacman.
+        ghosts = new GhostList(context, mScreenX, mScreenY, arcades.getArcadeContainingPacman());
 
         collisionDetector = new CollisionDetector();
 
