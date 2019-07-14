@@ -15,6 +15,7 @@ public class Ghost implements GameObject {
     final int RIGHT = 1;
     final int UP = 2;
     final int DOWN = 3;
+    boolean alive;
 
     //coordinate
     private int x;
@@ -36,11 +37,11 @@ public class Ghost implements GameObject {
 
     private boolean collision;
 
-    public Ghost(Context context, int sx, int sy, Pair<Integer, Integer> optimalSize) {
+    public Ghost(Context context, int sx, int sy, Pair<Integer, Integer> optimalSize, int direction) {
         this.context = context;
         mScreenX = sx;
         mScreenY = sy;
-        this.currDirection = RIGHT;
+        this.currDirection = direction;
         this.nextDirection = -1;
 
         Bitmap unsizedGhostView = BitmapFactory.decodeResource(context.getResources(), R.drawable.ghost);
