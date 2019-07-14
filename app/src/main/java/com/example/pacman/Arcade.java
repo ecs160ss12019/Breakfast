@@ -279,11 +279,11 @@ public class Arcade implements GameObject{
         #----[--|P-]----#
         #----[--|--]----#
          */
-        pacmanX_pix = xReference + pacmanY * blockWidth;
-        pacmanY_pix = yReference + pacmanX * blockHeight;
+        pacmanX_pix = xReference + pacmanX * blockWidth;
+        pacmanY_pix = yReference + pacmanY * blockHeight;
 
-        ghostX_pix = xReference + ghostY * blockWidth;
-        ghostY_pix = yReference + ghostX * blockHeight;
+        ghostX_pix = xReference + ghostX * blockWidth;
+        ghostY_pix = yReference + ghostY * blockHeight;
 
         /*
         Now we get the img for each types of block.

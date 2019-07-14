@@ -144,79 +144,6 @@ public class Pacman implements GameObject{
 
     }
 
-    public void updateStatus(long fps, Arcade arcade) {
-        /*
-        We cannot update is the fps is -1,
-        otherwise there will be a overflow
-        in speed/fps.
-         */
-        if (fps == -1) {
-            return;
-        }
-
-        CollisionDetector collisionDetector = new CollisionDetector();
-
-        int nextX = 0;
-        int nextY = 0;
-
-        /*
-        if nextDirection is not -1, try to
-        move in that direction.
-        If it works, update currDirection,
-        return.
-         */
-
-        /*
-        We first do the unit update, then check collision.
-        We do need to keep the previous location so that
-        if there is a collision, we prevent it from moving and
-        roll back.
-
-        This piece of code is working but need
-        to be rewrite. It is now too crowded and
-        ugly.
-         */
-        if (nextDirection != -1) {
-            Pair<Integer, Integer> next = move(nextDirection, fps);
-            nextX = next.first;
-            nextY = next.second;
-
-            //Check collision
-            ArrayList<Obstacle> obstacles =arcade.getObstacleList(nextX, nextY);
-            Obstacle pacmanReference = new Obstacle(nextX, nextY,
-                    (int)(bitmapWidth * 0.8), (int)(bitmapHeight * 0.8));
-
-            boolean collision = collisionDetector.collisionExist(pacmanReference, obstacles);
-            if(!collision) {
-                //there is no collision, update and return
-                set(nextX, nextY);
-                currDirection = nextDirection;
-                return;
-            }
-        }
-
-        /*
-        Either there is no new user input direction,
-        or that direction does not work.
-        Try moving in current direction, if it do
-        not work as well, stay in current position
-         */
-        Pair<Integer, Integer> next = move(currDirection, fps);
-        nextX = next.first;
-        nextY = next.second;
-
-        //Check collision
-        ArrayList<Obstacle> obstacles = arcade.getObstacleList(nextX, nextY);
-        Obstacle pacmanReference = new Obstacle(nextX, nextY,
-                (int)(bitmapWidth * 0.8), (int)(bitmapHeight * 0.8));
-
-        boolean collision = collisionDetector.collisionExist(pacmanReference, obstacles);
-        if(!collision) {
-            //there is no collision, update and return
-            set(nextX, nextY);
-        }
-    }
-
     public void updateMovementStatus(int inputDirection, long fps,
                                      Arcade arcade) {
         /*
@@ -297,6 +224,93 @@ public class Pacman implements GameObject{
                 break;
         }
         updateStatus(fps, arcade);
+    }
+
+    public void updateStatus(long fps, Arcade arcade) {
+        /*
+        We cannot update when the fps is -1,
+        otherwise there will be an overflow
+        in speed/fps.
+         */
+        if (fps == -1) {
+            return;
+        }
+
+        /*
+        1. We use a pixel based algorithm to control motion
+           This is a working solution but may not be the most
+           optimal solution. We now disable it and work on
+           method 2.
+         */
+        /*
+        CollisionDetector collisionDetector = new CollisionDetector();
+
+        int nextX = 0;
+        int nextY = 0;
+        */
+
+        /*
+        if nextDirection is not -1, try to
+        move in that direction.
+        If it works, update currDirection,
+        return.
+         */
+
+        /*
+        We first do the unit update, then check collision.
+        We do need to keep the previous location so that
+        if there is a collision, we prevent it from moving and
+        roll back.
+
+        This piece of code is working but need
+        to be rewrite. It is now too crowded and
+        ugly.
+        */
+         /*
+        if (nextDirection != -1) {
+            Pair<Integer, Integer> next = move(nextDirection, fps);
+            nextX = next.first;
+            nextY = next.second;
+
+            //Check collision
+            ArrayList<Obstacle> obstacles =arcade.getObstacleList(nextX, nextY);
+            Obstacle pacmanReference = new Obstacle(nextX, nextY,
+                    (int)(bitmapWidth * 0.8), (int)(bitmapHeight * 0.8));
+
+            boolean collision = collisionDetector.collisionExist(pacmanReference, obstacles);
+            if(!collision) {
+                //there is no collision, update and return
+                set(nextX, nextY);
+                currDirection = nextDirection;
+                return;
+            }
+        }
+        */
+
+        /*
+        Either there is no new user input direction,
+        or that direction does not work.
+        Try moving in current direction, if it do
+        not work as well, stay in current position
+         */
+        /*
+        Pair<Integer, Integer> next = move(currDirection, fps);
+        nextX = next.first;
+        nextY = next.second;
+
+        //Check collision
+        ArrayList<Obstacle> obstacles = arcade.getObstacleList(nextX, nextY);
+        Obstacle pacmanReference = new Obstacle(nextX, nextY,
+                (int)(bitmapWidth * 0.8), (int)(bitmapHeight * 0.8));
+
+        boolean collision = collisionDetector.collisionExist(pacmanReference, obstacles);
+        if(!collision) {
+            //there is no collision, update and return
+            set(nextX, nextY);
+        }
+        */
+
+
     }
 
     //Constructor
