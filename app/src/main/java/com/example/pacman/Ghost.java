@@ -45,7 +45,7 @@ public class Ghost implements GameObject {
         this.nextDirection = -1;
 
         Bitmap unsizedGhostView = BitmapFactory.decodeResource(context.getResources(), R.drawable.ghost);
-        ghostView = Bitmap.createScaledBitmap(unsizedGhostView, optimalSize.first, optimalSize.second, true);
+        ghostView = Bitmap.createScaledBitmap(unsizedGhostView, sy/15, sy/15, true);
         bitmapWidth = ghostView.getWidth();
         bitmapHeight = ghostView.getHeight();
 
