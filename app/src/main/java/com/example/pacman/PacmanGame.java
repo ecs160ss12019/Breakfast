@@ -40,7 +40,7 @@ class PacmanGame extends SurfaceView implements Runnable {
     //Our pacman!
     private Pacman pacman;
 
-    private Ghost ghost;
+    private GhostList ghosts;
 
     //Our Arcade List
     private ArcadeList arcades;
@@ -145,7 +145,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         //FIXME
         //if(navigationButtons.initialInputFlag) {
             pacman.updateMovementStatus(direction, mFPS, arcades.getArcadeContainingPacman());
-            ghost.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+            ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
         //}
     }
 
@@ -189,8 +189,13 @@ class PacmanGame extends SurfaceView implements Runnable {
         mCanvas.drawColor(Color.argb
                 (255, 255, 255, 255));
         arcades.draw(canvas);
+<<<<<<< HEAD
+        //pacman.draw(canvas);
+        //ghost.draw(canvas);
+=======
         pacman.draw(canvas);
-        ghost.draw(canvas);
+        ghosts.draw(canvas);
+>>>>>>> 613cd8cdeb89ad3110c1aeb899bdd58511513e14
         navigationButtons.draw(canvas);
     }
 
@@ -234,17 +239,20 @@ class PacmanGame extends SurfaceView implements Runnable {
         mFPS = -1;
 
         //initialize the Arcade list
+        /*
         arcades = new ArcadeList(context, mScreenX, mScreenY,
                 R.raw.sample1);
+        */
+        arcades = new ArcadeList(context, mScreenX, mScreenY,
+                R.raw.sample2);
 
         // Initialize the pacman and ghost
         pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize());
         pacman.set(arcades.getArcadeContainingPacman().getPacmanX_pix(),
                 arcades.getArcadeContainingPacman().getPacmanY_pix());
 
-        ghost = new Ghost(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize());
-        ghost.set(arcades.getArcadeContainingPacman().getGhostX_pix(),
-                arcades.getArcadeContainingPacman().getGhostY_pix());
+        ghosts = new GhostList(context, mScreenX, mScreenY, arcades);
+
 
         collisionDetector = new CollisionDetector();
 

@@ -208,12 +208,17 @@ public class Arcade implements GameObject{
         num and i is the row num. If we mistakenly multiplied width
         to i and height to j, we will get an up side down Arcade!!
          */
+
         for (int i = 0; i < numRow; i++) {
             for (int j = 0; j < numCol; j++) {
                 int X = xReference + blockWidth * j - blockWidth / 2;
                 int Y = yReference + blockHeight * i - blockHeight / 2;
 
                 int type = blocks.get(i).get(j).getType();
+                if (type == 16 || type == 17 || type == 18) {
+                    //Blocks with these type num are transparent
+                    continue;
+                }
                 canvas.drawBitmap(blockViewList.get(type), X, Y, null);
             }
         }
@@ -289,7 +294,7 @@ public class Arcade implements GameObject{
 
         //load pacman img from resource
         //FIXME refer to id by filename?
-        Bitmap blockCollectionView = BitmapFactory.decodeResource(context.getResources(), R.drawable.blocks);
+        Bitmap blockCollectionView = BitmapFactory.decodeResource(context.getResources(), R.drawable.blocks3);
 
         /*
         resize the original file.
@@ -297,12 +302,20 @@ public class Arcade implements GameObject{
         Since this is the source file, we need to resize based on
         the oriFile height, width ratio
          */
+        /*
         double ratio = blockCollectionView.getWidth() / blockCollectionView.getHeight();
         blockCollectionView = Bitmap.createScaledBitmap(blockCollectionView, (int)(ratio * blockHeight),
                 blockHeight, true);
+        */
 
         BitmapDivider divider = new BitmapDivider(blockCollectionView);
         blockViewList = divider.split(imgFileRow,imgFileCol);
+
+        for (int i = 0; i < blockViewList.size(); i++) {
+            Bitmap temp = Bitmap.createScaledBitmap(blockViewList.get(i), blockHeight,
+                    blockHeight, true);
+            blockViewList.set(i, temp);
+        }
     }
 
     public Arcade(Context context, ArrayList<ArrayList<Integer>> matrix,
@@ -320,9 +333,12 @@ public class Arcade implements GameObject{
         for (int i = 0; i < numRow; i++) {
             ArrayList<ArcadeBlock> newLine = new ArrayList<>(numCol);
             for (int j = 0; j < numCol; j++) {
+                //System.out.print(matrix.get(i).get(j) + " ");
+
                 ArcadeBlock newBlock = new ArcadeBlock(i, j, matrix.get(i).get(j));
                 newLine.add(newBlock);
             }
+            //System.out.println();
             blocks.add(newLine);
         }
 
