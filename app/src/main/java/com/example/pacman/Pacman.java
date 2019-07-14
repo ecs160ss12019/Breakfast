@@ -323,8 +323,14 @@ public class Pacman implements GameObject{
 
         pacmanViewList = new ArrayList<>();
         for (int i = 0; i < unsizedPacmanViewList.size(); i++) {
+
+            //FIXME Pacman size?
+            /*
             Bitmap bitmap = Bitmap.createScaledBitmap(unsizedPacmanViewList.get(i),
                     optimalSize.first, optimalSize.second, true);
+            */
+            Bitmap bitmap = Bitmap.createScaledBitmap(unsizedPacmanViewList.get(i),
+                    sy / 15, sy/15, true);
             pacmanViewList.add(bitmap);
         }
 
