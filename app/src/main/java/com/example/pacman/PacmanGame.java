@@ -144,8 +144,8 @@ class PacmanGame extends SurfaceView implements Runnable {
          */
         //FIXME
         //if(navigationButtons.initialInputFlag) {
-            pacman.updateMovementStatus(direction, mFPS, arcades.getArcadeContainingPacman());
-            ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+        pacman.updateMovementStatus(direction, mFPS, arcades.getArcadeContainingPacman());
+        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
         //}
     }
 
@@ -189,13 +189,8 @@ class PacmanGame extends SurfaceView implements Runnable {
         mCanvas.drawColor(Color.argb
                 (255, 255, 255, 255));
         arcades.draw(canvas);
-<<<<<<< HEAD
-        //pacman.draw(canvas);
-        //ghost.draw(canvas);
-=======
         pacman.draw(canvas);
         ghosts.draw(canvas);
->>>>>>> 613cd8cdeb89ad3110c1aeb899bdd58511513e14
         navigationButtons.draw(canvas);
     }
 
@@ -239,10 +234,6 @@ class PacmanGame extends SurfaceView implements Runnable {
         mFPS = -1;
 
         //initialize the Arcade list
-        /*
-        arcades = new ArcadeList(context, mScreenX, mScreenY,
-                R.raw.sample1);
-        */
         arcades = new ArcadeList(context, mScreenX, mScreenY,
                 R.raw.sample2);
 
