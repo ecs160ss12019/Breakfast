@@ -190,7 +190,7 @@ class PacmanGame extends SurfaceView implements Runnable {
                 (255, 255, 255, 255));
         arcades.draw(canvas);
         pacman.draw(canvas);
-        //ghosts.draw(canvas);
+        ghosts.draw(canvas);
         navigationButtons.draw(canvas);
     }
 
