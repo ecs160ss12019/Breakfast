@@ -144,8 +144,8 @@ class PacmanGame extends SurfaceView implements Runnable {
          */
         //FIXME
         //if(navigationButtons.initialInputFlag) {
-            pacman.updateMovementStatus(direction, mFPS, arcades.getArcadeContainingPacman());
-            ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+        pacman.updateMovementStatus(direction, mFPS, arcades.getArcadeContainingPacman());
+        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
         //}
     }
 
@@ -235,7 +235,7 @@ class PacmanGame extends SurfaceView implements Runnable {
 
         //initialize the Arcade list
         arcades = new ArcadeList(context, mScreenX, mScreenY,
-                R.raw.sample1);
+                R.raw.sample2);
 
         // Initialize the pacman and ghost
         pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize());
