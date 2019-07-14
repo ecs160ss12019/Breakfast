@@ -65,7 +65,7 @@ public class Pacman implements GameObject{
     nextDirection means the user wants to head to this direction.
     We need to verify if this direction is okay to goto.
      */
-    private int nextDirection;;
+    private int nextDirection;
 
     //did the pacman move?
     private boolean moved;
@@ -335,8 +335,8 @@ public class Pacman implements GameObject{
         bitmapHeight = pacmanViewList.get(0).getHeight();
 
         // Configure the speed of the Pacman
-        // This code means the Pacman can cover the width of the screen in 4 second
-        speed = mScreenX/4;
+        // This code means the Pacman can cover the width of the screen in 8 second
+        speed = mScreenX/8;
     }
 }
 

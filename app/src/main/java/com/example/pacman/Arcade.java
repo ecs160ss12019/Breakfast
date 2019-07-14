@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /*
@@ -91,17 +90,27 @@ public class Arcade implements GameObject{
     private int pacmanX;
     private int pacmanY;
 
+    //where the ghost should start from
+    private int ghostX;
+    private int ghostY;
+
     //pacman start position in pixel
     private int pacmanX_pix;
     private int pacmanY_pix;
 
-    public int getPacmanX_pix() {
-        return pacmanX_pix;
-    }
+    // ghost start position in pixel
+    private int ghostX_pix;
+    private int ghostY_pix;
+
+    public int getPacmanX_pix() { return pacmanX_pix; }
 
     public int getPacmanY_pix() {
         return pacmanY_pix;
     }
+
+    public int getGhostX_pix() { return ghostX_pix; }
+
+    public int getGhostY_pix() { return ghostY_pix; }
 
     //getBlockSize
 
@@ -268,6 +277,9 @@ public class Arcade implements GameObject{
         pacmanX_pix = xReference + pacmanX * blockWidth;
         pacmanY_pix = yReference + pacmanY * blockHeight;
 
+        ghostX_pix = xReference + ghostX * blockWidth;
+        ghostY_pix = yReference + ghostY * blockHeight;
+
         /*
         Now we get the img for each types of block.
         While now we are doing it in this class, same as we did
@@ -296,7 +308,7 @@ public class Arcade implements GameObject{
     public Arcade(Context context, ArrayList<ArrayList<Integer>> matrix,
                   int numRow, int numCol,
                   int imgFileRow, int imgFileCol,
-                  int pacmanX, int pacmanY,
+                  int pacmanX, int pacmanY, int ghostX, int ghostY,
                   boolean inUse) {
         this.context = context;
 
@@ -327,6 +339,8 @@ public class Arcade implements GameObject{
 
         this.pacmanX = pacmanX;
         this.pacmanY = pacmanY;
+        this.ghostX = ghostX;
+        this.ghostY = ghostY;
 
         this.inUse = inUse;
     }

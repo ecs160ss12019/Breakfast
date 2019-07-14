@@ -9,8 +9,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import java.util.ArrayList;
-
 class PacmanGame extends SurfaceView implements Runnable {
     // Are we debugging?
     private final boolean DEBUGGING = true;
@@ -41,6 +39,8 @@ class PacmanGame extends SurfaceView implements Runnable {
 
     //Our pacman!
     private Pacman pacman;
+
+    private Ghost ghost;
 
     //Our Arcade List
     private ArcadeList arcades;
@@ -190,6 +190,7 @@ class PacmanGame extends SurfaceView implements Runnable {
                 (255, 255, 255, 255));
         arcades.draw(canvas);
         pacman.draw(canvas);
+        ghost.draw(canvas);
         navigationButtons.draw(canvas);
     }
 
@@ -240,6 +241,10 @@ class PacmanGame extends SurfaceView implements Runnable {
         pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize());
         pacman.set(arcades.getArcadeContainingPacman().getPacmanX_pix(),
                 arcades.getArcadeContainingPacman().getPacmanY_pix());
+
+        ghost = new Ghost(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize());
+        ghost.set(arcades.getArcadeContainingPacman().getGhostX_pix(),
+                arcades.getArcadeContainingPacman().getGhostY_pix());
 
         collisionDetector = new CollisionDetector();
 
