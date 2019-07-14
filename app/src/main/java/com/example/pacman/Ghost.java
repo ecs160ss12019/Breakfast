@@ -167,7 +167,8 @@ public class Ghost implements GameObject {
         int inputDirection = -1;
         if(collision) {
             Random randomGenerator = new Random();
-            inputDirection = randomGenerator.nextInt(3);
+            inputDirection = randomGenerator.nextInt(4);
+
         }
         switch (inputDirection) {
             case -1:
@@ -187,5 +188,19 @@ public class Ghost implements GameObject {
                 break;
         }
         updateStatus(fps, arcade);
+    }
+
+    public void killPacman(Pacman pacman) {
+        CollisionDetector collisionDetector = new CollisionDetector();
+        Obstacle ghostReference = new Obstacle(this.x, this.y,
+                (int)(bitmapWidth*0.8), (int)(bitmapHeight*0.8));
+        ArrayList<Obstacle> obstacles = new ArrayList<>();
+        Obstacle pacmanReference = new Obstacle(pacman.getX(), pacman.getY(),
+                (int)(pacman.getBitmapWidth()*0.8), (int)(pacman.getBitmapHeight()*0.8));
+        obstacles.add(pacmanReference);
+        collision = collisionDetector.collisionExist(ghostReference, obstacles);
+        if (collision) {
+            pacman.set(0, 0);
+        }
     }
 }
