@@ -6,6 +6,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.util.Pair;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class Ghost implements GameObject {
 
     final int LEFT = 0;
@@ -31,14 +34,21 @@ public class Ghost implements GameObject {
     private int currDirection;
     private int nextDirection;
 
+    private boolean collision;
+
     public Ghost(Context context, int sx, int sy, Pair<Integer, Integer> optimalSize) {
         this.context = context;
         mScreenX = sx;
         mScreenY = sy;
+        this.currDirection = RIGHT;
+        this.nextDirection = -1;
+
         Bitmap unsizedGhostView = BitmapFactory.decodeResource(context.getResources(), R.drawable.ghost);
         ghostView = Bitmap.createScaledBitmap(unsizedGhostView, optimalSize.first, optimalSize.second, true);
         bitmapWidth = ghostView.getWidth();
         bitmapHeight = ghostView.getHeight();
+
+        speed = mScreenX / 10;
     }
 
     //The starting point need to be initialized after construction
@@ -94,7 +104,11 @@ public class Ghost implements GameObject {
     }
 
     @Override
-    public void updateStatus(long fps) {
+    public void updateStatus(long fps){
+
+    }
+
+    public void updateStatus(long fps, Arcade arcade) {
         /*
         We cannot update is the fps is -1,
         otherwise there will be a overflow
@@ -104,6 +118,8 @@ public class Ghost implements GameObject {
             return;
         }
 
+        CollisionDetector collisionDetector = new CollisionDetector();
+
         int nextX = 0;
         int nextY = 0;
 
@@ -112,12 +128,21 @@ public class Ghost implements GameObject {
             nextX = next.first;
             nextY = next.second;
 
-            set(nextX, nextY);
-            currDirection = nextDirection;
+            //Check collision
+            ArrayList<Obstacle> obstacles =arcade.getObstacleList(nextX, nextY);
+            Obstacle ghostReference = new Obstacle(nextX, nextY,
+                    (int)(bitmapWidth*0.8), (int)(bitmapHeight*0.8));
+
+            collision = collisionDetector.collisionExist(ghostReference, obstacles);
+            if (!collision) {
+                set(nextX, nextY);
+                currDirection = nextDirection;
+                return;
+            }
         }
 
         /*
-        Either there is no new user input direction,
+        Either there is no new direction,
         or that direction does not work.
         Try moving in current direction, if it do
         not work as well, stay in current position
@@ -125,7 +150,41 @@ public class Ghost implements GameObject {
         Pair<Integer, Integer> next = move(currDirection, fps);
         nextX = next.first;
         nextY = next.second;
-        set(nextX, nextY);
+
+        //Check collision
+        ArrayList<Obstacle> obstacles = arcade.getObstacleList(nextX, nextY);
+        Obstacle ghostReference = new Obstacle(nextX, nextY,
+                (int)(bitmapWidth * 0.8), (int)(bitmapHeight * 0.8));
+
+        collision = collisionDetector.collisionExist(ghostReference, obstacles);
+        if(!collision) {
+            set(nextX, nextY);
+        }
     }
 
+    public void updateMovementStatus(long fps, Arcade arcade) {
+        int inputDirection = -1;
+        if(collision) {
+            Random randomGenerator = new Random();
+            inputDirection = randomGenerator.nextInt(3);
+        }
+        switch (inputDirection) {
+            case -1:
+                //nextDirection = -1;
+                break;
+            case 0:
+                nextDirection = UP;
+                break;
+            case 1:
+                nextDirection = DOWN;
+                break;
+            case 2:
+                nextDirection = LEFT;
+                break;
+            case 3:
+                nextDirection = RIGHT;
+                break;
+        }
+        updateStatus(fps, arcade);
+    }
 }
