@@ -9,11 +9,12 @@ import android.util.Log;
 public class GameMode {
     private int modeSelection;
     private final int easy = 0;
-    private final int medium = 1;
+    private final int normal = 1;
     private final int hard = 2;
 
     public GameMode(int inputMode){
-        modeSelection = 0;
+        // mode is normal by default
+        modeSelection = 1;
         switch (inputMode) {
             case 0:
                 break;
@@ -32,7 +33,7 @@ public class GameMode {
             case easy:
                 easyMode();
                 break;
-            case medium:
+            case normal:
                 normalMode();
                 break;
             case hard:

@@ -37,6 +37,15 @@ class PacmanGame extends SurfaceView implements Runnable {
     //our UserInput object
     private UserInput userInput;
 
+    // this class greets the player once the game is loaded
+    // and goes away when the player selects the GameMode
+    private WelcomeView welcomeView;
+
+    // mode option: easy(0), normal(1), hard(2)
+    // pass it to gameMode object;
+    private int inputGameMode;
+    private GameMode gameMode;
+
     //Our pacman!
     private Pacman pacman;
 
@@ -234,6 +243,13 @@ class PacmanGame extends SurfaceView implements Runnable {
 
         //Init fps to -1 so that we will know if the canvas is not ready
         mFPS = -1;
+
+
+        /*
+        * implement front page view (something like welcome to breakfast's Pac-Man game)
+        * where it has the option to select the GameMode.
+        * */
+
 
         //initialize the Arcade list
         arcades = new ArcadeList(context, mScreenX, mScreenY,
