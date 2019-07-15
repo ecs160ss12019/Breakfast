@@ -144,8 +144,10 @@ class PacmanGame extends SurfaceView implements Runnable {
          */
         //FIXME
         //if(navigationButtons.initialInputFlag) {
-        pacman.updateMovementStatus(direction, mFPS, arcades.getArcadeContainingPacman());
-        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+
+        //System.out.println("Pacman Location: " + pacman.getCenterX() + " " + pacman.getCenterY());
+        pacman.updateMovementStatus(direction, mFPS);
+        //ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
         //}
     }
 
@@ -190,7 +192,7 @@ class PacmanGame extends SurfaceView implements Runnable {
                 (255, 255, 255, 255));
         arcades.draw(canvas);
         pacman.draw(canvas);
-        ghosts.draw(canvas);
+        //ghosts.draw(canvas);
         navigationButtons.draw(canvas);
     }
 
@@ -200,7 +202,7 @@ class PacmanGame extends SurfaceView implements Runnable {
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_MOVE:
+            //case MotionEvent.ACTION_MOVE:
             case MotionEvent.ACTION_DOWN:
                 //update UserInput only, update other game objects somewhere else
                 userInput.updateUserInput(motionEvent.getX(), motionEvent.getY());
@@ -224,6 +226,8 @@ class PacmanGame extends SurfaceView implements Runnable {
         mScreenX = x;
         mScreenY = y;
 
+        System.out.println("Super: " + mScreenX + " " + mScreenY);
+
         // Initialize the objects
         // ready for drawing with
         // getHolder is a method of SurfaceView
@@ -238,9 +242,8 @@ class PacmanGame extends SurfaceView implements Runnable {
                 R.raw.sample2);
 
         // Initialize the pacman and ghost
-        pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize());
-        pacman.set(arcades.getArcadeContainingPacman().getPacmanX_pix(),
-                arcades.getArcadeContainingPacman().getPacmanY_pix());
+        pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize(),
+                arcades.getArcadeContainingPacman());
 
         ghosts = new GhostList(context, mScreenX, mScreenY, arcades);
 

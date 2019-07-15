@@ -20,6 +20,8 @@ public class Ghost implements GameObject {
     //coordinate
     private int x;
     private int y;
+    private int currDirectionNextX;
+    private int currDirectionNextY;
     private float speed;
     private int mScreenX;
     private int mScreenY;
@@ -50,13 +52,6 @@ public class Ghost implements GameObject {
         bitmapHeight = ghostView.getHeight();
 
         speed = mScreenX / 10;
-    }
-
-    //The starting point need to be initialized after construction
-    //if collision, use this to roll back
-    public void set(int x, int y) {
-        this.x = x;
-        this.y = y;
     }
 
     @Override
@@ -109,6 +104,45 @@ public class Ghost implements GameObject {
 
     }
 
+    @Override
+    public int getCenterX() {
+        return this.x;
+    }
+
+    @Override
+    public int getCenterY() {
+        return this.y;
+    }
+
+    //The starting point need to be initialized after construction
+    //if collision, use this to roll back
+    @Override
+    public void setCenter(int centerX, int centerY) {
+        this.x = centerX;
+        this.y = centerY;
+    }
+
+    @Override
+    public int getCurrDirection() {
+        return currDirection;
+    }
+
+    @Override
+    public int getNextDirection() {
+        return nextDirection;
+    }
+
+    @Override
+    public ArrayList<Integer> getMotionInfo() {
+        ArrayList<Integer> motion = new ArrayList<>();
+        motion.add(this.getCenterX());
+        motion.add(this.getCenterY());
+        motion.add(currDirectionNextX);
+        motion.add(currDirectionNextY);
+        motion.add(currDirection);
+        return motion;
+    }
+
     public void updateStatus(long fps, Arcade arcade) {
         /*
         We cannot update is the fps is -1,
@@ -136,7 +170,7 @@ public class Ghost implements GameObject {
 
             collision = collisionDetector.collisionExist(ghostReference, obstacles);
             if (!collision) {
-                set(nextX, nextY);
+                setCenter(nextX, nextY);
                 currDirection = nextDirection;
                 return;
             }
@@ -159,7 +193,7 @@ public class Ghost implements GameObject {
 
         collision = collisionDetector.collisionExist(ghostReference, obstacles);
         if(!collision) {
-            set(nextX, nextY);
+            setCenter(nextX, nextY);
         }
     }
 

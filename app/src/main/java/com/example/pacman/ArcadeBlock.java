@@ -10,10 +10,10 @@ It might be one of these:
                 'inner boundary,
                 'corner'
  */
-public class ArcadeBlock implements GameObject {
+public class ArcadeBlock {
     //This is the index in block matrix, unit is not in pixel
-    private int x;
-    private int y;
+    public int x;
+    public int y;
 
     //this marks the type of the block
     private int type;
@@ -21,16 +21,17 @@ public class ArcadeBlock implements GameObject {
     public int getType() {
         return type;
     }
-
+/*
     @Override
     public void draw(Canvas canvas) {
 
     }
 
     @Override
-    public void updateStatus(long fps) {
+    public void updateLocation(long fps) {
 
     }
+*/
 
     public ArcadeBlock(int x, int y, int type) {
         this.x = x;

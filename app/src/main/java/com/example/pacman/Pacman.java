@@ -15,6 +15,8 @@ public class Pacman implements GameObject{
     //coordinate
     private int x;
     private int y;
+    private int currDirectionNextX;
+    private int currDirectionNextY;
     private float speed;
     private int mScreenX;
     private int mScreenY;
@@ -67,22 +69,48 @@ public class Pacman implements GameObject{
      */
     private int nextDirection;
 
+    private MotionInArcade motionInArcade;
+
     //did the pacman move?
     private boolean moved;
 
+    @Override
+    public int getCenterX() {
+        return this.x;
+    }
+
+    @Override
+    public int getCenterY() {
+        return this.y;
+    }
+
     //The starting point need to be initialized after construction
     //if collision, use this to roll back
-    public void set(int x, int y) {
-        this.x = x;
-        this.y = y;
+    @Override
+    public void setCenter(int centerX, int centerY) {
+        this.x = centerX;
+        this.y = centerY;
     }
 
-    public int getX() {
-        return (int)x;
+    @Override
+    public int getCurrDirection() {
+        return this.currDirection;
     }
 
-    public int getY() {
-        return (int)y;
+    @Override
+    public int getNextDirection() {
+        return this.nextDirection;
+    }
+
+    @Override
+    public ArrayList<Integer> getMotionInfo() {
+        ArrayList<Integer> motion = new ArrayList<>();
+        motion.add(this.getCenterX());
+        motion.add(this.getCenterY());
+        motion.add(currDirectionNextX);
+        motion.add(currDirectionNextY);
+        motion.add(currDirection);
+        return motion;
     }
 
     public int getBitmapWidth() {
@@ -103,9 +131,11 @@ public class Pacman implements GameObject{
     We use this func to calculate the after move location in a direction,
     no matter the direction is valid or not.
      */
-    private Pair<Integer, Integer> move(int direction, long fps) {
+    private TwoTuple move(int direction, long fps) {
         int nextX = this.x;
         int nextY = this.y;
+
+
 
         // Move the pacman based on the direction variable
         // and the speed of the previous frame
@@ -136,7 +166,7 @@ public class Pacman implements GameObject{
             nextY = mScreenY - bitmapHeight / 2;
         }
 
-        return new Pair<>(nextX, nextY);
+        return new TwoTuple(nextX, nextY);
     }
 
     @Override
@@ -144,8 +174,7 @@ public class Pacman implements GameObject{
 
     }
 
-    public void updateMovementStatus(int inputDirection, long fps,
-                                     Arcade arcade) {
+    public void updateMovementStatus(int inputDirection, long fps) {
         /*
         We want to know where is the player heading,
         so we can update the currDirection of pacman
@@ -206,27 +235,29 @@ public class Pacman implements GameObject{
         There is no need to update nextDirection if
         input is -1.
          */
+
         switch (inputDirection) {
             case -1:
                 //nextDirection = -1;
                 break;
             case 0:
-                nextDirection = UP;
-                break;
-            case 1:
-                nextDirection = DOWN;
-                break;
-            case 2:
                 nextDirection = LEFT;
                 break;
-            case 3:
+            case 1:
                 nextDirection = RIGHT;
                 break;
+            case 2:
+                nextDirection = UP;
+                break;
+            case 3:
+                nextDirection = DOWN;
+                break;
         }
-        updateStatus(fps, arcade);
+
+        updateLocation(fps);
     }
 
-    public void updateStatus(long fps, Arcade arcade) {
+    private void updateLocation(long fps) {
         /*
         We cannot update when the fps is -1,
         otherwise there will be an overflow
@@ -310,11 +341,67 @@ public class Pacman implements GameObject{
         }
         */
 
+        /*
+        2.  We now attach the pacman to the arcade
+            block at its position. We use arcade block
+            to determine motion, instead of pixel.
 
+            We only attempt to attach the position to arcade
+            block when the it's necessary to do so.
+            We set a condition: if next unit move will cross the
+            center of a block, we do the attach thing. Otherwise,
+            current motion should not be disturbed.
+         */
+
+        //next move in current direction
+        TwoTuple next = move(currDirection, fps);
+        currDirectionNextX = next.first();
+        currDirectionNextY = next.second();
+
+        System.out.println("Global update: " + x + " " + y + " " + currDirectionNextX + " " + currDirectionNextY);
+
+        //update motion info
+        motionInArcade.updateMotionInfo(getMotionInfo());
+
+        //check if in decision region
+        if(motionInArcade.inDecisionRegion()) {
+            System.out.println("in region");
+            //we need to take action
+            if (nextDirection != currDirection) {
+                System.out.println("diff dir");
+                //We need to check user's desired direction
+                NextMotionInfo info1 = motionInArcade.isValidMotion(nextDirection);
+                if (info1.isValid()) {
+                    System.out.println("Valid Turn");
+                    //we can change direction.
+                    setCenter(info1.getPos().first(), info1.getPos().second());
+                    currDirection = nextDirection;
+                    return;
+                }
+            }
+
+            /*
+            either user did not input direction
+            or user's desired input is invalid.
+            We check if we can continue on current direction
+             */
+            NextMotionInfo info2 = motionInArcade.isValidMotion(currDirection);
+            if (!info2.isValid()) {
+                System.out.println("Curr direction invalid");
+                //Now we must remain at current position
+                setCenter(info2.getPos().first(), info2.getPos().second());
+                return;
+            }
+        }
+
+        System.out.println("No disturb");
+        //We do not need to disturb current motion
+        setCenter(currDirectionNextX, currDirectionNextY);
     }
 
     //Constructor
-    public Pacman(Context context, int sx, int sy, Pair<Integer, Integer> optimalSize) {
+    public Pacman(Context context, int sx, int sy, Pair<Integer, Integer> optimalSize, Arcade arcade) {
+        setCenter(arcade.getPacmanX_pix(), arcade.getPacmanY_pix());
         this.context = context;
         mScreenX = sx;
         mScreenY = sy;
@@ -357,6 +444,8 @@ public class Pacman implements GameObject{
         // Configure the speed of the Pacman
         // This code means the Pacman can cover the width of the screen in 8 second
         speed = mScreenX/8;
+
+        motionInArcade = new MotionInArcade(arcade);
     }
 }
 

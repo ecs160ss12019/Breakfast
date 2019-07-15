@@ -26,7 +26,9 @@ public class PacmanActivity extends Activity {
         Point size = new Point();
         display.getSize(size);
 
-        mPacmanGame = new PacmanGame(this, size.x, size.y);
+        //FIXME
+        //mPacmanGame = new PacmanGame(this, size.x, size.y);
+        mPacmanGame = new PacmanGame(this, 2028, 1080);
         setContentView(mPacmanGame);
     }
 

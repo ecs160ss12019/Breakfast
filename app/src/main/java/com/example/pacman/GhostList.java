@@ -21,7 +21,7 @@ public class GhostList {
         ghosts = new ArrayList<>();
         for (int i=0; i<GHOSTS_NUM; i++) {
             Ghost ghost = new Ghost(context, sx, sy, arcades.getOptimalPacmanSize(), i);
-            ghost.set(arcades.getArcadeContainingPacman().getGhostX_pix(),
+            ghost.setCenter(arcades.getArcadeContainingPacman().getGhostX_pix(),
                     arcades.getArcadeContainingPacman().getGhostY_pix());
             ghosts.add(ghost);
         }

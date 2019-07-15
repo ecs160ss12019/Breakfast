@@ -12,10 +12,10 @@ import java.util.Arrays;
 public class NavigationButtons {
     //button imgs
     /*
-    0: UP
-    1: DOWN
-    2: LEFT
-    3: RIGHT
+    final int LEFT = 0;
+    final int RIGHT = 1;
+    final int UP = 2;
+    final int DOWN = 3;
      */
     private ArrayList<Bitmap> buttons;
     private ArrayList<Bitmap> pressedButtons;
@@ -30,10 +30,10 @@ public class NavigationButtons {
 
     private boolean[] buttonPressed;
 
-    final int UP = 0;
-    final int DOWN = 1;
-    final int LEFT = 2;
-    final int RIGHT = 3;
+    final int LEFT = 0;
+    final int RIGHT = 1;
+    final int UP = 2;
+    final int DOWN = 3;
 
     private int buttonWidth;
     private int buttonHeight;
@@ -131,13 +131,6 @@ public class NavigationButtons {
         double centerOfButtonsY = screenHeight / 2;
 
         buttonsXY = new ArrayList<>();
-        //UP
-        this.buttonsXY.add(new Pair<Double, Double>(centerOfButtonsX,
-                centerOfButtonsY - (gap + 0.5) * buttonHeight));
-
-        //DOWN
-        this.buttonsXY.add(new Pair<Double, Double>(centerOfButtonsX,
-                centerOfButtonsY + (gap + 0.5) * buttonHeight));
 
         //LEFT
         this.buttonsXY.add(new Pair<Double, Double>(centerOfButtonsX - (gap + 0.5) * buttonWidth,
@@ -146,6 +139,14 @@ public class NavigationButtons {
         //RIGHT
         this.buttonsXY.add(new Pair<Double, Double>(centerOfButtonsX + (gap + 0.5) * buttonWidth,
                 centerOfButtonsY));
+
+        //UP
+        this.buttonsXY.add(new Pair<Double, Double>(centerOfButtonsX,
+                centerOfButtonsY - (gap + 0.5) * buttonHeight));
+
+        //DOWN
+        this.buttonsXY.add(new Pair<Double, Double>(centerOfButtonsX,
+                centerOfButtonsY + (gap + 0.5) * buttonHeight));
 
         //None of the buttons are pressed now
         this.buttonPressed = new boolean[]{false, false, false, false};
@@ -171,18 +172,6 @@ public class NavigationButtons {
         ArrayList<Double> rangeLeft = new ArrayList<>();
         ArrayList<Double> rangeRight = new ArrayList<>();
 
-        //UP
-        rangeUp.add(centerOfButtonsX + half * buttonWidth);
-        rangeUp.add(centerOfButtonsX - half * buttonWidth);
-        rangeUp.add(centerOfButtonsY - gap * buttonHeight);
-        rangeUp.add(centerOfButtonsY - farest * buttonHeight);
-
-        //DOWN
-        rangeDown.add(centerOfButtonsX + half * buttonWidth);
-        rangeDown.add(centerOfButtonsX - half * buttonWidth);
-        rangeDown.add(centerOfButtonsY + farest * buttonHeight);
-        rangeDown.add(centerOfButtonsY + gap * buttonHeight);
-
         //LEFT
         rangeLeft.add(centerOfButtonsX - gap * buttonWidth);
         rangeLeft.add(centerOfButtonsX - farest * buttonWidth);
@@ -195,9 +184,21 @@ public class NavigationButtons {
         rangeRight.add(centerOfButtonsY + half * buttonHeight);
         rangeRight.add(centerOfButtonsY - half * buttonHeight);
 
-        buttonRange.add(rangeUp);
-        buttonRange.add(rangeDown);
+        //UP
+        rangeUp.add(centerOfButtonsX + half * buttonWidth);
+        rangeUp.add(centerOfButtonsX - half * buttonWidth);
+        rangeUp.add(centerOfButtonsY - gap * buttonHeight);
+        rangeUp.add(centerOfButtonsY - farest * buttonHeight);
+
+        //DOWN
+        rangeDown.add(centerOfButtonsX + half * buttonWidth);
+        rangeDown.add(centerOfButtonsX - half * buttonWidth);
+        rangeDown.add(centerOfButtonsY + farest * buttonHeight);
+        rangeDown.add(centerOfButtonsY + gap * buttonHeight);
+
         buttonRange.add(rangeLeft);
         buttonRange.add(rangeRight);
+        buttonRange.add(rangeUp);
+        buttonRange.add(rangeDown);
     }
 }

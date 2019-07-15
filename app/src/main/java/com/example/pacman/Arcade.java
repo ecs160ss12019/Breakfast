@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.util.Pair;
 
 import java.util.ArrayList;
 
@@ -45,7 +46,7 @@ list should look like.
                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]	]
     }
  */
-public class Arcade implements GameObject{
+public class Arcade{
     private Context context;
 
     //the matrix of building blocks
@@ -83,8 +84,8 @@ public class Arcade implements GameObject{
     at the middle of the screen. We keep the coordinate
     , in pixels, of the the top left hand corner.
      */
-    private int xReference;
-    private int yReference;
+    public int xReference;
+    public int yReference;
 
     //where the pacman should start from
     private int pacmanX;
@@ -113,14 +114,24 @@ public class Arcade implements GameObject{
     public int getGhostY_pix() { return ghostY_pix; }
 
     //getBlockSize
-
-
     public int getBlockWidth() {
         return blockWidth;
     }
 
     public int getBlockHeight() {
         return blockHeight;
+    }
+
+    //get a block
+    public ArcadeBlock getBlock(TwoTuple pos) {
+        return blocks.get(pos.first()).get(pos.second());
+    }
+
+    //getPixel Pos
+    public TwoTuple mapScreen(TwoTuple pos) {
+        int x = xReference + pos.second() * blockWidth;
+        int y = yReference + pos.first() * blockHeight;
+        return new TwoTuple(x, y);
     }
 
     /*
@@ -173,7 +184,85 @@ public class Arcade implements GameObject{
         return obstacles;
     }
 
-    @Override
+    public TwoTuple mapBlock(int currX, int currY, int currDirection) {
+        //block bonds of 1st block
+        int left = xReference - blockWidth / 2;
+        int right = xReference + blockWidth / 2;
+        int up = yReference - blockHeight / 2;
+        int down = yReference + blockHeight / 2;
+
+        for (int i = 0; i < numRow; i++) {
+            for (int j = 0; j < numCol; j++) {
+                // This is a naive approach that wastes res
+                /*
+                int blockCenterX = blockWidth * j + xReference;
+                int blockCenterY = blockHeight * i + yReference;
+
+                left = blockCenterX - blockWidth / 2;
+                right = blockCenterX + blockWidth / 2;
+                up = blockCenterY - blockHeight / 2;
+                down = blockCenterY + blockHeight / 2;
+                */
+                //if in a block, return block num
+                if (currX > left && currX < right && currY > up && currY < down) {
+                    return new TwoTuple(i, j);
+                }
+
+                //if on boundary
+                /*
+                On x boundary, this only happens when object
+                is travelling left or right.
+
+                We only need to check left side
+                 */
+                if (currX == left && currY > up && currY < down) {
+                    switch (currDirection) {
+                        case 0:
+                            //heading left
+                            return new TwoTuple(i - 1, j);
+                        case 1:
+                            //heading right
+                            return new TwoTuple(i, j);
+                    }
+                }
+
+                /*
+                On y boundary, this only happens when object
+                is travelling up or down.
+
+                We only need to check upper side
+                 */
+                if (currY == up && currX > left && currX < right) {
+                    switch (currDirection) {
+                        case 2:
+                            //heading up
+                            return new TwoTuple(i, j - 1);
+                        case 3:
+                            //heading down
+                            return new TwoTuple(i, j);
+                    }
+                }
+
+                //update left, right bonds
+                left = right;
+                right += blockWidth;
+            }
+            //restore left, right
+            left -= blockWidth * numCol;
+            right -= blockWidth * numCol;
+
+            //update upper, lower bonds
+            up = down;
+            down += blockHeight;
+        }
+
+        System.out.println("Error, no block matches");
+        System.out.println("Current game object position: " + currX +
+                " " + currY);
+
+        return new TwoTuple(0,0);
+    }
+
     public void draw(Canvas canvas) {
         /*
         Drawing the arcade is essentially drawing
@@ -225,11 +314,6 @@ public class Arcade implements GameObject{
 
     }
 
-    @Override
-    public void updateStatus(long pfs) {
-
-    }
-
     /*
     Instead of deploying these variables from the constructor,
     we should do it here.
@@ -271,6 +355,14 @@ public class Arcade implements GameObject{
         double matrixHeightInPixel = numRow * blockHeight;
         xReference = (int) (screenWidth - matrixWidthInPixel) / 2 + blockWidth / 2;
         yReference = (int) (screenHeight - matrixHeightInPixel) / 2 + blockHeight / 2;
+
+        System.out.println("#########################");
+        System.out.println("Reference: " + xReference + " " + yReference);
+        System.out.println("matrix_pix: " + matrixWidthInPixel + " " + matrixHeightInPixel);
+        System.out.println("matrix_size: " + numRow + " " + numCol);
+        System.out.println("screen: " + screenWidth + " " + screenHeight);
+        System.out.println("block: " + blockWidth + " " + blockHeight);
+        System.out.println("#########################");
 
         /*
         initial pacman position referencing to top left corner.
