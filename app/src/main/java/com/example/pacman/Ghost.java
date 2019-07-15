@@ -2,7 +2,6 @@ package com.example.pacman;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.util.Pair;
 
@@ -41,15 +40,16 @@ public class Ghost implements GameObject {
     //context of the game, used access Resource ptr
     private Context context;
 
-    public Ghost(Context context, int sx, int sy, Arcade arcade, Pacman pacman, int direction) {
+    public Ghost(Context context, int sx, int sy, Arcade arcade, Pacman pacman, Bitmap ghostView, int direction) {
         this.context = context;
         mScreenX = sx;
         mScreenY = sy;
         this.currDirection = direction;
         this.nextDirection = -1;
 
-        Bitmap unsizedGhostView = BitmapFactory.decodeResource(context.getResources(), R.drawable.ghost);
-        ghostView = Bitmap.createScaledBitmap(unsizedGhostView, sy/15, sy/15, true);
+        // Bitmap unsizedGhostView = BitmapFactory.decodeResource(context.getResources(), R.drawable.ghost);
+        // ghostView = Bitmap.createScaledBitmap(unsizedGhostView, sy/15, sy/15, true);
+        this.ghostView = ghostView;
         bitmapWidth = ghostView.getWidth();
         bitmapHeight = ghostView.getHeight();
 
