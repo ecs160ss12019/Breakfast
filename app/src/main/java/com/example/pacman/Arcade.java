@@ -95,6 +95,10 @@ public class Arcade{
     private int ghostX;
     private int ghostY;
 
+    //where the cake should start from
+    private int cakeX;
+    private int cakeY;
+
     //pacman start position in pixel
     private int pacmanX_pix;
     private int pacmanY_pix;
@@ -102,6 +106,10 @@ public class Arcade{
     // ghost start position in pixel
     private int ghostX_pix;
     private int ghostY_pix;
+
+    // cake start position in pixel
+    private int cakeX_pix;
+    private int cakeY_pix;
 
     public int getPacmanX_pix() { return pacmanX_pix; }
 
@@ -112,6 +120,10 @@ public class Arcade{
     public int getGhostX_pix() { return ghostX_pix; }
 
     public int getGhostY_pix() { return ghostY_pix; }
+
+    public int getCakeX_pix() { return cakeX_pix; }
+
+    public int getCakeY_pix() { return cakeY_pix; }
 
     //getBlockSize
     public int getBlockWidth() {
@@ -377,6 +389,9 @@ public class Arcade{
         ghostX_pix = xReference + ghostX * blockWidth;
         ghostY_pix = yReference + ghostY * blockHeight;
 
+        cakeX_pix = xReference + cakeX * blockWidth;
+        cakeY_pix = yReference + cakeY * blockHeight;
+
         /*
         Now we get the img for each types of block.
         While now we are doing it in this class, same as we did
@@ -413,7 +428,7 @@ public class Arcade{
     public Arcade(Context context, ArrayList<ArrayList<Integer>> matrix,
                   int numRow, int numCol,
                   int imgFileRow, int imgFileCol,
-                  int pacmanX, int pacmanY, int ghostX, int ghostY,
+                  int pacmanX, int pacmanY, int ghostX, int ghostY, int cakeX, int cakeY,
                   boolean inUse) {
         this.context = context;
 
@@ -449,6 +464,8 @@ public class Arcade{
         this.pacmanY = pacmanY;
         this.ghostX = ghostX;
         this.ghostY = ghostY;
+        this.cakeX = cakeX;
+        this.cakeY = cakeY;
 
         this.inUse = inUse;
     }

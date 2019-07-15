@@ -117,6 +117,8 @@ public class ArcadeDecoder {
         int pacmanY = 0;
         int ghostX = 0;
         int ghostY = 0;
+        int cakeX = 0;
+        int cakeY = 0;
 
         /*
         start extraction
@@ -143,7 +145,12 @@ public class ArcadeDecoder {
                 ghostX = reader.nextInt();
             } else if(name.equals("ghostY")) {
                 ghostY = reader.nextInt();
-            } else if(name.equals("matrix")) {
+            } else if(name.equals("cakeX")){
+                cakeX = reader.nextInt();
+            } else if(name.equals("cakeY")){
+                cakeY = reader.nextInt();
+            }
+            else if(name.equals("matrix")) {
                 matrix = readMatrix(reader);
             } else {
                 reader.skipValue();
@@ -153,7 +160,7 @@ public class ArcadeDecoder {
         reader.endObject();
 
         return new Arcade(context, matrix, numRow, numCol,
-                imgFileRow, imgFileCol, pacmanX, pacmanY, ghostX, ghostY, inUse);
+                imgFileRow, imgFileCol, pacmanX, pacmanY, ghostX, ghostY, cakeX, cakeY, inUse);
     }
 
     /*
