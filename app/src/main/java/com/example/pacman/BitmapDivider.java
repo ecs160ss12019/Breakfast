@@ -30,7 +30,6 @@ public class BitmapDivider {
                 bitmaps.add(next);
             }
         }
-
         return bitmaps;
     }
 
