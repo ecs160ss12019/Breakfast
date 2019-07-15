@@ -244,6 +244,8 @@ class PacmanGame extends SurfaceView implements Runnable {
         //Init fps to -1 so that we will know if the canvas is not ready
         mFPS = -1;
 
+        gameMode = new GameMode(1, mScreenX);
+
 
         /*
         * implement front page view (something like welcome to breakfast's Pac-Man game)
