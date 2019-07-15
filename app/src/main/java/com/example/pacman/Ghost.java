@@ -40,7 +40,8 @@ public class Ghost implements GameObject {
     //context of the game, used access Resource ptr
     private Context context;
 
-    public Ghost(Context context, int sx, int sy, Arcade arcade, Pacman pacman, Bitmap ghostView, int direction) {
+    public Ghost(Context context, int sx, int sy, Arcade arcade,
+                 Pacman pacman, Bitmap ghostView, int direction, float speed) {
         this.context = context;
         mScreenX = sx;
         mScreenY = sy;
@@ -53,7 +54,7 @@ public class Ghost implements GameObject {
         bitmapWidth = ghostView.getWidth();
         bitmapHeight = ghostView.getHeight();
 
-        speed = mScreenX / 10;
+        this.speed = speed;
 
         this.x = arcade.getGhostX_pix();
         this.y = arcade.getGhostY_pix();

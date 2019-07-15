@@ -29,7 +29,7 @@ public class GhostList {
     private int numCol;
     private ArrayList<Bitmap> ghostsViewList;
 
-    public GhostList(Context context, int sx, int sy, Arcade arcade, Pacman pacman) {
+    public GhostList(Context context, int sx, int sy, Arcade arcade, Pacman pacman, float speed) {
         this.context = context;
         mScreenX = sx;
         mScreenY = sy;
@@ -52,7 +52,7 @@ public class GhostList {
 
         ghosts = new ArrayList<>();
         for (int i=0; i<GHOSTS_NUM; i++) {
-            Ghost ghost = new Ghost(context, sx, sy, arcade, pacman, ghostsViewList.get(i), i);
+            Ghost ghost = new Ghost(context, sx, sy, arcade, pacman, ghostsViewList.get(i), i, speed);
             ghosts.add(ghost);
         }
     }

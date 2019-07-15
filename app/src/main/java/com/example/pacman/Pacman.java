@@ -320,7 +320,7 @@ public class Pacman implements GameObject{
     }
 
     //Constructor
-    public Pacman(Context context, int sx, int sy, Pair<Integer, Integer> optimalSize) {
+    public Pacman(Context context, int sx, int sy, Pair<Integer, Integer> optimalSize, float speed) {
         this.context = context;
         mScreenX = sx;
         mScreenY = sy;
@@ -362,7 +362,7 @@ public class Pacman implements GameObject{
 
         // Configure the speed of the Pacman
         // This code means the Pacman can cover the width of the screen in 8 second
-        speed = mScreenX/8;
+        this.speed = speed;
     }
 }
 

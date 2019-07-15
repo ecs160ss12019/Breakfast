@@ -244,13 +244,15 @@ class PacmanGame extends SurfaceView implements Runnable {
         //Init fps to -1 so that we will know if the canvas is not ready
         mFPS = -1;
 
+        /*
+            implement front page view (something like welcome to breakfast's Pac-Man game)
+            where it has the option to select the GameMode.
+         */
+        welcomeView = new WelcomeView();
         gameMode = new GameMode(1, mScreenX);
 
 
-        /*
-        * implement front page view (something like welcome to breakfast's Pac-Man game)
-        * where it has the option to select the GameMode.
-        * */
+
 
 
         //initialize the Arcade list
@@ -258,11 +260,11 @@ class PacmanGame extends SurfaceView implements Runnable {
                 R.raw.sample2);
 
         // Initialize the pacman
-        pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize());
+        pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize(), gameMode.getPacmanSpeed());
         pacman.set(arcades.getArcadeContainingPacman().getPacmanX_pix(),
                 arcades.getArcadeContainingPacman().getPacmanY_pix());
         // Initialize the 4 ghosts in the arcade which contains Pacman.
-        ghosts = new GhostList(context, mScreenX, mScreenY, arcades.getArcadeContainingPacman(), pacman);
+        ghosts = new GhostList(context, mScreenX, mScreenY, arcades.getArcadeContainingPacman(), pacman, gameMode.getGhostsSpeed());
 
         collisionDetector = new CollisionDetector();
 

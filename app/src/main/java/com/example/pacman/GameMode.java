@@ -69,8 +69,7 @@ public class GameMode {
     public void hardMode(){
         // This code means the Pacman and ghosts can cover the width
         // of the screen in 9 seconds
-        pacmanSpeed = screenX/3;
-        ghostsSpeed = screenX/3;
-
+        pacmanSpeed = screenX/4;
+        ghostsSpeed = screenX/4;
     }
 }
