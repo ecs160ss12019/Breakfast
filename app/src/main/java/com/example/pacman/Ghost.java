@@ -15,20 +15,19 @@ public class Ghost implements GameObject {
     final int RIGHT = 1;
     final int UP = 2;
     final int DOWN = 3;
-    boolean alive;
 
-    //coordinate
-    int x;
-    int y;
-    private float speed;
+    // about screen
     private int mScreenX;
     private int mScreenY;
 
-    //context of the game, used access Resource ptr
-    private Context context;
+    // about Ghost
+    int x; //coordinate
+    int y;
+    private float speed;
+    private boolean weaken = false; // after Pacman eats power pellet, Ghost will become weaken (can be killed by Pacman)
+    private boolean dead = false; // after Pacman kills Ghost
 
     private Bitmap ghostView;
-
     private int bitmapWidth;
     private int bitmapHeight;
 
@@ -37,7 +36,12 @@ public class Ghost implements GameObject {
 
     private boolean collision;
 
-    public Ghost(Context context, int sx, int sy, Arcade arcade, int direction) {
+    private Pacman pacman; // used for chase and kill Pacman
+
+    //context of the game, used access Resource ptr
+    private Context context;
+
+    public Ghost(Context context, int sx, int sy, Arcade arcade, Pacman pacman, int direction) {
         this.context = context;
         mScreenX = sx;
         mScreenY = sy;
@@ -53,6 +57,7 @@ public class Ghost implements GameObject {
 
         this.x = arcade.getGhostX_pix();
         this.y = arcade.getGhostY_pix();
+        this.pacman = pacman;
     }
 
     //The starting point need to be initialized after construction
@@ -193,17 +198,20 @@ public class Ghost implements GameObject {
         updateStatus(fps, arcade);
     }
 
-    public void killPacman(Pacman pacman) {
-        CollisionDetector collisionDetector = new CollisionDetector();
-        Obstacle ghostReference = new Obstacle(this.x, this.y,
-                (int)(bitmapWidth*0.8), (int)(bitmapHeight*0.8));
-        ArrayList<Obstacle> obstacles = new ArrayList<>();
-        Obstacle pacmanReference = new Obstacle(pacman.getX(), pacman.getY(),
-                (int)(pacman.getBitmapWidth()*0.8), (int)(pacman.getBitmapHeight()*0.8));
-        obstacles.add(pacmanReference);
-        collision = collisionDetector.collisionExist(ghostReference, obstacles);
-        if (collision) {
-            pacman.set(0, 0);
+    public void killPacman() {
+        if(weaken == false) {
+            CollisionDetector collisionDetector = new CollisionDetector();
+            Obstacle ghostReference = new Obstacle(this.x, this.y,
+                    (int)(bitmapWidth*0.8), (int)(bitmapHeight*0.8));
+            ArrayList<Obstacle> obstacles = new ArrayList<>();
+            Obstacle pacmanReference = new Obstacle(pacman.getX(), pacman.getY(),
+                    (int)(pacman.getBitmapWidth()*0.8), (int)(pacman.getBitmapHeight()*0.8));
+            obstacles.add(pacmanReference);
+            collision = collisionDetector.collisionExist(ghostReference, obstacles);
+            if (collision) {
+                pacman.setDead(true);
+                pacman.set(0, 0);
+            }
         }
     }
 }

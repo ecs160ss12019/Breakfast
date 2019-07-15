@@ -70,6 +70,12 @@ public class Pacman implements GameObject{
     //did the pacman move?
     private boolean moved;
 
+    private boolean dead; // Pacman will be dead and return to start point after killed by Ghost
+
+    public void setDead(boolean dead) {
+        this.dead = dead;
+    }
+
     //The starting point need to be initialized after construction
     //if collision, use this to roll back
     public void set(int x, int y) {

@@ -146,6 +146,8 @@ class PacmanGame extends SurfaceView implements Runnable {
         //if(navigationButtons.initialInputFlag) {
         pacman.updateMovementStatus(direction, mFPS, arcades.getArcadeContainingPacman());
         ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+
+        ghosts.killPacman();
         //}
     }
 
@@ -242,7 +244,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         pacman.set(arcades.getArcadeContainingPacman().getPacmanX_pix(),
                 arcades.getArcadeContainingPacman().getPacmanY_pix());
         // Initialize the 4 ghosts in the arcade which contains Pacman.
-        ghosts = new GhostList(context, mScreenX, mScreenY, arcades.getArcadeContainingPacman());
+        ghosts = new GhostList(context, mScreenX, mScreenY, arcades.getArcadeContainingPacman(), pacman);
 
         collisionDetector = new CollisionDetector();
 
