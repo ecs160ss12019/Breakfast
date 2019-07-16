@@ -57,11 +57,11 @@ public class Arcade{
     private int numCol;
 
     /*
-    The img in the source folder is a collection of
-    block views. We need to cut them into a list of
-    3 views. We take the original collection file as
-    a matrix of imgFileRow * imgFileCol
-     */
+        The img in the source folder is a collection of
+        block views. We need to cut them into a list of
+        3 views. We take the original collection file as
+        a matrix of imgFileRow * imgFileCol
+         */
     private int imgFileRow;
     private int imgFileCol;
 

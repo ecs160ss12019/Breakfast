@@ -6,28 +6,42 @@ import android.graphics.Bitmap;
 import java.util.ArrayList;
 
 public class PelletList {
-    private ArrayList<PelletCell> pelletList;
-    private ArrayList<PowerPellet> pwrpelletList;
+    private ArrayList<ArrayList<PelletCell>> pelletList;
+
     private Bitmap pelletView;
     private Context context;
     private int bitmapWidth;
     private int bitmapHeight;
 
 
-    //context of the game, used access Resource ptr
-//    private Context context;
-
     public PelletList(Context context, ArcadeList arcades){
+        ArrayList<ArrayList<PelletCell>> pelletList = new ArrayList<>();
         this.context = context;
+        int numrows = 0; // retrieve from arcade
+        int numcols = 0; // retrieve from arcade
+        for(int i=0;i<numrows;i++){
+            ArrayList<PelletCell> newLine = new ArrayList<>();
+            for(int j=0;j<numcols;j++){
+                PelletCell cell = new PelletCell(i,j,type);
+                /*if(arcades.get(i).get(j).getType() == 16) {
+                    ArcadeBlock newBlock = new ArcadeBlock(i, j, matrix.get(i).get(j));
+
+                }*/
+//                PelletCell cell = new PelletCell(i,j,);
+            }
+        }
+
+
+
 
     }
 
-    /*public TwoTuple map2screen(int num){
+   /* public TwoTuple map2screen(int x, int y){
         TwoTuple cor = new TwoTuple(
-                num*bitmapHeight+Arcade.xReference,
-                num*bitmapWidth+Arcade.yReference);
-        return cor;
-*/
+                x*bitmapHeight+arcades.xReference,
+                num*bitmapWidth+arcades.yReference);
+        return cor;*/
+
     }
 
 

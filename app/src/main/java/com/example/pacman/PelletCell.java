@@ -5,29 +5,30 @@ import android.graphics.Canvas;
 
 import java.util.ArrayList;
 
-public class PelletCell implements Pellet{
+public class PelletCell{
 
-    private int type = 0;
-    private int mScreenX;
-    private int mScreenY;
-    private int point = 1;
+    private int type;
+    private int pelletX;
+    private int pelletY;
+//    private int point;
 
-    public PelletCell(){
-
+    public PelletCell(int pelletX, int pelletY, int type) {
+        this.type = type;
+        this.pelletX = pelletX;
+        this.pelletY = pelletY;
+//        this.point = point;
     }
-    public int getX(){
-        return mScreenX;
 
+    public int getX(){
+        return pelletX;
     }
     public int getY(){
-        return mScreenY;
-
+        return pelletY;
     }
     public int getType(){
         return this.type;
     }
-    public int getPoint(){
-        return point;
-    }
-
+//    public int getPoint(){
+//        return point;
+//    }
 }

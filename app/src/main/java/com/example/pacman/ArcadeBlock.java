@@ -21,17 +21,6 @@ public class ArcadeBlock {
     public int getType() {
         return type;
     }
-/*
-    @Override
-    public void draw(Canvas canvas) {
-
-    }
-
-    @Override
-    public void updateLocation(long fps) {
-
-    }
-*/
 
     public ArcadeBlock(int x, int y, int type) {
         this.x = x;
