@@ -263,7 +263,7 @@ public class Pacman implements GameObject{
         otherwise there will be an overflow
         in speed/fps.
          */
-        if (fps == -1) {
+        if (fps == -1 || fps == 0) {
             return;
         }
 

@@ -37,7 +37,7 @@ public class ArcadeDecoder {
     It is possible to get an IOException when
     constructing this class.
     Thus, use try catch block in the
-     */
+    */
     public ArrayList<Arcade> decode() throws IOException{
         /*
         It will make the code real hard to
