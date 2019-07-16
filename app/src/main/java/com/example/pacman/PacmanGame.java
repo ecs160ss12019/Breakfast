@@ -37,13 +37,6 @@ class PacmanGame extends SurfaceView implements Runnable {
     //our UserInput object
     private UserInput userInput;
 
-    // this class greets the player once the game is loaded
-    // and goes away when the player selects the GameMode
-    private WelcomeView welcomeView;
-
-    // mode option: easy(0), normal(1), hard(2)
-    // pass it to gameMode object;
-    private int inputGameMode;
     private GameMode gameMode;
 
     //Our pacman!
@@ -153,10 +146,10 @@ class PacmanGame extends SurfaceView implements Runnable {
          */
         //FIXME
         //if(navigationButtons.initialInputFlag) {
-        pacman.updateMovementStatus(direction, mFPS, arcades.getArcadeContainingPacman());
-        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
 
-        ghosts.killPacman();
+        //System.out.println("Pacman Location: " + pacman.getCenterX() + " " + pacman.getCenterY());
+        pacman.updateMovementStatus(direction, mFPS);
+        //ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
         //}
     }
 
@@ -201,7 +194,7 @@ class PacmanGame extends SurfaceView implements Runnable {
                 (255, 255, 255, 255));
         arcades.draw(canvas);
         pacman.draw(canvas);
-        ghosts.draw(canvas);
+        //ghosts.draw(canvas);
         navigationButtons.draw(canvas);
     }
 
@@ -211,7 +204,7 @@ class PacmanGame extends SurfaceView implements Runnable {
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_MOVE:
+            //case MotionEvent.ACTION_MOVE:
             case MotionEvent.ACTION_DOWN:
                 //update UserInput only, update other game objects somewhere else
                 userInput.updateUserInput(motionEvent.getX(), motionEvent.getY());
@@ -235,6 +228,8 @@ class PacmanGame extends SurfaceView implements Runnable {
         mScreenX = x;
         mScreenY = y;
 
+        System.out.println("Super: " + mScreenX + " " + mScreenY);
+
         // Initialize the objects
         // ready for drawing with
         // getHolder is a method of SurfaceView
@@ -244,23 +239,19 @@ class PacmanGame extends SurfaceView implements Runnable {
         //Init fps to -1 so that we will know if the canvas is not ready
         mFPS = -1;
 
-
-        /*
-        * implement front page view (something like welcome to breakfast's Pac-Man game)
-        * where it has the option to select the GameMode.
-        * */
-
+        gameMode = new GameMode(1, mScreenX);
+        /* implement front page view (something like welcome to breakfast's Pac-Man game) */
 
         //initialize the Arcade list
         arcades = new ArcadeList(context, mScreenX, mScreenY,
                 R.raw.sample2);
 
-        // Initialize the pacman
-        pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize());
-        pacman.set(arcades.getArcadeContainingPacman().getPacmanX_pix(),
-                arcades.getArcadeContainingPacman().getPacmanY_pix());
-        // Initialize the 4 ghosts in the arcade which contains Pacman.
-        ghosts = new GhostList(context, mScreenX, mScreenY, arcades.getArcadeContainingPacman(), pacman);
+        // Initialize the pacman and ghost
+        pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize(),
+                arcades.getArcadeContainingPacman(), gameMode.getPacmanSpeed());
+
+        ghosts = new GhostList(context, mScreenX, mScreenY, arcades, gameMode.getGhostsSpeed());
+
 
         collisionDetector = new CollisionDetector();
 

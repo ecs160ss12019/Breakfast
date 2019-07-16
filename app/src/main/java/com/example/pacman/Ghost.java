@@ -2,6 +2,7 @@ package com.example.pacman;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.util.Pair;
 
@@ -14,19 +15,22 @@ public class Ghost implements GameObject {
     final int RIGHT = 1;
     final int UP = 2;
     final int DOWN = 3;
+    boolean alive;
 
-    // about screen
+    //coordinate
+    private int x;
+    private int y;
+    private int currDirectionNextX;
+    private int currDirectionNextY;
+    private float speed;
     private int mScreenX;
     private int mScreenY;
 
-    // about Ghost
-    int x; //coordinate
-    int y;
-    private float speed;
-    private boolean weaken = false; // after Pacman eats power pellet, Ghost will become weaken (can be killed by Pacman)
-    private boolean dead = false; // after Pacman kills Ghost
+    //context of the game, used access Resource ptr
+    private Context context;
 
     private Bitmap ghostView;
+
     private int bitmapWidth;
     private int bitmapHeight;
 
@@ -35,36 +39,20 @@ public class Ghost implements GameObject {
 
     private boolean collision;
 
-    private Pacman pacman; // used for chase and kill Pacman
-
-    //context of the game, used access Resource ptr
-    private Context context;
-
-    public Ghost(Context context, int sx, int sy, Arcade arcade, Pacman pacman, Bitmap ghostView, int direction) {
+    public Ghost(Context context, int sx, int sy, Pair<Integer, Integer> optimalSize, int direction,
+                    float speed) {
         this.context = context;
         mScreenX = sx;
         mScreenY = sy;
         this.currDirection = direction;
         this.nextDirection = -1;
 
-        // Bitmap unsizedGhostView = BitmapFactory.decodeResource(context.getResources(), R.drawable.ghost);
-        // ghostView = Bitmap.createScaledBitmap(unsizedGhostView, sy/15, sy/15, true);
-        this.ghostView = ghostView;
+        Bitmap unsizedGhostView = BitmapFactory.decodeResource(context.getResources(), R.drawable.ghost);
+        ghostView = Bitmap.createScaledBitmap(unsizedGhostView, optimalSize.first, optimalSize.second, true);
         bitmapWidth = ghostView.getWidth();
         bitmapHeight = ghostView.getHeight();
 
-        speed = mScreenX / 10;
-
-        this.x = arcade.getGhostX_pix();
-        this.y = arcade.getGhostY_pix();
-        this.pacman = pacman;
-    }
-
-    //The starting point need to be initialized after construction
-    //if collision, use this to roll back
-    public void set(int x, int y) {
-        this.x = x;
-        this.y = y;
+        this.speed = speed;
     }
 
     @Override
@@ -117,6 +105,45 @@ public class Ghost implements GameObject {
 
     }
 
+    @Override
+    public int getCenterX() {
+        return this.x;
+    }
+
+    @Override
+    public int getCenterY() {
+        return this.y;
+    }
+
+    //The starting point need to be initialized after construction
+    //if collision, use this to roll back
+    @Override
+    public void setCenter(int centerX, int centerY) {
+        this.x = centerX;
+        this.y = centerY;
+    }
+
+    @Override
+    public int getCurrDirection() {
+        return currDirection;
+    }
+
+    @Override
+    public int getNextDirection() {
+        return nextDirection;
+    }
+
+    @Override
+    public ArrayList<Integer> getMotionInfo() {
+        ArrayList<Integer> motion = new ArrayList<>();
+        motion.add(this.getCenterX());
+        motion.add(this.getCenterY());
+        motion.add(currDirectionNextX);
+        motion.add(currDirectionNextY);
+        motion.add(currDirection);
+        return motion;
+    }
+
     public void updateStatus(long fps, Arcade arcade) {
         /*
         We cannot update is the fps is -1,
@@ -144,7 +171,7 @@ public class Ghost implements GameObject {
 
             collision = collisionDetector.collisionExist(ghostReference, obstacles);
             if (!collision) {
-                set(nextX, nextY);
+                setCenter(nextX, nextY);
                 currDirection = nextDirection;
                 return;
             }
@@ -167,7 +194,7 @@ public class Ghost implements GameObject {
 
         collision = collisionDetector.collisionExist(ghostReference, obstacles);
         if(!collision) {
-            set(nextX, nextY);
+            setCenter(nextX, nextY);
         }
     }
 
@@ -175,8 +202,7 @@ public class Ghost implements GameObject {
         int inputDirection = -1;
         if(collision) {
             Random randomGenerator = new Random();
-            inputDirection = randomGenerator.nextInt(4);
-
+            inputDirection = randomGenerator.nextInt(3);
         }
         switch (inputDirection) {
             case -1:
@@ -196,22 +222,5 @@ public class Ghost implements GameObject {
                 break;
         }
         updateStatus(fps, arcade);
-    }
-
-    public void killPacman() {
-        if(weaken == false) {
-            CollisionDetector collisionDetector = new CollisionDetector();
-            Obstacle ghostReference = new Obstacle(this.x, this.y,
-                    (int)(bitmapWidth*0.8), (int)(bitmapHeight*0.8));
-            ArrayList<Obstacle> obstacles = new ArrayList<>();
-            Obstacle pacmanReference = new Obstacle(pacman.getX(), pacman.getY(),
-                    (int)(pacman.getBitmapWidth()*0.8), (int)(pacman.getBitmapHeight()*0.8));
-            obstacles.add(pacmanReference);
-            collision = collisionDetector.collisionExist(ghostReference, obstacles);
-            if (collision) {
-                pacman.setDead(true);
-                pacman.set(0, 0);
-            }
-        }
     }
 }
