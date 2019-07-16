@@ -57,9 +57,7 @@ public class ArcadeList {
         double matrixHeightInPixel = numRow * blockHeight;
         return (int) (screenHeight - matrixHeightInPixel) / 2;
     }
-    public ArrayList<Arcade> getArcades() {
-        return arcades;
-    }
+    public ArrayList<Arcade> getArcades() { return arcades; }
 
     public Arcade getArcadeContainingPacman() {
         return arcades.get(containsPacman);
