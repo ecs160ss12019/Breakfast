@@ -14,13 +14,13 @@ public class GhostList {
     //context of the game, used access Resource ptr
     private Context context;
 
-    public GhostList(Context context, int sx, int sy, ArcadeList arcades) {
+    public GhostList(Context context, int sx, int sy, ArcadeList arcades, float speed) {
         this.context = context;
         mScreenX = sx;
         mScreenY = sy;
         ghosts = new ArrayList<>();
         for (int i=0; i<GHOSTS_NUM; i++) {
-            Ghost ghost = new Ghost(context, sx, sy, arcades.getOptimalPacmanSize(), i);
+            Ghost ghost = new Ghost(context, sx, sy, arcades.getOptimalPacmanSize(), i, speed);
             ghost.setCenter(arcades.getArcadeContainingPacman().getGhostX_pix(),
                     arcades.getArcadeContainingPacman().getGhostY_pix());
             ghosts.add(ghost);

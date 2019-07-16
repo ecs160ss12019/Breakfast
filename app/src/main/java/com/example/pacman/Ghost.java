@@ -39,7 +39,8 @@ public class Ghost implements GameObject {
 
     private boolean collision;
 
-    public Ghost(Context context, int sx, int sy, Pair<Integer, Integer> optimalSize, int direction) {
+    public Ghost(Context context, int sx, int sy, Pair<Integer, Integer> optimalSize, int direction,
+                    float speed) {
         this.context = context;
         mScreenX = sx;
         mScreenY = sy;
@@ -51,7 +52,7 @@ public class Ghost implements GameObject {
         bitmapWidth = ghostView.getWidth();
         bitmapHeight = ghostView.getHeight();
 
-        speed = mScreenX / 10;
+        this.speed = speed;
     }
 
     @Override
