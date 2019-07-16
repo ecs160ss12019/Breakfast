@@ -152,7 +152,7 @@ class PacmanGame extends SurfaceView implements Runnable {
 
         //System.out.println("Pacman Location: " + pacman.getCenterX() + " " + pacman.getCenterY());
         pacman.updateMovementStatus(direction, mFPS);
-        //ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
         //}
     }
 
@@ -197,7 +197,7 @@ class PacmanGame extends SurfaceView implements Runnable {
                 (255, 255, 255, 255));
         arcades.draw(canvas);
         pacman.draw(canvas);
-        //ghosts.draw(canvas);
+        ghosts.draw(canvas);
         navigationButtons.draw(canvas);
     }
 
@@ -253,7 +253,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize(),
                 arcades.getArcadeContainingPacman(), gameMode.getPacmanSpeed());
 
-        ghosts = new GhostList(context, mScreenX, mScreenY, arcades, gameMode.getGhostsSpeed());
+        ghosts = new GhostList(context, mScreenX, mScreenY, arcades.getArcadeContainingPacman(), gameMode.getGhostsSpeed());
 
 
         collisionDetector = new CollisionDetector();

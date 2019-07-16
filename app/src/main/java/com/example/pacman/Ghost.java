@@ -2,9 +2,7 @@ package com.example.pacman;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -36,10 +34,15 @@ public class Ghost implements GameObject {
 
     private int currDirection;
     private int nextDirection;
+    private boolean needToChangeDir =false;
 
     private boolean collision;
+    private Pacman pacman; // used for chase and kill Pacman
 
-    public Ghost(Context context, int sx, int sy, Pair<Integer, Integer> optimalSize, int direction,
+    private MotionInArcade motionInArcade;
+
+    public Ghost(Context context, int sx, int sy, Arcade arcade,
+                 Pacman pacman, Bitmap ghostView,  int direction,
                     float speed) {
         this.context = context;
         mScreenX = sx;
@@ -47,12 +50,17 @@ public class Ghost implements GameObject {
         this.currDirection = direction;
         this.nextDirection = -1;
 
-        Bitmap unsizedGhostView = BitmapFactory.decodeResource(context.getResources(), R.drawable.ghost);
-        ghostView = Bitmap.createScaledBitmap(unsizedGhostView, optimalSize.first, optimalSize.second, true);
+        this.ghostView = ghostView;
         bitmapWidth = ghostView.getWidth();
         bitmapHeight = ghostView.getHeight();
 
         this.speed = speed;
+
+        this.x = arcade.getGhostX_pix();
+        this.y = arcade.getGhostY_pix();
+        this.pacman = pacman;
+
+        motionInArcade = new MotionInArcade(arcade);
     }
 
     @Override
@@ -64,7 +72,7 @@ public class Ghost implements GameObject {
     We use this func to calculate the after move location in a direction,
     no matter the direction is valid or not.
      */
-    private Pair<Integer, Integer> move(int direction, long fps) {
+    private TwoTuple move(int direction, long fps) {
         int nextX = this.x;
         int nextY = this.y;
 
@@ -97,7 +105,7 @@ public class Ghost implements GameObject {
             nextY = mScreenY - bitmapHeight / 2;
         }
 
-        return new Pair<>(nextX, nextY);
+        return new TwoTuple(nextX, nextY);
     }
 
     @Override
@@ -144,7 +152,7 @@ public class Ghost implements GameObject {
         return motion;
     }
 
-    public void updateStatus(long fps, Arcade arcade) {
+    public void updateLocation(long fps, Arcade arcade) {
         /*
         We cannot update is the fps is -1,
         otherwise there will be a overflow
@@ -154,55 +162,106 @@ public class Ghost implements GameObject {
             return;
         }
 
-        CollisionDetector collisionDetector = new CollisionDetector();
+        // The first Movement solution was based on Collision
+        // Siqi updated movement solution based on arcade, so this part is comment out
 
-        int nextX = 0;
-        int nextY = 0;
+//        CollisionDetector collisionDetector = new CollisionDetector();
+//
+//        int nextX = 0;
+//        int nextY = 0;
+//
+//        if (nextDirection != -1) {
+//            Pair<Integer, Integer> next = move(nextDirection, fps);
+//            nextX = next.first;
+//            nextY = next.second;
+//
+//            //Check collision
+//            ArrayList<Obstacle> obstacles =arcade.getObstacleList(nextX, nextY);
+//            Obstacle ghostReference = new Obstacle(nextX, nextY,
+//                    (int)(bitmapWidth*0.8), (int)(bitmapHeight*0.8));
+//
+//            collision = collisionDetector.collisionExist(ghostReference, obstacles);
+//            if (!collision) {
+//                setCenter(nextX, nextY);
+//                currDirection = nextDirection;
+//                return;
+//            }
+//        }
+//
+//        /*
+//        Either there is no new direction,
+//        or that direction does not work.
+//        Try moving in current direction, if it do
+//        not work as well, stay in current position
+//         */
+//        Pair<Integer, Integer> next = move(currDirection, fps);
+//        nextX = next.first;
+//        nextY = next.second;
+//
+//        //Check collision
+//        ArrayList<Obstacle> obstacles = arcade.getObstacleList(nextX, nextY);
+//        Obstacle ghostReference = new Obstacle(nextX, nextY,
+//                (int)(bitmapWidth * 0.8), (int)(bitmapHeight * 0.8));
+//
+//        collision = collisionDetector.collisionExist(ghostReference, obstacles);
+//        if(!collision) {
+//            setCenter(nextX, nextY);
+//        }
 
-        if (nextDirection != -1) {
-            Pair<Integer, Integer> next = move(nextDirection, fps);
-            nextX = next.first;
-            nextY = next.second;
+        //next move in current direction
+        TwoTuple next = move(currDirection, fps);
+        currDirectionNextX = next.first();
+        currDirectionNextY = next.second();
 
-            //Check collision
-            ArrayList<Obstacle> obstacles =arcade.getObstacleList(nextX, nextY);
-            Obstacle ghostReference = new Obstacle(nextX, nextY,
-                    (int)(bitmapWidth*0.8), (int)(bitmapHeight*0.8));
+        System.out.println("Global update: " + x + " " + y + " " + currDirectionNextX + " " + currDirectionNextY);
 
-            collision = collisionDetector.collisionExist(ghostReference, obstacles);
-            if (!collision) {
-                setCenter(nextX, nextY);
-                currDirection = nextDirection;
+        //update motion info
+        motionInArcade.updateMotionInfo(getMotionInfo());
+
+        //check if in decision region
+        if(motionInArcade.inDecisionRegion()) {
+            System.out.println("in region");
+            //we need to take action
+            if (nextDirection != currDirection) {
+                System.out.println("diff dir");
+                //We need to check user's desired direction
+                NextMotionInfo info1 = motionInArcade.isValidMotion(nextDirection);
+                if (info1.isValid()) {
+                    System.out.println("Valid Turn");
+                    //we can change direction.
+                    setCenter(info1.getPos().first(), info1.getPos().second());
+                    currDirection = nextDirection;
+                    needToChangeDir = false;
+                    return;
+                }
+            }
+
+            /*
+            either user did not input direction
+            or user's desired input is invalid.
+            We check if we can continue on current direction
+             */
+            NextMotionInfo info2 = motionInArcade.isValidMotion(currDirection);
+            if (!info2.isValid()) {
+                System.out.println("Curr direction invalid");
+                //Now we must remain at current position
+                setCenter(info2.getPos().first(), info2.getPos().second());
+                needToChangeDir = true;
                 return;
             }
         }
 
-        /*
-        Either there is no new direction,
-        or that direction does not work.
-        Try moving in current direction, if it do
-        not work as well, stay in current position
-         */
-        Pair<Integer, Integer> next = move(currDirection, fps);
-        nextX = next.first;
-        nextY = next.second;
-
-        //Check collision
-        ArrayList<Obstacle> obstacles = arcade.getObstacleList(nextX, nextY);
-        Obstacle ghostReference = new Obstacle(nextX, nextY,
-                (int)(bitmapWidth * 0.8), (int)(bitmapHeight * 0.8));
-
-        collision = collisionDetector.collisionExist(ghostReference, obstacles);
-        if(!collision) {
-            setCenter(nextX, nextY);
-        }
+        System.out.println("No disturb");
+        //We do not need to disturb current motion
+        needToChangeDir = false;
+        setCenter(currDirectionNextX, currDirectionNextY);
     }
 
     public void updateMovementStatus(long fps, Arcade arcade) {
         int inputDirection = -1;
-        if(collision) {
+        if(needToChangeDir == true) {
             Random randomGenerator = new Random();
-            inputDirection = randomGenerator.nextInt(3);
+            inputDirection = randomGenerator.nextInt(4);
         }
         switch (inputDirection) {
             case -1:
@@ -221,6 +280,6 @@ public class Ghost implements GameObject {
                 nextDirection = RIGHT;
                 break;
         }
-        updateStatus(fps, arcade);
+        updateLocation(fps, arcade);
     }
 }
