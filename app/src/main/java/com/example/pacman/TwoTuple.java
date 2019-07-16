@@ -4,6 +4,7 @@ public class TwoTuple {
     private int x;
     private int y;
 
+    //integer case
     public int first() {
         return this.x;
     }
@@ -15,5 +16,10 @@ public class TwoTuple {
     public TwoTuple(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    //float case
+    public TwoTuple(float x, float y) {
+
     }
 }
