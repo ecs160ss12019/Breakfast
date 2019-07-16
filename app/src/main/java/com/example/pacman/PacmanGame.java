@@ -53,6 +53,9 @@ class PacmanGame extends SurfaceView implements Runnable {
     //Our CollisionDestructor
     CollisionDetector collisionDetector;
 
+    //consoleReader for debugging use
+    //ConsoleReader consoleReader;
+
 
     // When we start the thread with:
     // mGameThread.start();
@@ -260,5 +263,8 @@ class PacmanGame extends SurfaceView implements Runnable {
 
         //init Nav Buttons
         navigationButtons = new NavigationButtons(context, mScreenX, mScreenY);
+
+        //init with system env variable
+        //consoleReader = new ConsoleReader(System.console());
     }
 }
