@@ -27,6 +27,16 @@ public class ArcadeList {
     private int screenHeight;
 
     /*
+    Get the dimension of a specific
+    Arcade
+     */
+    public TwoTuple getDimensionOfArcade(int index) {
+        int numRow = arcades.get(index).getNumRow();
+        int numCol = arcades.get(index).getNumCol();
+        return new TwoTuple(numRow, numCol);
+    }
+
+    /*
     update reference points for Arcades.
     For now we will simply calculate the reference
     point for the one and only center arcade on the

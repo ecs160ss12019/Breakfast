@@ -111,6 +111,14 @@ public class Arcade{
     private int cakeX_pix;
     private int cakeY_pix;
 
+    public int getNumRow() {
+        return numRow;
+    }
+
+    public int getNumCol() {
+        return numCol;
+    }
+
     public int getPacmanX_pix() { return pacmanX_pix; }
 
     public int getPacmanY_pix() {
