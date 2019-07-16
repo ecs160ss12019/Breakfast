@@ -14,6 +14,7 @@ public class PacmanActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //System.out.println("OnCreate Called");
 
         //Set the game in full screen mode
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -27,8 +28,8 @@ public class PacmanActivity extends Activity {
         display.getSize(size);
 
         //FIXME
-        //mPacmanGame = new PacmanGame(this, size.x, size.y);
-        mPacmanGame = new PacmanGame(this, 2028, 1080);
+        mPacmanGame = new PacmanGame(this, size.x, size.y);
+        //mPacmanGame = new PacmanGame(this, 2028, 1080);
         setContentView(mPacmanGame);
     }
 

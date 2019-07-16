@@ -17,9 +17,4 @@ public class TwoTuple {
         this.x = x;
         this.y = y;
     }
-
-    //float case
-    public TwoTuple(float x, float y) {
-
-    }
 }
