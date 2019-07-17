@@ -17,6 +17,9 @@ public class PelletList {
     private int pwrBitmapWidth;
     private int pwrBitmapHeight;
 
+    /*
+        We want to
+     */
     public void draw(Canvas canvas){
         for (int index = 0; index < arcades.size();++index){
 //            System.out.println("2d array not zero ");
@@ -36,6 +39,7 @@ public class PelletList {
             }
         }
     }
+
 
     public PelletList(Context context, ArrayList<Arcade> arcades, TwoTuple screen) {
         this.arcades = arcades;
@@ -59,21 +63,7 @@ public class PelletList {
                 bitmapWidth , bitmapHeight, true));
 
 
-//
-        /*
-        for(int i=0;i<arcades.size();i++){
-            ArrayList<PelletCell> newLine = new ArrayList<>();
-            for(int j=0;j<arcades.getDimensionOfArcade(i).second();j++){
-                PelletCell cell = new PelletCell(i,j,type);
-                if(arcades.get(i).get(j).getType() == 16) {
-                    ArcadeBlock newBlock = new ArcadeBlock(i, j, matrix.get(i).get(j));
-                }
-//                PelletCell cell = new PelletCell(i,j,k);
-            }
-        }
-        */
-
-        Random random = new Random();
+        //Random random = new Random();
         //Construct a matrix given the arcades with 0 and 1(pellet can be added).
         for (int index = 0; index < arcades.size(); ++index) {
             int numRow =  arcades.get(index).getNumRow();
@@ -93,8 +83,7 @@ public class PelletList {
                 }
             }
 
-            System.out.println("Size of new line" + newLine.size());
-
+//            System.out.println("Size of new line" + newLine.size());
             pelletList.add(newLine);
         }
 
@@ -111,7 +100,6 @@ public class PelletList {
         int arcadeIndex = pell.getArcadeIndex();
         int x_pixel = arcades.get(arcadeIndex).xReference + pell.getY() * arcades.get(arcadeIndex).getBlockWidth();
         int y_pixel = arcades.get(arcadeIndex).yReference + pell.getX() * arcades.get(arcadeIndex).getBlockHeight();
-
         return new TwoTuple(x_pixel, y_pixel);
     }
 }
