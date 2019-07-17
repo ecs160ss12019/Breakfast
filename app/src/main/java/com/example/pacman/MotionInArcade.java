@@ -268,36 +268,36 @@ public class MotionInArcade {
 
         //start checking
         if (nextDirection == LEFT) {
-            System.out.println("Attempt to move Left");
+            //System.out.println("Attempt to move Left");
             nextPos = new TwoTuple(posInArcade_X, posInArcade_Y - 1);
             valid = arcade.getBlock(nextPos).getType() == 16;
         }
 
         if (nextDirection == RIGHT) {
-            System.out.println("Attempt to move Right");
+            //System.out.println("Attempt to move Right");
             nextPos = new TwoTuple(posInArcade_X, posInArcade_Y + 1);
             valid = arcade.getBlock(nextPos).getType() == 16;
         }
 
         if (nextDirection == UP) {
-            System.out.println("Attempt to move Up");
+            //System.out.println("Attempt to move Up");
             nextPos = new TwoTuple(posInArcade_X - 1, posInArcade_Y);
             valid = arcade.getBlock(nextPos).getType() == 16;
         }
 
         if (nextDirection == DOWN) {
-            System.out.println("Attempt to move Down");
+            //System.out.println("Attempt to move Down");
             nextPos = new TwoTuple(posInArcade_X + 1, posInArcade_Y);
             valid = arcade.getBlock(nextPos).getType() == 16;
         }
 
         if (valid) {
-            System.out.println("next motion valid");
+            //System.out.println("next motion valid");
             TwoTuple move = arcade.mapScreen(nextPos);
             return new NextMotionInfo(move, valid);
         }
 
-        System.out.println("next motion invalid");
+        //System.out.println("next motion invalid");
         TwoTuple noMove = arcade.mapScreen(currPos);
         return new NextMotionInfo(noMove, valid);
     }
@@ -325,13 +325,13 @@ public class MotionInArcade {
          */
         currPos = arcade.mapBlock(new TwoTuple(currX, currY), currDirection);
 
-        System.out.println("Matched Block: " + currPos.first() + " " + currPos.second());
+        //System.out.println("Matched Block: " + currPos.first() + " " + currPos.second());
 
         //center of block
         blockCenterX = arcade.xReference + currPos.second() * arcade.getBlockWidth();
         blockCenterY = arcade.yReference + currPos.first() * arcade.getBlockHeight();
 
-        System.out.println("Block center: " + blockCenterX + " " + blockCenterY);
+        //System.out.println("Block center: " + blockCenterX + " " + blockCenterY);
     }
 
     //just in case we change to another arcade.

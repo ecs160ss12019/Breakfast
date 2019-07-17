@@ -170,14 +170,14 @@ public class Cake implements GameObject {
 
         //check if in decision region
         if(motionInArcade.inDecisionRegion()) {
-            System.out.println("in region");
+            //System.out.println("in region");
             //we need to take action
             if (nextDirection != currDirection) {
-                System.out.println("diff dir");
+                //System.out.println("diff dir");
                 //We need to check user's desired direction
                 NextMotionInfo info1 = motionInArcade.isValidMotion(nextDirection);
                 if (info1.isValid()) {
-                    System.out.println("Valid Turn");
+                    //System.out.println("Valid Turn");
                     //we can change direction.
                     setCenter(info1.getPos().first(), info1.getPos().second());
                     currDirection = nextDirection;
@@ -193,7 +193,7 @@ public class Cake implements GameObject {
              */
             NextMotionInfo info2 = motionInArcade.isValidMotion(currDirection);
             if (!info2.isValid()) {
-                System.out.println("Curr direction invalid");
+                //System.out.println("Curr direction invalid");
                 //Now we must remain at current position
                 setCenter(info2.getPos().first(), info2.getPos().second());
                 needToChangeDir = true;
@@ -201,7 +201,7 @@ public class Cake implements GameObject {
             }
         }
 
-        System.out.println("No disturb");
+        //System.out.println("No disturb");
         //We do not need to disturb current motion
         needToChangeDir = false;
         setCenter(currDirectionNextX, currDirectionNextY);

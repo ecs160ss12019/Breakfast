@@ -358,21 +358,21 @@ public class Pacman implements GameObject{
         currDirectionNextX = next.first();
         currDirectionNextY = next.second();
 
-        System.out.println("Global update: " + x + " " + y + " " + currDirectionNextX + " " + currDirectionNextY);
+        //System.out.println("Global update: " + x + " " + y + " " + currDirectionNextX + " " + currDirectionNextY);
 
         //update motion info
         motionInArcade.updateMotionInfo(getMotionInfo());
 
         //check if in decision region
         if (motionInArcade.inDecisionRegion()) {
-            System.out.println("in region");
+            //System.out.println("in region");
             //we need to take action
             if (nextDirection != currDirection) {
-                System.out.println("diff dir");
+                //System.out.println("diff dir");
                 //We need to check user's desired direction
                 NextMotionInfo info1 = motionInArcade.isValidMotion(nextDirection);
                 if (info1.isValid()) {
-                    System.out.println("Valid Turn");
+                    //System.out.println("Valid Turn");
                     //we can change direction.
                     setCenter(info1.getPos().first(), info1.getPos().second());
                     currDirection = nextDirection;
@@ -387,7 +387,7 @@ public class Pacman implements GameObject{
              */
             NextMotionInfo info2 = motionInArcade.isValidMotion(currDirection);
             if (!info2.isValid()) {
-                System.out.println("Curr direction invalid");
+                //System.out.println("Curr direction invalid");
                 //Now we must remain at current position
                 setCenter(info2.getPos().first(), info2.getPos().second());
                 return;
@@ -404,12 +404,15 @@ public class Pacman implements GameObject{
                 new TwoTuple(currDirectionNextX, currDirectionNextY), nextDirection);
 
         if (checkNextMoveInBound.second){
-            System.out.println("No disturb");
+            //System.out.println("No disturb");
             //We do not need to disturb current motion
             setCenter(currDirectionNextX, currDirectionNextY);
+            return;
         }
-
-        setCenter(checkNextMoveInBound.first.first(), checkNextMoveInBound.first.second());
+        System.out.println("Bad Fps: " + fps + "  gap: " + speed / fps +
+                "  prev: " + x + " " + y + "  next: " + currDirectionNextX + " " + currDirectionNextY);
+        //setCenter(checkNextMoveInBound.first.first(), checkNextMoveInBound.first.second());
+        setCenter(x, y);
     }
 
     //Constructor

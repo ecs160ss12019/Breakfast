@@ -79,7 +79,8 @@ class PacmanGame extends SurfaceView implements Runnable {
             while the game is not paused, update
              */
             // What time is it now at the start of the loop?
-            long frameStartTime = System.currentTimeMillis();
+            //long frameStartTime = System.currentTimeMillis();
+            long frameStartTime = System.nanoTime();
 
             if(!mPaused) {
                 /*
@@ -117,7 +118,9 @@ class PacmanGame extends SurfaceView implements Runnable {
 
             // How long did this frame/loop take?
             // Store the answer in timeThisFrame
-            long timeThisFrame = System.currentTimeMillis() - frameStartTime;
+            //long timeThisFrame = System.currentTimeMillis() - frameStartTime;
+            long timeThisFrame = (System.nanoTime() - frameStartTime) / 1000000;
+            System.out.println(timeThisFrame);
 
             // Make sure timeThisFrame is at least 1 millisecond
             // because accidentally dividing by zero crashes the game
@@ -239,8 +242,6 @@ class PacmanGame extends SurfaceView implements Runnable {
         // With the values passed in as parameters
         mScreenX = x;
         mScreenY = y;
-
-        System.out.println("Super: " + mScreenX + " " + mScreenY);
 
         // Initialize the objects
         // ready for drawing with

@@ -379,6 +379,7 @@ public class Arcade{
         xReference = (int) (screenWidth - matrixWidthInPixel) / 2 + blockWidth / 2;
         yReference = (int) (screenHeight - matrixHeightInPixel) / 2 + blockHeight / 2;
 
+        /*
         System.out.println("#########################");
         System.out.println("Reference: " + xReference + " " + yReference);
         System.out.println("matrix_pix: " + matrixWidthInPixel + " " + matrixHeightInPixel);
@@ -386,7 +387,7 @@ public class Arcade{
         System.out.println("screen: " + screenWidth + " " + screenHeight);
         System.out.println("block: " + blockWidth + " " + blockHeight);
         System.out.println("#########################");
-
+        */
         /*
         initial pacman position referencing to top left corner.
         A visual representation:
