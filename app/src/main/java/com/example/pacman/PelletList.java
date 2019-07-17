@@ -10,7 +10,6 @@ import java.util.Random;
 public class PelletList {
     private ArrayList<ArrayList<PelletCell>> pelletList;
     ArrayList<Arcade> arcades;
-
     private ArrayList<Bitmap> pelletViewList;
     private Context context;
     private int bitmapWidth;
@@ -20,17 +19,19 @@ public class PelletList {
 
     public void draw(Canvas canvas){
         for (int index = 0; index < arcades.size();++index){
-            System.out.println("2d array not zero ");
+//            System.out.println("2d array not zero ");
             for(int i = 0; i < pelletList.get(index).size(); ++i) {
-                System.out.println("1d array not zero");
+//                System.out.println("1d array not zero");
                 TwoTuple posOnScreen = map2screen(pelletList.get(index).get(i));
                 int type = pelletList.get(index).get(i).getType();
                 if (type == 1) {
                     canvas.drawBitmap(pelletViewList.get(type),
-                            posOnScreen.first() - (bitmapWidth / 2), posOnScreen.second() - (bitmapHeight / 2), null);
+                            posOnScreen.first() - (bitmapWidth / 2),
+                            posOnScreen.second() - (bitmapHeight / 2), null);
                 } else {
                     canvas.drawBitmap(pelletViewList.get(type),
-                            posOnScreen.first() - (pwrBitmapWidth / 2), posOnScreen.second() - (pwrBitmapHeight / 2), null);
+                            posOnScreen.first() - (pwrBitmapWidth / 2),
+                            posOnScreen.second() - (pwrBitmapHeight / 2), null);
                 }
             }
         }
@@ -50,7 +51,7 @@ public class PelletList {
         double pelletRatio = pelletView.getWidth()/pelletView.getHeight();
         bitmapHeight = screenHeight / 45;
         bitmapWidth = (int)(bitmapHeight * pelletRatio) ;
-        pwrBitmapHeight = screenHeight / 20;
+        pwrBitmapHeight = screenHeight / 22;
         pwrBitmapWidth = (int)(pwrBitmapHeight * pwrPelletRatio);
         pelletViewList.add(Bitmap.createScaledBitmap(pwrpelletView,
                 pwrBitmapWidth , pwrBitmapHeight, true));
@@ -66,9 +67,8 @@ public class PelletList {
                 PelletCell cell = new PelletCell(i,j,type);
                 if(arcades.get(i).get(j).getType() == 16) {
                     ArcadeBlock newBlock = new ArcadeBlock(i, j, matrix.get(i).get(j));
-
                 }
-//                PelletCell cell = new PelletCell(i,j,);
+//                PelletCell cell = new PelletCell(i,j,k);
             }
         }
         */
@@ -81,9 +81,12 @@ public class PelletList {
             ArrayList<PelletCell> newLine = new ArrayList<>();
             for (int i = 0; i < numRow; ++i) {
                 for (int j = 0; j < numCol; ++j) {
-                    int p = random.nextInt(3);
+//                  int pwrcount = 0;
+                    int p = 2;
+                    if(newLine.size() % 30 == 0){
+                        p=1;
+                    }
                     if (arcades.get(index).getBlock(new TwoTuple(i, j)).getType() == 16 && p != 0) {
-                        System.out.println("Added a pell");
                         PelletCell pell = new PelletCell(i, j, p - 1, index);
                         newLine.add(pell);
                     }

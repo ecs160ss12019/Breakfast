@@ -203,14 +203,13 @@ class PacmanGame extends SurfaceView implements Runnable {
         mCanvas.drawColor(Color.argb
                 (255, 255, 255, 255));
         arcades.draw(canvas);
+        pelletList.draw(canvas);
         pacman.draw(canvas);
         ghosts.draw(canvas);
         cake.draw(canvas);
         navigationButtons.draw(canvas);
-        pelletList.draw(canvas);
 
     }
-
     /*
     implement onTouchEvent to handle user input
      */
