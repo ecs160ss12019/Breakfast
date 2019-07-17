@@ -364,7 +364,7 @@ public class Pacman implements GameObject{
         motionInArcade.updateMotionInfo(getMotionInfo());
 
         //check if in decision region
-        if(motionInArcade.inDecisionRegion()) {
+        if (motionInArcade.inDecisionRegion()) {
             System.out.println("in region");
             //we need to take action
             if (nextDirection != currDirection) {
@@ -394,9 +394,22 @@ public class Pacman implements GameObject{
             }
         }
 
-        System.out.println("No disturb");
-        //We do not need to disturb current motion
-        setCenter(currDirectionNextX, currDirectionNextY);
+        /*
+        Now we can keep the original motion,
+        but we still need to know if the next move
+        is still on path.
+         */
+
+        Pair<TwoTuple, Boolean> checkNextMoveInBound = motionInArcade.mostDistantPathBlock(
+                new TwoTuple(currDirectionNextX, currDirectionNextY), nextDirection);
+
+        if (checkNextMoveInBound.second){
+            System.out.println("No disturb");
+            //We do not need to disturb current motion
+            setCenter(currDirectionNextX, currDirectionNextY);
+        }
+
+        setCenter(checkNextMoveInBound.first.first(), checkNextMoveInBound.first.second());
     }
 
     //Constructor

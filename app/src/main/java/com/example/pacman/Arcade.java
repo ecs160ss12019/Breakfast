@@ -154,57 +154,10 @@ public class Arcade{
         return new TwoTuple(x, y);
     }
 
-    /*
-        We take an coordinate, and we want to know what are the
-        obstacles surrounding it. The reason we cannot scan through
-        the whole arcade and return all obstacles is because doing so will
-        essentially take O(n^2) time to check collision in the update() method.
+    public TwoTuple mapBlock(TwoTuple pos, int currDirection) {
+        int currX = pos.first();
+        int currY = pos.second();
 
-        We need a faster algorithm to make sure there is no delay in the main thread.
-        To achieve this, we need to restrict the obstacle list to be as small as possible.
-
-        We know that an object cannot possibly collide into an obstacle if the
-        distance between there centers is longer than the sum of distances between
-        each object's center and its farest point on boundary.
-        d > sigma(L) = l1 + l2 = distance(center1, vertex1) + distance(center2, vertex2).
-
-        We use this property to filter out blocks that are too far to become obstacles.
-        Further, note that both GameObject and ArcadeBlock, at least for now,
-        are bounded by square, we can reduce the calculation to merely evaluating
-        abs(diff(center1, center2)).
-
-        Note that we want to restrict the origin object size to be the same as the
-        ArcadeBlock.
-
-        Note that this obstacle list can be empty. Thus, do handle
-        the empty case in the caller function.
-         */
-    public ArrayList<Obstacle> getObstacleList(int originX, int originY) {
-        ArrayList<Obstacle> obstacles = new ArrayList<>();
-        for (int i = 0; i < numRow; i++) {
-            for (int j = 0; j < numCol; j++) {
-                //if this block is a path, ignore it
-                if(blocks.get(i).get(j).getType() != 2) {
-                    //center of the block
-                    //Note that we use width * j and height * i, not vice-versa.
-                    int block_centerX_pix = xReference + blockWidth * j;
-                    int block_centerY_pix = yReference + blockHeight * i;
-
-                    //Diff center
-                    int diffX = Math.abs(originX - block_centerX_pix);
-                    int diffY = Math.abs(originY - block_centerY_pix);
-                    if (diffX < blockWidth && diffY < blockHeight) {
-                        //Add to obstacle list
-                        obstacles.add(new Obstacle(block_centerX_pix, block_centerY_pix, blockWidth, blockHeight));
-                    }
-                }
-            }
-        }
-
-        return obstacles;
-    }
-
-    public TwoTuple mapBlock(int currX, int currY, int currDirection) {
         //block bonds of 1st block
         int left = xReference - blockWidth / 2;
         int right = xReference + blockWidth / 2;
@@ -281,6 +234,56 @@ public class Arcade{
                 " " + currY);
 
         return new TwoTuple(0,0);
+    }
+
+    /*
+        We take an coordinate, and we want to know what are the
+        obstacles surrounding it. The reason we cannot scan through
+        the whole arcade and return all obstacles is because doing so will
+        essentially take O(n^2) time to check collision in the update() method.
+
+        We need a faster algorithm to make sure there is no delay in the main thread.
+        To achieve this, we need to restrict the obstacle list to be as small as possible.
+
+        We know that an object cannot possibly collide into an obstacle if the
+        distance between there centers is longer than the sum of distances between
+        each object's center and its farest point on boundary.
+        d > sigma(L) = l1 + l2 = distance(center1, vertex1) + distance(center2, vertex2).
+
+        We use this property to filter out blocks that are too far to become obstacles.
+        Further, note that both GameObject and ArcadeBlock, at least for now,
+        are bounded by square, we can reduce the calculation to merely evaluating
+        abs(diff(center1, center2)).
+
+        Note that we want to restrict the origin object size to be the same as the
+        ArcadeBlock.
+
+        Note that this obstacle list can be empty. Thus, do handle
+        the empty case in the caller function.
+         */
+    public ArrayList<Obstacle> getObstacleList(int originX, int originY) {
+        ArrayList<Obstacle> obstacles = new ArrayList<>();
+        for (int i = 0; i < numRow; i++) {
+            for (int j = 0; j < numCol; j++) {
+                //if this block is a path, ignore it
+                if(blocks.get(i).get(j).getType() != 2) {
+                    //center of the block
+                    //Note that we use width * j and height * i, not vice-versa.
+                    int block_centerX_pix = xReference + blockWidth * j;
+                    int block_centerY_pix = yReference + blockHeight * i;
+
+                    //Diff center
+                    int diffX = Math.abs(originX - block_centerX_pix);
+                    int diffY = Math.abs(originY - block_centerY_pix);
+                    if (diffX < blockWidth && diffY < blockHeight) {
+                        //Add to obstacle list
+                        obstacles.add(new Obstacle(block_centerX_pix, block_centerY_pix, blockWidth, blockHeight));
+                    }
+                }
+            }
+        }
+
+        return obstacles;
     }
 
     public void draw(Canvas canvas) {
