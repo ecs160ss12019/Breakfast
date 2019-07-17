@@ -44,6 +44,8 @@ class PacmanGame extends SurfaceView implements Runnable {
 
     private GhostList ghosts;
 
+    private Cake cake;
+
     //Our Arcade List
     private ArcadeList arcades;
 
@@ -147,12 +149,14 @@ class PacmanGame extends SurfaceView implements Runnable {
         we use this if condition
         if(navigationButtons.initialInputFlag)
          */
+
         //FIXME
         //if(navigationButtons.initialInputFlag) {
 
         //System.out.println("Pacman Location: " + pacman.getCenterX() + " " + pacman.getCenterY());
         pacman.updateMovementStatus(direction, mFPS);
         ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+        cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
         //}
     }
 
@@ -198,6 +202,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         arcades.draw(canvas);
         pacman.draw(canvas);
         ghosts.draw(canvas);
+        cake.draw(canvas);
         navigationButtons.draw(canvas);
     }
 
@@ -257,6 +262,7 @@ class PacmanGame extends SurfaceView implements Runnable {
 
         ghosts = new GhostList(context, mScreenX, mScreenY, arcades.getArcadeContainingPacman(), gameMode.getGhostsSpeed());
 
+        cake = new Cake(context, mScreenX, mScreenY, arcades.getArcadeContainingPacman(), gameMode.getGhostsSpeed());
 
         collisionDetector = new CollisionDetector();
 
