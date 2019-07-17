@@ -46,6 +46,9 @@ class PacmanGame extends SurfaceView implements Runnable {
 
     private Cake cake;
 
+    //Our Pellets
+    private PelletList pelletList;
+
     //Our Arcade List
     private ArcadeList arcades;
 
@@ -204,6 +207,8 @@ class PacmanGame extends SurfaceView implements Runnable {
         ghosts.draw(canvas);
         cake.draw(canvas);
         navigationButtons.draw(canvas);
+        pelletList.draw(canvas);
+
     }
 
     /*
@@ -254,7 +259,9 @@ class PacmanGame extends SurfaceView implements Runnable {
         arcades = new ArcadeList(context, mScreenX, mScreenY,
                 R.raw.sample2);
 
-        PelletList pelletList = new PelletList(context,arcades.getArcades());
+        pelletList = new PelletList(context,arcades.getArcades(), new TwoTuple(mScreenX, mScreenY));
+
+
 
         // Initialize the pacman and ghost
         pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize(),

@@ -9,7 +9,7 @@ import java.util.ArrayList;
     Type 1 - avaliable slots for pellets
     Type 2 - avaliable slots for power pellet
  */
-public class PelletCell{
+public class PelletCell implements GameObject{
     private int arcadeIndex;
     private int type;
     private int pelletX;
@@ -36,5 +36,30 @@ public class PelletCell{
     public int getArcadeIndex() {
         return arcadeIndex;
     }
+    //call override to draw method and draw itself on the screen
+    public void draw(Canvas canvas){
+//        canvas.drawBitmap(pacmanViewList.get(currDirection),
+//                x - (bitmapWidth/2), y - (bitmapHeight/2), null);
+    }
+
+    //update coordinate and status
+    //Eaten pellet
+    public void updateStatus(long fps){}
+
+    //get center position
+    public int getCenterX(){return this.getX();}
+
+    public int getCenterY(){return this.getY();}
+
+    //set center position
+    public void setCenter(int centerX, int centerY){}
+    //getCurrDirection
+    public int getCurrDirection(){return 0;}
+
+    //getNextDirection
+    public int getNextDirection(){return 0;}
+
+    public ArrayList<Integer> getMotionInfo(){return new ArrayList<Integer>();}
+
 
 }
