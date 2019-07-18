@@ -28,7 +28,8 @@ public class GhostList {
     private int numCol;
     private ArrayList<Bitmap> ghostsViewList;
 
-    public GhostList(Context context, int sx, int sy, Arcade arcade, float speed, String name) {
+    //public GhostList(Context context, int sx, int sy, Arcade arcade, float speed, String name)
+    public GhostList(Context context, int sx, int sy, Arcade arcade, float speed) {
         this.context = context;
         mScreenX = sx;
         mScreenY = sy;
