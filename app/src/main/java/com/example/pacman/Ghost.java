@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.lang.*;
 
 public class Ghost implements GameObject {
 
@@ -41,6 +42,12 @@ public class Ghost implements GameObject {
 
     private MotionInArcade motionInArcade;
 
+    private String GhostName;
+
+    // ** for ghostbehavior;
+    //public Ghost(Context context, int sx, int sy, Arcade arcade,
+    //             Pacman pacman, Bitmap ghostView,  int direction,
+    //             float speed, String name)
     public Ghost(Context context, int sx, int sy, Arcade arcade,
                  Pacman pacman, Bitmap ghostView,  int direction,
                     float speed) {
@@ -59,6 +66,9 @@ public class Ghost implements GameObject {
         this.x = arcade.getGhostX_pix();
         this.y = arcade.getGhostY_pix();
         this.pacman = pacman;
+
+     // ** for ghostbehavior;
+     //   this.GhostName = name;
 
         motionInArcade = new MotionInArcade(arcade);
     }
@@ -282,4 +292,157 @@ public class Ghost implements GameObject {
         }
         updateLocation(fps, arcade);
     }
+
+    //**For ghost behavior;
+
+/*
+    //This is the GhostBehavior Function, each of the ghost has a unique behavior;
+    //The red Ghost will keep tracing the pacman;
+    //The pink ghost will get in front of pacman to cut the him off;
+    //The blue ghost will patrol a area
+    //the yellow ghost will just move randomly;
+    public void GhostBehavior(String GhostName,long fps, Arcade arcade){
+        switch (GhostName){
+            case "Red":
+                int HorizontalGap = pacman.getCenterX()-this.x;
+                int VerticleGap = pacman.getCenterY()-this.y;
+                if(Math.abs(VerticleGap) > Math.abs(HorizontalGap)){
+                    if(HorizontalGap < 0 ){
+                        nextDirection = LEFT;
+                        if(needToChangeDir){
+                            if(VerticleGap < 0){
+                                nextDirection = DOWN;
+                            }
+                            else{
+                                nextDirection = UP;
+                            }
+                        }
+                    }
+                    else{
+                        nextDirection = RIGHT;
+                        if(needToChangeDir){
+                            if(VerticleGap < 0){
+                                nextDirection = DOWN;
+                            }
+                            else{
+                                nextDirection = UP;
+                            }
+                        }
+                    }
+                }
+                else{
+                    if(VerticleGap < 0){
+                        nextDirection = DOWN;
+                        if(needToChangeDir){
+                            if(HorizontalGap < 0){
+                                nextDirection = LEFT;
+                            }
+                            else{
+                                nextDirection = RIGHT;
+                            }
+                        }
+                    }
+                    else{
+                        nextDirection = UP;
+                        if(needToChangeDir){
+                            if(HorizontalGap < 0){
+                                nextDirection = LEFT;
+                            }
+                            else{
+                                nextDirection = RIGHT;
+                            }
+                        }
+                    }
+                }
+                break;
+            case "Pink":
+                int HorizontalGap1 = pacman.getNextposX()-this.x;
+                int VerticleGap1 = pacman.getNextposY()-this.y;
+                if(Math.abs(VerticleGap1) > Math.abs(HorizontalGap1)){
+                    if(HorizontalGap1 < 0 ){
+                        nextDirection = LEFT;
+                        if(needToChangeDir){
+                            if(VerticleGap1 < 0){
+                                nextDirection = DOWN;
+                            }
+                            else{
+                                nextDirection = UP;
+                            }
+                        }
+                    }
+                    else{
+                        nextDirection = RIGHT;
+                        if(needToChangeDir){
+                            if(VerticleGap1 < 0){
+                                nextDirection = DOWN;
+                            }
+                            else{
+                                nextDirection = UP;
+                            }
+                        }
+                    }
+                }
+                else{
+                    if(VerticleGap1 < 0){
+                        nextDirection = DOWN;
+                        if(needToChangeDir){
+                            if(HorizontalGap1 < 0){
+                                nextDirection = LEFT;
+                            }
+                            else{
+                                nextDirection = RIGHT;
+                            }
+                        }
+                    }
+                    else{
+                        nextDirection = UP;
+                        if(needToChangeDir){
+                            if(HorizontalGap1 < 0){
+                                nextDirection = LEFT;
+                            }
+                            else{
+                                nextDirection = RIGHT;
+                            }
+                        }
+                    }
+                }
+                break;
+            case "Blue":
+
+                break;
+            case "Yellow":
+                int inputDirection = -1;
+                if(needToChangeDir) {
+                    Random randomGenerator = new Random();
+                    inputDirection = randomGenerator.nextInt(4);
+                }
+                switch (inputDirection) {
+                    case -1:
+                        //nextDirection = -1;
+                        break;
+                    case 0:
+                        nextDirection = UP;
+                        break;
+                    case 1:
+                        nextDirection = DOWN;
+                        break;
+                    case 2:
+                        nextDirection = LEFT;
+                        break;
+                    case 3:
+                        nextDirection = RIGHT;
+                        break;
+                }
+        }
+        updateLocation(fps, arcade);
+    }
+    */
+
+
+    // for ghostbehavior
+    /*
+    public String getGhostName(){
+        return this.GhostName;
+    }
+    */
 }

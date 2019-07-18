@@ -464,5 +464,13 @@ public class Pacman implements GameObject{
 
         motionInArcade = new MotionInArcade(arcade);
     }
+
+    public int getNextposX(){
+        return this.currDirectionNextX;
+    }
+
+    public int getNextposY(){
+        return this.currDirectionNextY;
+    }
 }
 
