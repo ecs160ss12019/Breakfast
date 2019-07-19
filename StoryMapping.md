@@ -45,7 +45,7 @@ The 4 ghosts can move automatically.
 Possibly accomplish: the user stories 1, 2, 5, 6.
 
 ### Sprint 2: 
-Possibly accomplish: the user stories 1, 2, 5, 6, 3, 8, 9 
+Possibly accomplish: the user stories 1, 2, 5, 6, 3, 8, 9.<br/>
 Additional features: add a welcome page with 3 game mode options that changes the speed of game characters.
 
 ### Sprint 3: 
