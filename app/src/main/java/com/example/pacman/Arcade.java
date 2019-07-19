@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.util.Pair;
 
 import java.util.ArrayList;
 
@@ -88,42 +87,28 @@ public class Arcade{
     public int yReference;
 
     //where the pacman should start from
-    private int pacmanX;
-    private int pacmanY;
+    private TwoTuple pacmanPosition;
 
     //where the ghost should start from
-    private int ghostX;
-    private int ghostY;
+    private TwoTuple ghostPosition;
 
     //where the cake should start from
-    private int cakeX;
-    private int cakeY;
+    private TwoTuple cakePosition;
 
     //pacman start position in pixel
-    private int pacmanX_pix;
-    private int pacmanY_pix;
+    private TwoTuple pacmanPosition_pix;
 
     // ghost start position in pixel
-    private int ghostX_pix;
-    private int ghostY_pix;
+    private TwoTuple ghostPosition_pix;
 
     // cake start position in pixel
-    private int cakeX_pix;
-    private int cakeY_pix;
+    private TwoTuple cakePosition_pix;
 
-    public int getPacmanX_pix() { return pacmanX_pix; }
+    public TwoTuple getPacmanPosition_pix() { return pacmanPosition_pix; }
 
-    public int getPacmanY_pix() {
-        return pacmanY_pix;
-    }
+    public TwoTuple getGhostPosition_pix() { return ghostPosition_pix; }
 
-    public int getGhostX_pix() { return ghostX_pix; }
-
-    public int getGhostY_pix() { return ghostY_pix; }
-
-    public int getCakeX_pix() { return cakeX_pix; }
-
-    public int getCakeY_pix() { return cakeY_pix; }
+    public TwoTuple getCakePosition_pix() { return cakePosition_pix; }
 
     //getBlockSize
     public int getBlockWidth() {
@@ -383,14 +368,10 @@ public class Arcade{
         #----[--|P-]----#
         #----[--|--]----#
          */
-        pacmanX_pix = xReference + pacmanX * blockWidth;
-        pacmanY_pix = yReference + pacmanY * blockHeight;
 
-        ghostX_pix = xReference + ghostX * blockWidth;
-        ghostY_pix = yReference + ghostY * blockHeight;
-
-        cakeX_pix = xReference + cakeX * blockWidth;
-        cakeY_pix = yReference + cakeY * blockHeight;
+        pacmanPosition_pix = new TwoTuple(xReference + pacmanPosition.x * blockWidth, yReference + pacmanPosition.y * blockHeight);
+        ghostPosition_pix = new TwoTuple(xReference + ghostPosition.x * blockWidth, yReference + ghostPosition.y * blockHeight);
+        cakePosition_pix = new TwoTuple(xReference + cakePosition.x * blockWidth, yReference + cakePosition.y * blockHeight);
 
         /*
         Now we get the img for each types of block.
@@ -428,7 +409,7 @@ public class Arcade{
     public Arcade(Context context, ArrayList<ArrayList<Integer>> matrix,
                   int numRow, int numCol,
                   int imgFileRow, int imgFileCol,
-                  int pacmanX, int pacmanY, int ghostX, int ghostY, int cakeX, int cakeY,
+                  TwoTuple pacmanPosition, TwoTuple ghostPosition, TwoTuple cakePosition,
                   boolean inUse) {
         this.context = context;
 
@@ -460,12 +441,9 @@ public class Arcade{
         this.imgFileRow = imgFileRow;
         this.imgFileCol = imgFileCol;
 
-        this.pacmanX = pacmanX;
-        this.pacmanY = pacmanY;
-        this.ghostX = ghostX;
-        this.ghostY = ghostY;
-        this.cakeX = cakeX;
-        this.cakeY = cakeY;
+        this.pacmanPosition = pacmanPosition;
+        this.ghostPosition = ghostPosition;
+        this.cakePosition = cakePosition;
 
         this.inUse = inUse;
     }

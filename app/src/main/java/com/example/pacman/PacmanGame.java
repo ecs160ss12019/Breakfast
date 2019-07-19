@@ -19,13 +19,13 @@ class PacmanGame extends SurfaceView implements Runnable {
     private Paint mPaint;
 
     // How many frames per second did we get?
-    private long mFPS;
+    private long
+            mFPS;
     // The number of milliseconds in a second
     private final int MILLIS_IN_SECOND = 1000;
 
     // Holds the resolution of the screen
-    private int mScreenX;
-    private int mScreenY;
+    private TwoTuple mScreen;
 
     // Here is the Thread and two control variables
     private Thread mGameThread = null;
@@ -228,10 +228,9 @@ class PacmanGame extends SurfaceView implements Runnable {
 
         // Initialize these two members/fields
         // With the values passed in as parameters
-        mScreenX = x;
-        mScreenY = y;
+        mScreen = new TwoTuple(x, y);
 
-        System.out.println("Super: " + mScreenX + " " + mScreenY);
+        System.out.println("Super: " + mScreen.x + " " + mScreen.y);
 
         // Initialize the objects
         // ready for drawing with
@@ -242,18 +241,18 @@ class PacmanGame extends SurfaceView implements Runnable {
         //Init fps to -1 so that we will know if the canvas is not ready
         mFPS = -1;
 
-        gameMode = new GameMode(1, mScreenX);
+        gameMode = new GameMode(1, mScreen.x);
         /* implement front page view (something like welcome to breakfast's Pac-Man game) */
 
         //initialize the Arcade list
-        arcades = new ArcadeList(context, mScreenX, mScreenY,
+        arcades = new ArcadeList(context, mScreen.x, mScreen.y,
                 R.raw.sample2);
 
         // Initialize the pacman and ghost
-        pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize(),
+        pacman = new Pacman(context, mScreen, arcades.getOptimalPacmanSize(),
                 arcades.getArcadeContainingPacman(), gameMode.getPacmanSpeed());
 
-        ghosts = new GhostList(context, mScreenX, mScreenY, arcades.getArcadeContainingPacman(), gameMode.getGhostsSpeed());
+        ghosts = new GhostList(context, mScreen, arcades.getArcadeContainingPacman(), gameMode.getGhostsSpeed());
 
 
         collisionDetector = new CollisionDetector();
@@ -262,7 +261,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         userInput = new UserInput();
 
         //init Nav Buttons
-        navigationButtons = new NavigationButtons(context, mScreenX, mScreenY);
+        navigationButtons = new NavigationButtons(context, mScreen.x, mScreen.y);
 
         //init with system env variable
         //consoleReader = new ConsoleReader(System.console());

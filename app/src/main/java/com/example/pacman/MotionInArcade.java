@@ -1,5 +1,7 @@
 package com.example.pacman;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /*
@@ -151,6 +153,10 @@ public class MotionInArcade {
             System.out.println("Attempt to move Left");
             nextPos = new TwoTuple(posInArcade_X, posInArcade_Y - 1);
             valid = arcade.getBlock(nextPos).getType() == 16;
+            if(nextPos.first() == 0) {
+                Log.d("Debugging", "" + nextPos.first());
+            }
+            Log.d("Debugging", "" + nextPos.first());
         }
 
         if (nextDirection == RIGHT) {

@@ -7,24 +7,11 @@ import android.graphics.Canvas;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Ghost implements GameObject {
+public class Ghost extends Runner implements GameObject {
 
-    final int LEFT = 0;
-    final int RIGHT = 1;
-    final int UP = 2;
-    final int DOWN = 3;
     boolean alive;
 
-    //coordinate
-    private int x;
-    private int y;
-    private int currDirectionNextX;
-    private int currDirectionNextY;
-    private float speed;
-    private int mScreenX;
-    private int mScreenY;
-
-    //context of the game, used access Resource ptr
+//    //context of the game, used access Resource ptr
     private Context context;
 
     private Bitmap ghostView;
@@ -41,12 +28,11 @@ public class Ghost implements GameObject {
 
     private MotionInArcade motionInArcade;
 
-    public Ghost(Context context, int sx, int sy, Arcade arcade,
+    public Ghost(Context context, TwoTuple screenResolution, Arcade arcade,
                  Pacman pacman, Bitmap ghostView,  int direction,
                     float speed) {
         this.context = context;
-        mScreenX = sx;
-        mScreenY = sy;
+        mScreen = screenResolution;
         this.currDirection = direction;
         this.nextDirection = -1;
 
@@ -56,8 +42,7 @@ public class Ghost implements GameObject {
 
         this.speed = speed;
 
-        this.x = arcade.getGhostX_pix();
-        this.y = arcade.getGhostY_pix();
+        this.position = new TwoTuple(arcade.getGhostPosition_pix());
         this.pacman = pacman;
 
         motionInArcade = new MotionInArcade(arcade);
@@ -65,7 +50,7 @@ public class Ghost implements GameObject {
 
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(ghostView, x-bitmapWidth/2, y-bitmapHeight/2, null);
+        canvas.drawBitmap(ghostView, this.position.x-bitmapWidth/2, this.position.y-bitmapHeight/2, null);
     }
 
     /*
@@ -73,8 +58,8 @@ public class Ghost implements GameObject {
     no matter the direction is valid or not.
      */
     private TwoTuple move(int direction, long fps) {
-        int nextX = this.x;
-        int nextY = this.y;
+        int nextX = this.position.x;
+        int nextY = this.position.y;
 
         // Move the pacman based on the direction variable
         // and the speed of the previous frame
@@ -95,14 +80,14 @@ public class Ghost implements GameObject {
         if (nextX - bitmapWidth / 2 < 0) {
             nextX = bitmapWidth / 2;
         }
-        if (nextX + bitmapWidth / 2 > mScreenX) {
-            nextX = mScreenX - bitmapWidth / 2;
+        if (nextX + bitmapWidth / 2 > mScreen.x) {
+            nextX = mScreen.x - bitmapWidth / 2;
         }
         if (nextY - bitmapHeight / 2 < 0) {
             nextY = bitmapHeight / 2;
         }
-        if (nextY + bitmapHeight / 2 > mScreenY) {
-            nextY = mScreenY - bitmapHeight / 2;
+        if (nextY + bitmapHeight / 2 > mScreen.y) {
+            nextY = mScreen.x - bitmapHeight / 2;
         }
 
         return new TwoTuple(nextX, nextY);
@@ -114,21 +99,11 @@ public class Ghost implements GameObject {
     }
 
     @Override
-    public int getCenterX() {
-        return this.x;
-    }
+    public int getCenterX() { return this.position.x; }
 
     @Override
     public int getCenterY() {
-        return this.y;
-    }
-
-    //The starting point need to be initialized after construction
-    //if collision, use this to roll back
-    @Override
-    public void setCenter(int centerX, int centerY) {
-        this.x = centerX;
-        this.y = centerY;
+        return this.position.y;
     }
 
     @Override
@@ -146,8 +121,8 @@ public class Ghost implements GameObject {
         ArrayList<Integer> motion = new ArrayList<>();
         motion.add(this.getCenterX());
         motion.add(this.getCenterY());
-        motion.add(currDirectionNextX);
-        motion.add(currDirectionNextY);
+        motion.add(currDirectionNextPosition.x);
+        motion.add(currDirectionNextPosition.y);
         motion.add(currDirection);
         return motion;
     }
@@ -210,10 +185,9 @@ public class Ghost implements GameObject {
 
         //next move in current direction
         TwoTuple next = move(currDirection, fps);
-        currDirectionNextX = next.first();
-        currDirectionNextY = next.second();
+        currDirectionNextPosition = next;
 
-        System.out.println("Global update: " + x + " " + y + " " + currDirectionNextX + " " + currDirectionNextY);
+        System.out.println("Ghost update: " + this.position.x + " " + this.position.y + " " + currDirectionNextPosition.x + " " + currDirectionNextPosition.y);
 
         //update motion info
         motionInArcade.updateMotionInfo(getMotionInfo());
@@ -229,7 +203,7 @@ public class Ghost implements GameObject {
                 if (info1.isValid()) {
                     System.out.println("Valid Turn");
                     //we can change direction.
-                    setCenter(info1.getPos().first(), info1.getPos().second());
+                    setPosition(info1.getPos());
                     currDirection = nextDirection;
                     needToChangeDir = false;
                     return;
@@ -245,7 +219,7 @@ public class Ghost implements GameObject {
             if (!info2.isValid()) {
                 System.out.println("Curr direction invalid");
                 //Now we must remain at current position
-                setCenter(info2.getPos().first(), info2.getPos().second());
+                setPosition(info2.getPos());
                 needToChangeDir = true;
                 return;
             }
@@ -254,7 +228,7 @@ public class Ghost implements GameObject {
         System.out.println("No disturb");
         //We do not need to disturb current motion
         needToChangeDir = false;
-        setCenter(currDirectionNextX, currDirectionNextY);
+        setPosition(currDirectionNextPosition);
     }
 
     public void updateMovementStatus(long fps, Arcade arcade) {

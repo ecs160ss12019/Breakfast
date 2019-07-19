@@ -13,8 +13,7 @@ public class GhostList {
     private Arcade arcade; // the arcade which the 4 ghosts are in.
     private Pacman pacman; // four ghosts are chasing the same pacman.
 
-    private int mScreenX;
-    private int mScreenY;
+    private TwoTuple mScreen;
     //context of the game, used access Resource ptr
     private Context context;
 
@@ -28,10 +27,9 @@ public class GhostList {
     private int numCol;
     private ArrayList<Bitmap> ghostsViewList;
 
-    public GhostList(Context context, int sx, int sy, Arcade arcade, float speed) {
+    public GhostList(Context context, TwoTuple screenResolution, Arcade arcade, float speed) {
         this.context = context;
-        mScreenX = sx;
-        mScreenY = sy;
+        mScreen = screenResolution;
         this.arcade = arcade;
 
         //currently, the collection is 2*2 with 4 views in total
@@ -45,13 +43,13 @@ public class GhostList {
         ghostsViewList = new ArrayList<>();
         for (int i = 0; i < unsizedGhostsViewList.size(); i++) {
             Bitmap bitmap = Bitmap.createScaledBitmap(unsizedGhostsViewList.get(i),
-                    sy / 15, sy/15, true);
+                    screenResolution.y / 15, screenResolution.y/15, true);
             ghostsViewList.add(bitmap);
         }
 
         ghosts = new ArrayList<>();
         for (int i=0; i<GHOSTS_NUM; i++) {
-            Ghost ghost = new Ghost(context, sx, sy, arcade, pacman, ghostsViewList.get(i), i, speed);
+            Ghost ghost = new Ghost(context, screenResolution, arcade, pacman, ghostsViewList.get(i), i, speed);
             ghosts.add(ghost);
         }
     }

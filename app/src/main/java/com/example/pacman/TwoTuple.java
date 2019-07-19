@@ -1,8 +1,8 @@
 package com.example.pacman;
 
 public class TwoTuple {
-    private int x;
-    private int y;
+    public int x;
+    public int y;
 
     //integer case
     public int first() {
@@ -16,5 +16,10 @@ public class TwoTuple {
     public TwoTuple(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    public TwoTuple(TwoTuple position) {
+        this.x = position.x;
+        this.y = position.y;
     }
 }

@@ -15,13 +15,10 @@ public interface GameObject {
     //update coordinate and status
     public void updateStatus(long fps);
 
-    //get center position
+    //get current position
     public int getCenterX();
 
     public int getCenterY();
-
-    //set center position
-    public void setCenter(int centerX, int centerY);
 
     /*
     These variables are public and final
