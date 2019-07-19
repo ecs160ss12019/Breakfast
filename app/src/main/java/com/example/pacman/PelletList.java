@@ -18,7 +18,7 @@ public class PelletList {
     private int pwrBitmapHeight;
 
     /*
-        We want to
+        We want to Draw the pellets based on the creation of the matrix arcade
      */
     public void draw(Canvas canvas){
         for (int index = 0; index < arcades.size();++index){
