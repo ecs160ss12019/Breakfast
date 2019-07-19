@@ -46,19 +46,20 @@ Possibly accomplish: the user stories 1, 2, 5, 6.
 
 ### Sprint 2: 
 Possibly accomplish: the user stories 1, 2, 5, 6, 3, 8, 9 
+Additional features: add a welcome page with 3 game mode options that changes the speed of game characters.
 
 ### Sprint 3: 
 Sound effect  
 Possibly accomplish: the user stories 4, 7, 10, 11, 12
 
 ## Acceptance Tests 
-Epic Story | As a Pacman, I will run around and eat all the pellets on my path, while trying to avoid being killed by ghosts. | As a Pacman, I will be able to kill the ghosts, if I eat a power pellets. | As a Pacman, I can eat a Cake to earn extra points. | As a ghost, I can kill the Pac-man by contact, and I can reset if the Pac-man eats me.
+Epic Story | As a Pac-man, I will run around and eat all the pellets on my path, while trying to avoid being killed by ghosts. | As a Pac-man, I will be able to kill the ghosts, if I eat a power pellets. | As a Pacman, I can eat a Cake to earn extra points. | As a ghost, I can kill the Pac-man by contact, and I can reset if the Pac-man eats me.
 Arcade
 --- | --- | --- | --- | --- | ---
-Objects | Pacman, Pellets, Ghosts | Pacman, Power Pellets, Ghosts | Pacman, Cake | Ghost, Pacman | Grid (Map)
-Sprint 1 | Test with the player by tapping left, right, top, and bottom on the device screen to check if the Pacman changes direction accordingly. | Visually check (has different image)  if the power pellets are generated in the game. | Test if the cherries are generated randomly. | Test if there are 4 ghosts on the screen; Test if the ghosts are able to move around randomly; Test if the ghost can kill the Pacman by collision. | Visually check if the grid or the game map is rendered onto the device screen properly
-Sprint 2 | Test if the Pacman gets killed by all 4 ghosts by collision (they run into the same position on the map). | Test if the Pacman can eat pellets and power pellets by collision. | Test if the cherries can be eaten by pacman | Test if the system generates a new ghost when there is ghost being killed. | Letter grid
-Sprint 3 | Test if the next level is run after the Pacman eats all the pellets. | Test if the ghosts can be killed by Pacman when collision. | Test if Pacma can eat Cake by collision and gain points;  | Test if the Pacman gets extra points after eating Cake for few seconds. | Generate sound effects | More than one grid system (more than one map)
+Objects | Pacman, Pellets, Ghosts | Pac-man, Power Pellets, Ghosts | Pac-man, Cake | Ghost, Pacman | Grid (Map)
+Sprint 1 | Test with the player by tapping left, right, top, and bottom on the device screen to check if the Pacman changes direction accordingly. | Visually check (has different image)  if the power pellets are generated in the game. | Test if the cherries are generated randomly. | Test if there are 4 ghosts on the screen; Test if the ghosts are able to move around randomly; Test if the ghost can kill the Pac-man by collision. | Visually check if the grid or the game map is rendered onto the device screen properly
+Sprint 2 | Test if the Pac-man gets killed by all 4 ghosts by collision (they run into the same position on the map). | Test if the Pac-man can eat pellets and power pellets by collision. | Test if the Pac-man can eat the moving Cake | Test if the system generates new ghosts when they die | Letter grid
+Sprint 3 | Test if the next level is run after the Pac-man eats all the pellets. | Test if the ghosts can be killed by Pac-man when collision. | Test if Pac-man can eat Cake by collision and gain points;  | Test if the Pac-man gets extra points after eating Cake for few seconds. | Generate sound effects | More than one grid system (more than one map)
 
 
 
