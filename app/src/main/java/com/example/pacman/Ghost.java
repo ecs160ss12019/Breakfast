@@ -3,6 +3,7 @@ package com.example.pacman;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -169,6 +170,25 @@ public class Ghost extends Runner implements GameObject {
         //System.out.println("No disturb");
         //We do not need to disturb current motion
         needToChangeDir = false;
+
+        /*
+        Now we can keep the original motion,
+        but we still need to know if the next move
+        is still on path.
+         */
+
+        Pair<TwoTuple, Boolean> checkNextMoveInBound = motionInArcade.mostDistantPathBlock(
+                new TwoTuple(currDirectionNextPosition), nextDirection);
+
+        if (checkNextMoveInBound.second){
+            //System.out.println("No disturb");
+            //We do not need to disturb current motion
+            setPosition(currDirectionNextPosition);
+            return;
+        }
+        System.out.println("Bad Fps: " + fps + "  gap: " + speed / fps +
+                "  prev: " + this.position.x + " " + this.position.y + "  next: " + currDirectionNextPosition.x + " " + currDirectionNextPosition.y);
+        //setCenter(checkNextMoveInBound.first.first(), checkNextMoveInBound.first.second());
         setPosition(currDirectionNextPosition);
     }
 

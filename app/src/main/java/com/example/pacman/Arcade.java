@@ -177,6 +177,9 @@ public class Arcade{
                     switch (currDirection) {
                         case 0:
                             //heading left
+                            if (i == 0) {
+                                return new TwoTuple(i, j);
+                            }
                             return new TwoTuple(i - 1, j);
                         case 1:
                             //heading right
@@ -194,6 +197,9 @@ public class Arcade{
                     switch (currDirection) {
                         case 2:
                             //heading up
+                            if (j == 0) {
+                                return new TwoTuple(i, j);
+                            }
                             return new TwoTuple(i, j - 1);
                         case 3:
                             //heading down
@@ -218,7 +224,7 @@ public class Arcade{
         System.out.println("Current game object position: " + currX +
                 " " + currY);
 
-        return new TwoTuple(0,0);
+        return new TwoTuple(Integer.MAX_VALUE,Integer.MAX_VALUE);
     }
 
     /*

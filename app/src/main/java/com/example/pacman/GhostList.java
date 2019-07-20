@@ -57,9 +57,19 @@ public class GhostList {
         }
     }
 
-    public void updateMovementStatus(long mFPS, Arcade arcadeContainingPacman) {
-        for (Ghost ghost : ghosts) {
-            ghost.updateMovementStatus(mFPS,arcadeContainingPacman);
+    public void updateMovementStatus(final long mFPS, final Arcade arcadeContainingPacman) {
+        for (int i = 0; i < ghosts.size(); i++) {
+            final int index = i;
+
+            Thread ghostThread = new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    ghosts.get(index).updateMovementStatus(mFPS,arcadeContainingPacman);
+                }
+            });
+            ghostThread.start();
+
+            //ghosts.get(index).updateMovementStatus(mFPS,arcadeContainingPacman);
         }
     }
 
