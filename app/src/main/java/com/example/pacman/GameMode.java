@@ -25,21 +25,19 @@ public class GameMode {
     }
 
     public GameMode(int inputMode, int screenX){
-        // mode is normal by default
         this.screenX = screenX;
-        modeSelection = 1;
+        // mode is normal by default
+        modeSelection = normal;
         switch (inputMode) {
             case 0:
-                break;
+                modeSelection = easy;
             case 1:
-                modeSelection = 1;
                 break;
             case 2:
-                modeSelection = 2;
+                modeSelection = hard;
                 break;
         }
         modeManager();
-
     }
     public void modeManager(){
         switch (modeSelection){
@@ -55,21 +53,15 @@ public class GameMode {
         }
     }
     public void easyMode(){
-        // This code means the Pacman and ghosts can cover the width
-        // of the screen in 9 seconds
-        pacmanSpeed = screenX/50;
-        ghostsSpeed = screenX/50;
+        this.pacmanSpeed = screenX/50;
+        this.ghostsSpeed = screenX/50;
     }
     public void normalMode(){
-        // This code means the Pacman and ghosts can cover the width
-        // of the screen in 9 seconds
-        pacmanSpeed = screenX/50;
-        ghostsSpeed = screenX/50;
+        this.pacmanSpeed = screenX/8;
+        this.ghostsSpeed = screenX/8;
     }
     public void hardMode(){
-        // This code means the Pacman and ghosts can cover the width
-        // of the screen in 9 seconds
-        pacmanSpeed = screenX/50;
-        ghostsSpeed = screenX/50;
+        this.pacmanSpeed = screenX/15;
+        this.ghostsSpeed = screenX/15;
     }
 }
