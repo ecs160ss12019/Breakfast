@@ -88,12 +88,12 @@ public class PelletList {
         }
 
 
-        for(int i = 0; i < pelletList.size(); ++i) {
-            System.out.println("PelletList line: " + i);
-            for(int j = 0; j < pelletList.get(0).size(); ++j) {
-                System.out.print(pelletList.get(i).get(j).getType() + " ");
-            }
-        }
+//        for(int i = 0; i < pelletList.size(); ++i) {
+//            System.out.println("PelletList line: " + i);
+//            for(int j = 0; j < pelletList.get(0).size(); ++j) {
+//                System.out.print(pelletList.get(i).get(j).getType() + " ");
+//            }
+//        }
     }
 
     public TwoTuple map2screen(PelletCell pell) {
