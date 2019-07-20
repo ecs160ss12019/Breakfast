@@ -239,7 +239,7 @@ public class Arcade{
         System.out.println("Current game object position: " + currX +
                 " " + currY);
 
-        return new TwoTuple(0,0);
+        return new TwoTuple(Integer.MAX_VALUE,Integer.MAX_VALUE);
     }
 
     /*

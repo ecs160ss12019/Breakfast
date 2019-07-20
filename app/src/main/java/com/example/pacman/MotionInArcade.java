@@ -95,11 +95,13 @@ public class MotionInArcade {
     public boolean pathBlockValidation(TwoTuple pos) {
         int row = pos.first();
         int col = pos.second();
-        int type = arcade.getBlock(pos).getType();
+        //MUST NOT check here or out of bound
+//        int type = arcade.getBlock(pos).getType();
 
-        return (row >= 0 && row < arcade.getNumRow() &&
+        return row >= 0 && row < arcade.getNumRow() &&
                 col >= 0 && col < arcade.getNumCol() &&
-                (type == 16 || type == 19));
+                (arcade.getBlock(pos).getType()==16 ||
+                arcade.getBlock(pos).getType() == 19);
     }
 
     /*
@@ -214,6 +216,8 @@ public class MotionInArcade {
     If we really need to disturb the current motion.
      */
     public boolean inDecisionRegion() {
+        if (!pathBlockValidation(currPos)) return false;
+
         /*
         currX = _currX;
         currY = _currY;
@@ -264,48 +268,50 @@ public class MotionInArcade {
         boolean valid = false;
         int posInArcade_X = currPos.first();
         int posInArcade_Y = currPos.second();
-        TwoTuple nextPos = new TwoTuple(0,0);
+        TwoTuple nextPos = new TwoTuple(Integer.MAX_VALUE,Integer.MAX_VALUE);
 
         //start checking
         if (nextDirection == LEFT) {
             //System.out.println("Attempt to move Left");
             nextPos = new TwoTuple(posInArcade_X, posInArcade_Y - 1);
 
-            if(nextPos.second() == -1 || nextPos.first() == -1) {
-                System.out.println("LEFT index: " + nextPos.first() + " " + nextPos.second());
-            }
-            valid = arcade.getBlock(nextPos).getType() == 16;
+//            if(nextPos.second() == -1 || nextPos.first() == -1) {
+//                System.out.println("LEFT index: " + nextPos.first() + " " + nextPos.second());
+//            }
+//            valid = arcade.getBlock(nextPos).getType() == 16;
         }
 
         if (nextDirection == RIGHT) {
             //System.out.println("Attempt to move Right");
             nextPos = new TwoTuple(posInArcade_X, posInArcade_Y + 1);
-            if(nextPos.second() == -1 || nextPos.first() == -1) {
-                System.out.println("RIGHT index: " + -1);
-            }
-
-            valid = arcade.getBlock(nextPos).getType() == 16;
+//            if(nextPos.second() == -1 || nextPos.first() == -1) {
+//                System.out.println("RIGHT index: " + -1);
+//            }
+//
+//            valid = arcade.getBlock(nextPos).getType() == 16;
         }
 
         if (nextDirection == UP) {
             //System.out.println("Attempt to move Up");
             nextPos = new TwoTuple(posInArcade_X - 1, posInArcade_Y);
-            if(nextPos.second() == -1 || nextPos.first() == -1) {
-                System.out.println("UP index: " + -1);
-            }
-
-            valid = arcade.getBlock(nextPos).getType() == 16;
+//            if(nextPos.second() == -1 || nextPos.first() == -1) {
+//                System.out.println("UP index: " + -1);
+//            }
+//
+//            valid = arcade.getBlock(nextPos).getType() == 16;
         }
 
         if (nextDirection == DOWN) {
             //System.out.println("Attempt to move Down");
             nextPos = new TwoTuple(posInArcade_X + 1, posInArcade_Y);
 
-            if(nextPos.second() == -1 || nextPos.first() == -1) {
-                System.out.println("DOWN  index: " + -1);
-            }
-            valid = arcade.getBlock(nextPos).getType() == 16;
+//            if(nextPos.second() == -1 || nextPos.first() == -1) {
+//                System.out.println("DOWN  index: " + -1);
+//            }
+//            valid = arcade.getBlock(nextPos).getType() == 16;
         }
+
+        valid = pathBlockValidation(nextPos);
 
         if (valid) {
             //System.out.println("next motion valid");

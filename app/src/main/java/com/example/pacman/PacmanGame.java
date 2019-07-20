@@ -140,7 +140,7 @@ class PacmanGame extends SurfaceView implements Runnable {
     the thread is running
      */
     public void updateGame() {
-
+        final int direction = navigationButtons.checkAndUpdate(userInput);
 
         /*
         if player touched or is continuous touching
@@ -169,10 +169,10 @@ class PacmanGame extends SurfaceView implements Runnable {
         the speed. However, we must fix the bug and
         implement a better algorithm.
          */
+
         Thread pacManThread = new Thread(new Runnable(){
             @Override
             public void run() {
-                int direction = navigationButtons.checkAndUpdate(userInput);
                 pacman.updateMovementStatus(direction, mFPS);
             }
         });
@@ -194,6 +194,10 @@ class PacmanGame extends SurfaceView implements Runnable {
         pacManThread.start();
         ghostsThread.start();
         cakeThread.start();
+
+        //pacman.updateMovementStatus(direction, mFPS);
+        //ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+        //cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
     }
 
     // This method is called by PacmanActivity
