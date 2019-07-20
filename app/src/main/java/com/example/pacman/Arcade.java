@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /*
 this class is the arcade that the pacman
@@ -87,7 +88,7 @@ public class Arcade{
     public int yReference;
 
     //where the pacman should start from
-    private TwoTuple pacmanPosition;
+    public TwoTuple pacmanPosition;
 
     //where the ghost should start from
     private TwoTuple ghostPosition;
@@ -125,6 +126,18 @@ public class Arcade{
 
     public int getBlockHeight() {
         return blockHeight;
+    }
+
+    public boolean inRange(TwoTuple tuple){
+        final int i = tuple.first();
+        final int j = tuple.second();
+        return i >= 0 && i < numRow && j >= 0 && j < numCol;
+    }
+
+    public boolean pathValid(TwoTuple tuple){
+        return inRange(tuple) &&
+                (getBlock(tuple).getType() == 16 ||
+                        getBlock(tuple).getType() == 17);
     }
 
     //get a block

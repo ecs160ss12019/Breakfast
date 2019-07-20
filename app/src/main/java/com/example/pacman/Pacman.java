@@ -13,11 +13,10 @@ public class Pacman extends Runner implements GameObject{
      * create Pacman here
      */
     //coordinate
-//    private int currDirectionNextX;
-//    private int currDirectionNextY;
-//    private float speed;
-//    private int mScreenX;
-//    private int mScreenY;
+    private TwoTuple posInArcade;
+    private ArcadeAnalyzer arcadeAnalyzer;
+    private Arcade arcade;
+    private float speed;
 
     //context of the game, used access Resource ptr
     private Context context;
@@ -49,8 +48,9 @@ public class Pacman extends Runner implements GameObject{
 
     @Override
     public void draw(Canvas canvas) {
+        TwoTuple screenPos = arcade.mapScreen(posInArcade);
         canvas.drawBitmap(pacmanViewList.get(currDirection),
-                this.position.x - (bitmapWidth/2), this.position.y - (bitmapHeight/2), null);
+                screenPos.first() - (bitmapWidth/2), screenPos.second() - (bitmapHeight/2), null);
     }
 
 
@@ -240,70 +240,174 @@ public class Pacman extends Runner implements GameObject{
          */
 
         //next move in current direction
-        TwoTuple next = move(currDirection, fps);
-        currDirectionNextPosition = next;
-        // next move in next direction
-        nextDirectionNextPosition = move(nextDirection, fps);
+//        TwoTuple next = move(currDirection, fps);
+//        currDirectionNextPosition = next;
+//        // next move in next direction
+//        nextDirectionNextPosition = move(nextDirection, fps);
+//
+//        System.out.println("Pacman update: " + this.position.x + " " + this.position.y + " " + currDirectionNextPosition.x + " " + currDirectionNextPosition.y);
+//
+//        //update motion info
+//        motionInArcade.updateMotionInfo(getMotionInfo());
+//
+//        if (nextDirection != currDirection) {
+//            //System.out.println("diff dir");
+//            //We need to check user's desired direction
+//            NextMotionInfo info1 = motionInArcade.isValidMotion(nextDirection);
+//            if (info1.isValid()) {
+//                //System.out.println("Valid Turn");
+//                //we can change direction.
+//                setPosition(info1.getPos());
+//                currDirection = nextDirection;
+//                return;
+//            }
+//        }
+//        //check if in decision region
+//        if (motionInArcade.inDecisionRegion()) {
+//            //System.out.println("in region");
+//            //we need to take action
+//            /*
+//            either user did not input direction
+//            or user's desired input is invalid.
+//            We check if we can continue on current direction
+//             */
+//            NextMotionInfo info2 = motionInArcade.isValidMotion(currDirection);
+//            if (!info2.isValid()) {
+//                //System.out.println("Curr direction invalid");
+//                //Now we must remain at current position
+//                setPosition(info2.getPos());
+//                return;
+//            }
+//        }
+//
+//        /*
+//        Now we can keep the original motion,
+//        but we still need to know if the next move
+//        is still on path.
+//         */
+//
+//        Pair<TwoTuple, Boolean> checkNextMoveInBound = motionInArcade.mostDistantPathBlock(
+//                new TwoTuple(currDirectionNextX, currDirectionNextY), nextDirection);
+//
+//        if (checkNextMoveInBound.second){
+//            //System.out.println("No disturb");
+//            //We do not need to disturb current motion
+//            setCenter(currDirectionNextX, currDirectionNextY);
+//            return;
+//        }
+//        System.out.println("Bad Fps: " + fps + "  gap: " + speed / fps +
+//                "  prev: " + x + " " + y + "  next: " + currDirectionNextX + " " + currDirectionNextY);
+//        //setCenter(checkNextMoveInBound.first.first(), checkNextMoveInBound.first.second());
+//        setCenter(x, y);
 
-        System.out.println("Pacman update: " + this.position.x + " " + this.position.y + " " + currDirectionNextPosition.x + " " + currDirectionNextPosition.y);
 
-        //update motion info
-        motionInArcade.updateMotionInfo(getMotionInfo());
 
-        if (nextDirection != currDirection) {
-            //System.out.println("diff dir");
-            //We need to check user's desired direction
-            NextMotionInfo info1 = motionInArcade.isValidMotion(nextDirection);
-            if (info1.isValid()) {
-                //System.out.println("Valid Turn");
-                //we can change direction.
-                setPosition(info1.getPos());
+        /***************************************/
+        //New Method
+        int mathematicalMove = mathematicalMoveDistance(fps);
+
+        if (nextDirection != currDirection && nextDirection != -1) {
+            //try new direction
+            boolean allowsTurn = arcadeAnalyzer.allowsToGo(posInArcade, nextDirection);
+
+            if (allowsTurn) {
+                //Turn and go
+                posInArcade = movedTo(mathematicalMove, nextDirection);
+
                 currDirection = nextDirection;
                 return;
             }
         }
-        //check if in decision region
-        if (motionInArcade.inDecisionRegion()) {
-            //System.out.println("in region");
-            //we need to take action
+
+        //Either not able to turn or not desired to turn
+        boolean allowsMove = arcadeAnalyzer.allowsToGo(posInArcade, currDirection);
+        if (allowsMove) {
+            //move and go
+            posInArcade = movedTo(mathematicalMove, currDirection);
+        }
+
+        //else no move, stay there
+    }
+
+    //mathematical movement distance
+    private int mathematicalMoveDistance(long fps) {
+        return (int)(speed / fps);
+    }
+
+    //move as far as possible
+    private TwoTuple movedTo(int mathematicalMove, int movingDirection) {
+        int movedDistance = 0;
+        TwoTuple currPos = posInArcade;
+
+        System.out.println("Starting to move from: " + posInArcade.first() + " " + posInArcade.second());
+        boolean allowsMove = arcadeAnalyzer.allowsToGo(currPos, movingDirection);
+        while (movedDistance <= mathematicalMove && allowsMove) {
+            movedDistance += arcadeAnalyzer.blockDimension;
+            currPos = TwoTuple.moveTo(currPos, movingDirection);
+
+            System.out.println("moved distance: " + movedDistance);
+            System.out.println("Moved to: " + currPos.first() + " " + currPos.second());
+        }
+
+        System.out.println("!!!!!");
+        System.out.println("Finished moving to: " + currPos.first() + " " + currPos.second());
+        return currPos;
+    }
+
+    //Constructor2
+    public Pacman(Context context, TwoTuple screenResolution, Arcade arcade, TwoTuple posInArcade,
+                 ArcadeAnalyzer arcadeAnalyzer, float speed) {
+        this.context = context;
+        this.mScreen = screenResolution;
+        this.arcade = arcade;
+        this.posInArcade = posInArcade;
+        this.currDirection = RIGHT;
+        this.nextDirection = -1;
+
+        //currently, the collection is 2*2 with 4 views in total
+        numRow = 2;
+        numCol = 2;
+
+        //load pacman img from resource
+        Bitmap pacmanCollectionView = BitmapFactory.decodeResource(context.getResources(), R.drawable.pacman);
+
+        /*
+        resize to fit screen and
+        split the collection into small bitmaps (Left, Right, Up, Down)
+        */
+        BitmapDivider divider = new BitmapDivider(pacmanCollectionView);
+        ArrayList<Bitmap> unsizedPacmanViewList = divider.split(numRow, numCol);
+
+        pacmanViewList = new ArrayList<>();
+        for (int i = 0; i < unsizedPacmanViewList.size(); i++) {
+
+            //FIXME Pacman size?
             /*
-            either user did not input direction
-            or user's desired input is invalid.
-            We check if we can continue on current direction
-             */
-            NextMotionInfo info2 = motionInArcade.isValidMotion(currDirection);
-            if (!info2.isValid()) {
-                //System.out.println("Curr direction invalid");
-                //Now we must remain at current position
-                setPosition(info2.getPos());
-                return;
-            }
+            Bitmap bitmap = Bitmap.createScaledBitmap(unsizedPacmanViewList.get(i),
+                    optimalSize.first, optimalSize.second, true);
+            */
+            Bitmap bitmap = Bitmap.createScaledBitmap(unsizedPacmanViewList.get(i),
+                    screenResolution.y / 15, screenResolution.y/15, true);
+            pacmanViewList.add(bitmap);
         }
 
         /*
-        Now we can keep the original motion,
-        but we still need to know if the next move
-        is still on path.
+        initialize the size of bitmap after split
          */
+        bitmapWidth = pacmanViewList.get(0).getWidth();
+        bitmapHeight = pacmanViewList.get(0).getHeight();
 
-        Pair<TwoTuple, Boolean> checkNextMoveInBound = motionInArcade.mostDistantPathBlock(
-                new TwoTuple(currDirectionNextPosition), nextDirection);
-
-        if (checkNextMoveInBound.second){
-            //System.out.println("No disturb");
-            //We do not need to disturb current motion
-            setPosition(currDirectionNextPosition);
-            return;
-        }
-        System.out.println("Bad Fps: " + fps + "  gap: " + speed / fps +
-                "  prev: " + this.position.x + " " + this.position.y + "  next: " + currDirectionNextPosition.x + " " + currDirectionNextPosition.y);
-        //setCenter(checkNextMoveInBound.first.first(), checkNextMoveInBound.first.second());
-        setPosition(this.position);
+        // Configure the speed of the Pacman
+        // This code means the Pacman can cover the width of the screen in 8 second
+        this.speed = speed;
+        this.arcadeAnalyzer = arcadeAnalyzer;
     }
 
+
     //Constructor
-    public Pacman(Context context, TwoTuple screenResolution, Pair<Integer, Integer> optimalSize,
+    public Pacman(Context context, TwoTuple screenResolution, TwoTuple posInArcade, Pair<Integer, Integer> optimalSize,
                   Arcade arcade, float speed) {
+        this.posInArcade = posInArcade;
         setPosition(arcade.getPacmanPosition_pix());
         this.context = context;
         mScreen = screenResolution;
