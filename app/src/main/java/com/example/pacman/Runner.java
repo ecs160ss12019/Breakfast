@@ -1,6 +1,18 @@
 package com.example.pacman;
 
-public class Runner {
+import android.graphics.Canvas;
+
+import java.util.ArrayList;
+
+public class Runner implements GameObject {
+
+    /*
+    individual view height/width
+    this is crucial to centering the pacman
+    on the coordinates
+     */
+    int bitmapWidth;
+    int bitmapHeight;
 
     // These variables are public and final
     // They can be directly accessed by
@@ -19,8 +31,113 @@ public class Runner {
 
     float speed;
 
+    //currDirection means the pacman is going up, down, left, or right
+    int currDirection;
+
+    /*
+    nextDirection means the user wants to head to this direction.
+    We need to verify if this direction is okay to goto.
+     */
+    int nextDirection;
+
+    public int getBitmapWidth() {
+        return bitmapWidth;
+    }
+
+    public int getBitmapHeight() {
+        return bitmapHeight;
+    }
+
     //set current position
     public void setPosition(TwoTuple position) {
         this.position = position;
+    }
+
+    @Override
+    public int getPositionX() { return this.position.x; }
+
+    @Override
+    public int getPositionY() { return this.position.y; }
+
+    public int getCurrDirection() {
+        return currDirection;
+    }
+
+    public int getNextDirection() {
+        return nextDirection;
+    }
+
+    //getMotionInfo
+    /*
+    Array of 5
+    array[0] : currX
+    array[1] : currY
+    array[2] : currDirectionNextX
+    array[3] : currDirectionNextY
+    array[4] : currDirection
+
+    Note that currDirectionNextX means next x position if continue travelling
+    on currDirection (not in nextDirection), same for nextY.
+     */
+    public ArrayList<Integer> getMotionInfo() {
+        ArrayList<Integer> motion = new ArrayList<>();
+        motion.add(this.getPositionX());
+        motion.add(this.getPositionY());
+        motion.add(currDirectionNextPosition.x);
+        motion.add(currDirectionNextPosition.y);
+        motion.add(currDirection);
+        return motion;
+    }
+
+    /*
+    We use this func to calculate the after move location in a direction,
+    no matter the direction is valid or not.
+     */
+    TwoTuple move(int direction, long fps) {
+        int nextX = this.position.x;
+        int nextY = this.position.y;
+
+
+
+        // Move the pacman based on the direction variable
+        // and the speed of the previous frame
+        if (direction == LEFT) {
+            nextX = (int)(nextX - speed / fps);
+        }
+        if (direction == RIGHT) {
+            nextX = (int)(nextX + speed / fps);
+        }
+        if (direction == UP) {
+            nextY = (int)(nextY - speed / fps);
+        }
+        if (direction == DOWN) {
+            nextY = (int)(nextY + speed / fps);
+        }
+
+        // Stop the Pacman going off the screen
+        if (nextX - bitmapWidth / 2 < 0) {
+            nextX = bitmapWidth / 2;
+        }
+        if (nextX + bitmapWidth / 2 > mScreen.x) {
+            nextX = mScreen.x - bitmapWidth / 2;
+        }
+        if (nextY - bitmapHeight / 2 < 0) {
+            nextY = bitmapHeight / 2;
+        }
+        if (nextY + bitmapHeight / 2 > mScreen.y) {
+            nextY = mScreen.y - bitmapHeight / 2;
+        }
+
+        return new TwoTuple(nextX, nextY);
+    }
+
+    @Override
+    public void draw(Canvas canvas) {
+
+    }
+
+    @Override
+    public void updateStatus(long fps) {
+
     }
 }

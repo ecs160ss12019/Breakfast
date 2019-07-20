@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class ArcadeList {
+
+
     private ArrayList<Arcade> arcades;
 
     /*
@@ -25,6 +27,16 @@ public class ArcadeList {
     private int screenHeight;
 
     /*
+    Get the dimension of a specific
+    Arcade
+     */
+    public TwoTuple getDimensionOfArcade(int index) {
+        int numRow = arcades.get(index).getNumRow();
+        int numCol = arcades.get(index).getNumCol();
+        return new TwoTuple(numRow, numCol);
+    }
+
+    /*
     update reference points for Arcades.
     For now we will simply calculate the reference
     point for the one and only center arcade on the
@@ -35,7 +47,7 @@ public class ArcadeList {
     left most is #----[--|--]----# at the position of
     '['. The coordinate should be half ot horizontal length - half
     of the matrix width in pixels.
-     */
+    */
     public int updateReferenceX(int numCol, int blockWidth) {
         double matrixWidthInPixel = numCol * blockWidth;
         return  (int) (screenWidth - matrixWidthInPixel) / 2;
@@ -45,6 +57,7 @@ public class ArcadeList {
         double matrixHeightInPixel = numRow * blockHeight;
         return (int) (screenHeight - matrixHeightInPixel) / 2;
     }
+    public ArrayList<Arcade> getArcades() { return arcades; }
 
     public Arcade getArcadeContainingPacman() {
         return arcades.get(containsPacman);
@@ -62,6 +75,7 @@ public class ArcadeList {
     draw the one Arcade that is
     in use.
     */
+
     /*
     Now we only have 1 Arcade active
     at a time. In the future, however,
@@ -69,7 +83,7 @@ public class ArcadeList {
     at the same time. That is why we are
     traversing through the list instead of
     drawing it 1 by 1.
-     */
+    */
     public void draw(Canvas canvas) {
         for (Arcade arcade : arcades) {
             if (arcade.inUse) {

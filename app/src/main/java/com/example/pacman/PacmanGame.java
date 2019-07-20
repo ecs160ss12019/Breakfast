@@ -44,6 +44,11 @@ class PacmanGame extends SurfaceView implements Runnable {
 
     private GhostList ghosts;
 
+    private Cake cake;
+
+    //Our Pellets
+    private PelletList pelletList;
+
     //Our Arcade List
     private ArcadeList arcades;
 
@@ -74,7 +79,8 @@ class PacmanGame extends SurfaceView implements Runnable {
             while the game is not paused, update
              */
             // What time is it now at the start of the loop?
-            long frameStartTime = System.currentTimeMillis();
+            //long frameStartTime = System.currentTimeMillis();
+            long frameStartTime = System.nanoTime();
 
             if(!mPaused) {
                 /*
@@ -112,7 +118,9 @@ class PacmanGame extends SurfaceView implements Runnable {
 
             // How long did this frame/loop take?
             // Store the answer in timeThisFrame
-            long timeThisFrame = System.currentTimeMillis() - frameStartTime;
+            //long timeThisFrame = System.currentTimeMillis() - frameStartTime;
+            long timeThisFrame = (System.nanoTime() - frameStartTime) / 1000000;
+            System.out.println(timeThisFrame);
 
             // Make sure timeThisFrame is at least 1 millisecond
             // because accidentally dividing by zero crashes the game
@@ -147,12 +155,14 @@ class PacmanGame extends SurfaceView implements Runnable {
         we use this if condition
         if(navigationButtons.initialInputFlag)
          */
+
         //FIXME
         //if(navigationButtons.initialInputFlag) {
 
         //System.out.println("Pacman Location: " + pacman.getCenterX() + " " + pacman.getCenterY());
         pacman.updateMovementStatus(direction, mFPS);
         ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+        cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
         //}
     }
 
@@ -196,11 +206,13 @@ class PacmanGame extends SurfaceView implements Runnable {
         mCanvas.drawColor(Color.argb
                 (255, 255, 255, 255));
         arcades.draw(canvas);
+        pelletList.draw(canvas);
         pacman.draw(canvas);
         ghosts.draw(canvas);
+        cake.draw(canvas);
         navigationButtons.draw(canvas);
-    }
 
+    }
     /*
     implement onTouchEvent to handle user input
      */
@@ -248,12 +260,17 @@ class PacmanGame extends SurfaceView implements Runnable {
         arcades = new ArcadeList(context, mScreen.x, mScreen.y,
                 R.raw.sample2);
 
+        pelletList = new PelletList(context,arcades.getArcades(), new TwoTuple(mScreen.x, mScreen.y));
+
+
+
         // Initialize the pacman and ghost
         pacman = new Pacman(context, mScreen, arcades.getOptimalPacmanSize(),
                 arcades.getArcadeContainingPacman(), gameMode.getPacmanSpeed());
 
         ghosts = new GhostList(context, mScreen, arcades.getArcadeContainingPacman(), gameMode.getGhostsSpeed());
 
+        cake = new Cake(context, mScreen, arcades.getArcadeContainingPacman(), gameMode.getGhostsSpeed());
 
         collisionDetector = new CollisionDetector();
 

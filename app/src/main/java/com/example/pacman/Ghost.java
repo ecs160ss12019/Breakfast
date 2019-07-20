@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.lang.*;
 
 public class Ghost extends Runner implements GameObject {
 
@@ -28,7 +29,13 @@ public class Ghost extends Runner implements GameObject {
 
     private MotionInArcade motionInArcade;
 
-    public Ghost(Context context, TwoTuple screenResolution, Arcade arcade,
+    private String GhostName;
+
+    // ** for ghostbehavior;
+    //public Ghost(Context context, int sx, int sy, Arcade arcade,
+    //             Pacman pacman, Bitmap ghostView,  int direction,
+    //             float speed, String name)
+     public Ghost(Context context, TwoTuple screenResolution, Arcade arcade,
                  Pacman pacman, Bitmap ghostView,  int direction,
                     float speed) {
         this.context = context;
@@ -45,6 +52,9 @@ public class Ghost extends Runner implements GameObject {
         this.position = new TwoTuple(arcade.getGhostPosition_pix());
         this.pacman = pacman;
 
+     // ** for ghostbehavior;
+     //   this.GhostName = name;
+
         motionInArcade = new MotionInArcade(arcade);
     }
 
@@ -53,78 +63,9 @@ public class Ghost extends Runner implements GameObject {
         canvas.drawBitmap(ghostView, this.position.x-bitmapWidth/2, this.position.y-bitmapHeight/2, null);
     }
 
-    /*
-    We use this func to calculate the after move location in a direction,
-    no matter the direction is valid or not.
-     */
-    private TwoTuple move(int direction, long fps) {
-        int nextX = this.position.x;
-        int nextY = this.position.y;
-
-        // Move the pacman based on the direction variable
-        // and the speed of the previous frame
-        if (direction == LEFT) {
-            nextX = (int)(nextX - speed / fps);
-        }
-        if (direction == RIGHT) {
-            nextX = (int)(nextX + speed / fps);
-        }
-        if (direction == UP) {
-            nextY = (int)(nextY - speed / fps);
-        }
-        if (direction == DOWN) {
-            nextY = (int)(nextY + speed / fps);
-        }
-
-        // Stop the Pacman going off the screen
-        if (nextX - bitmapWidth / 2 < 0) {
-            nextX = bitmapWidth / 2;
-        }
-        if (nextX + bitmapWidth / 2 > mScreen.x) {
-            nextX = mScreen.x - bitmapWidth / 2;
-        }
-        if (nextY - bitmapHeight / 2 < 0) {
-            nextY = bitmapHeight / 2;
-        }
-        if (nextY + bitmapHeight / 2 > mScreen.y) {
-            nextY = mScreen.x - bitmapHeight / 2;
-        }
-
-        return new TwoTuple(nextX, nextY);
-    }
-
     @Override
     public void updateStatus(long fps){
 
-    }
-
-    @Override
-    public int getCenterX() { return this.position.x; }
-
-    @Override
-    public int getCenterY() {
-        return this.position.y;
-    }
-
-    @Override
-    public int getCurrDirection() {
-        return currDirection;
-    }
-
-    @Override
-    public int getNextDirection() {
-        return nextDirection;
-    }
-
-    @Override
-    public ArrayList<Integer> getMotionInfo() {
-        ArrayList<Integer> motion = new ArrayList<>();
-        motion.add(this.getCenterX());
-        motion.add(this.getCenterY());
-        motion.add(currDirectionNextPosition.x);
-        motion.add(currDirectionNextPosition.y);
-        motion.add(currDirection);
-        return motion;
     }
 
     public void updateLocation(long fps, Arcade arcade) {
@@ -194,14 +135,14 @@ public class Ghost extends Runner implements GameObject {
 
         //check if in decision region
         if(motionInArcade.inDecisionRegion()) {
-            System.out.println("in region");
+            //System.out.println("in region");
             //we need to take action
             if (nextDirection != currDirection) {
-                System.out.println("diff dir");
+                //System.out.println("diff dir");
                 //We need to check user's desired direction
                 NextMotionInfo info1 = motionInArcade.isValidMotion(nextDirection);
                 if (info1.isValid()) {
-                    System.out.println("Valid Turn");
+                    //System.out.println("Valid Turn");
                     //we can change direction.
                     setPosition(info1.getPos());
                     currDirection = nextDirection;
@@ -217,7 +158,7 @@ public class Ghost extends Runner implements GameObject {
              */
             NextMotionInfo info2 = motionInArcade.isValidMotion(currDirection);
             if (!info2.isValid()) {
-                System.out.println("Curr direction invalid");
+                //System.out.println("Curr direction invalid");
                 //Now we must remain at current position
                 setPosition(info2.getPos());
                 needToChangeDir = true;
@@ -225,7 +166,7 @@ public class Ghost extends Runner implements GameObject {
             }
         }
 
-        System.out.println("No disturb");
+        //System.out.println("No disturb");
         //We do not need to disturb current motion
         needToChangeDir = false;
         setPosition(currDirectionNextPosition);
@@ -256,4 +197,157 @@ public class Ghost extends Runner implements GameObject {
         }
         updateLocation(fps, arcade);
     }
+
+    //**For ghost behavior;
+
+/*
+    //This is the GhostBehavior Function, each of the ghost has a unique behavior;
+    //The red Ghost will keep tracing the pacman;
+    //The pink ghost will get in front of pacman to cut the him off;
+    //The blue ghost will patrol a area
+    //the yellow ghost will just move randomly;
+    public void GhostBehavior(String GhostName,long fps, Arcade arcade){
+        switch (GhostName){
+            case "Red":
+                int HorizontalGap = pacman.getCenterX()-this.x;
+                int VerticleGap = pacman.getCenterY()-this.y;
+                if(Math.abs(VerticleGap) > Math.abs(HorizontalGap)){
+                    if(HorizontalGap < 0 ){
+                        nextDirection = LEFT;
+                        if(needToChangeDir){
+                            if(VerticleGap < 0){
+                                nextDirection = DOWN;
+                            }
+                            else{
+                                nextDirection = UP;
+                            }
+                        }
+                    }
+                    else{
+                        nextDirection = RIGHT;
+                        if(needToChangeDir){
+                            if(VerticleGap < 0){
+                                nextDirection = DOWN;
+                            }
+                            else{
+                                nextDirection = UP;
+                            }
+                        }
+                    }
+                }
+                else{
+                    if(VerticleGap < 0){
+                        nextDirection = DOWN;
+                        if(needToChangeDir){
+                            if(HorizontalGap < 0){
+                                nextDirection = LEFT;
+                            }
+                            else{
+                                nextDirection = RIGHT;
+                            }
+                        }
+                    }
+                    else{
+                        nextDirection = UP;
+                        if(needToChangeDir){
+                            if(HorizontalGap < 0){
+                                nextDirection = LEFT;
+                            }
+                            else{
+                                nextDirection = RIGHT;
+                            }
+                        }
+                    }
+                }
+                break;
+            case "Pink":
+                int HorizontalGap1 = pacman.getNextposX()-this.x;
+                int VerticleGap1 = pacman.getNextposY()-this.y;
+                if(Math.abs(VerticleGap1) > Math.abs(HorizontalGap1)){
+                    if(HorizontalGap1 < 0 ){
+                        nextDirection = LEFT;
+                        if(needToChangeDir){
+                            if(VerticleGap1 < 0){
+                                nextDirection = DOWN;
+                            }
+                            else{
+                                nextDirection = UP;
+                            }
+                        }
+                    }
+                    else{
+                        nextDirection = RIGHT;
+                        if(needToChangeDir){
+                            if(VerticleGap1 < 0){
+                                nextDirection = DOWN;
+                            }
+                            else{
+                                nextDirection = UP;
+                            }
+                        }
+                    }
+                }
+                else{
+                    if(VerticleGap1 < 0){
+                        nextDirection = DOWN;
+                        if(needToChangeDir){
+                            if(HorizontalGap1 < 0){
+                                nextDirection = LEFT;
+                            }
+                            else{
+                                nextDirection = RIGHT;
+                            }
+                        }
+                    }
+                    else{
+                        nextDirection = UP;
+                        if(needToChangeDir){
+                            if(HorizontalGap1 < 0){
+                                nextDirection = LEFT;
+                            }
+                            else{
+                                nextDirection = RIGHT;
+                            }
+                        }
+                    }
+                }
+                break;
+            case "Blue":
+
+                break;
+            case "Yellow":
+                int inputDirection = -1;
+                if(needToChangeDir) {
+                    Random randomGenerator = new Random();
+                    inputDirection = randomGenerator.nextInt(4);
+                }
+                switch (inputDirection) {
+                    case -1:
+                        //nextDirection = -1;
+                        break;
+                    case 0:
+                        nextDirection = UP;
+                        break;
+                    case 1:
+                        nextDirection = DOWN;
+                        break;
+                    case 2:
+                        nextDirection = LEFT;
+                        break;
+                    case 3:
+                        nextDirection = RIGHT;
+                        break;
+                }
+        }
+        updateLocation(fps, arcade);
+    }
+    */
+
+
+    // for ghostbehavior
+    /*
+    public String getGhostName(){
+        return this.GhostName;
+    }
+    */
 }

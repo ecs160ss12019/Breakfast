@@ -5,27 +5,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.util.Pair;
 
-public class PowerPellet implements Pellet{
-    private int type = 1;
-    private int mScreenX;
-    private int mScreenY;
-    private int point = 5;
-
-    public PowerPellet(){
-
+public class PowerPellet extends PelletCell{
+    public PowerPellet(int pelletX, int pelletY,int arcadeindex) {
+        super(pelletX, pelletY,1, arcadeindex );
     }
-    public int getX(){
-        return mScreenX;
-    }
-    public int getY(){
-        return mScreenY;
-    }
-    public int getType(){
-        return this.type;
-    }
-    public int getPoint(){
-        return point;
-    }
-
-
 }

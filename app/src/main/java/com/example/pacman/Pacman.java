@@ -40,66 +40,12 @@ public class Pacman extends Runner implements GameObject{
     private int numRow;
     private int numCol;
 
-    /*
-    individual pacman view height/width
-    this is crucial to centering the pacman
-    on the coordinates
-     */
-    private int bitmapWidth;
-    private int bitmapHeight;
-
-    //currDirection means the pacman is going up, down, left, or right
-    private int currDirection;
-
-    /*
-    nextDirection means the user wants to head to this direction.
-    We need to verify if this direction is okay to goto.
-     */
-    private int nextDirection;
-
     private MotionInArcade motionInArcade;
 
     //did the pacman move?
     private boolean moved;
 
-    @Override
-    public int getCenterX() {
-        return this.position.x;
-    }
 
-    @Override
-    public int getCenterY() {
-        return this.position.y;
-    }
-
-    @Override
-    public int getCurrDirection() {
-        return this.currDirection;
-    }
-
-    @Override
-    public int getNextDirection() {
-        return this.nextDirection;
-    }
-
-    @Override
-    public ArrayList<Integer> getMotionInfo() {
-        ArrayList<Integer> motion = new ArrayList<>();
-        motion.add(this.getCenterX());
-        motion.add(this.getCenterY());
-        motion.add(currDirectionNextPosition.x);
-        motion.add(currDirectionNextPosition.y);
-        motion.add(currDirection);
-        return motion;
-    }
-
-    public int getBitmapWidth() {
-        return bitmapWidth;
-    }
-
-    public int getBitmapHeight() {
-        return bitmapHeight;
-    }
 
     @Override
     public void draw(Canvas canvas) {
@@ -107,47 +53,7 @@ public class Pacman extends Runner implements GameObject{
                 this.position.x - (bitmapWidth/2), this.position.y - (bitmapHeight/2), null);
     }
 
-    /*
-    We use this func to calculate the after move location in a direction,
-    no matter the direction is valid or not.
-     */
-    private TwoTuple move(int direction, long fps) {
-        int nextX = this.position.x;
-        int nextY = this.position.y;
 
-
-
-        // Move the pacman based on the direction variable
-        // and the speed of the previous frame
-        if (direction == LEFT) {
-            nextX = (int)(nextX - speed / fps);
-        }
-        if (direction == RIGHT) {
-            nextX = (int)(nextX + speed / fps);
-        }
-        if (direction == UP) {
-            nextY = (int)(nextY - speed / fps);
-        }
-        if (direction == DOWN) {
-            nextY = (int)(nextY + speed / fps);
-        }
-
-        // Stop the Pacman going off the screen
-        if (nextX - bitmapWidth / 2 < 0) {
-            nextX = bitmapWidth / 2;
-        }
-        if (nextX + bitmapWidth / 2 > mScreen.x) {
-            nextX = mScreen.x - bitmapWidth / 2;
-        }
-        if (nextY - bitmapHeight / 2 < 0) {
-            nextY = bitmapHeight / 2;
-        }
-        if (nextY + bitmapHeight / 2 > mScreen.y) {
-            nextY = mScreen.y - bitmapHeight / 2;
-        }
-
-        return new TwoTuple(nextX, nextY);
-    }
 
     @Override
     public void updateStatus(long fps){
@@ -343,15 +249,15 @@ public class Pacman extends Runner implements GameObject{
         motionInArcade.updateMotionInfo(getMotionInfo());
 
         //check if in decision region
-        if(motionInArcade.inDecisionRegion()) {
-            System.out.println("in region");
+        if (motionInArcade.inDecisionRegion()) {
+            //System.out.println("in region");
             //we need to take action
             if (nextDirection != currDirection) {
-                System.out.println("diff dir");
+                //System.out.println("diff dir");
                 //We need to check user's desired direction
                 NextMotionInfo info1 = motionInArcade.isValidMotion(nextDirection);
                 if (info1.isValid()) {
-                    System.out.println("Valid Turn");
+                    //System.out.println("Valid Turn");
                     //we can change direction.
                     setPosition(info1.getPos());
                     currDirection = nextDirection;
@@ -366,16 +272,32 @@ public class Pacman extends Runner implements GameObject{
              */
             NextMotionInfo info2 = motionInArcade.isValidMotion(currDirection);
             if (!info2.isValid()) {
-                System.out.println("Curr direction invalid");
+                //System.out.println("Curr direction invalid");
                 //Now we must remain at current position
                 setPosition(info2.getPos());
                 return;
             }
         }
 
-        System.out.println("No disturb");
-        //We do not need to disturb current motion
-        setPosition(currDirectionNextPosition);
+        /*
+        Now we can keep the original motion,
+        but we still need to know if the next move
+        is still on path.
+         */
+
+        Pair<TwoTuple, Boolean> checkNextMoveInBound = motionInArcade.mostDistantPathBlock(
+                new TwoTuple(currDirectionNextPosition), nextDirection);
+
+        if (checkNextMoveInBound.second){
+            //System.out.println("No disturb");
+            //We do not need to disturb current motion
+            setPosition(currDirectionNextPosition);
+            return;
+        }
+        System.out.println("Bad Fps: " + fps + "  gap: " + speed / fps +
+                "  prev: " + this.position.x + " " + this.position.y + "  next: " + currDirectionNextPosition.x + " " + currDirectionNextPosition.y);
+        //setCenter(checkNextMoveInBound.first.first(), checkNextMoveInBound.first.second());
+        setPosition(this.position);
     }
 
     //Constructor
@@ -425,6 +347,14 @@ public class Pacman extends Runner implements GameObject{
         this.speed = speed;
 
         motionInArcade = new MotionInArcade(arcade);
+    }
+
+    public int getNextposX(){
+        return this.currDirectionNextPosition.x;
+    }
+
+    public int getNextposY(){
+        return this.currDirectionNextPosition.y;
     }
 }
 
