@@ -242,29 +242,30 @@ public class Pacman extends Runner implements GameObject{
         //next move in current direction
         TwoTuple next = move(currDirection, fps);
         currDirectionNextPosition = next;
+        // next move in next direction
+        nextDirectionNextPosition = move(nextDirection, fps);
 
         System.out.println("Pacman update: " + this.position.x + " " + this.position.y + " " + currDirectionNextPosition.x + " " + currDirectionNextPosition.y);
 
         //update motion info
         motionInArcade.updateMotionInfo(getMotionInfo());
 
+        if (nextDirection != currDirection) {
+            //System.out.println("diff dir");
+            //We need to check user's desired direction
+            NextMotionInfo info1 = motionInArcade.isValidMotion(nextDirection);
+            if (info1.isValid()) {
+                //System.out.println("Valid Turn");
+                //we can change direction.
+                setPosition(info1.getPos());
+                currDirection = nextDirection;
+                return;
+            }
+        }
         //check if in decision region
         if (motionInArcade.inDecisionRegion()) {
             //System.out.println("in region");
             //we need to take action
-            if (nextDirection != currDirection) {
-                //System.out.println("diff dir");
-                //We need to check user's desired direction
-                NextMotionInfo info1 = motionInArcade.isValidMotion(nextDirection);
-                if (info1.isValid()) {
-                    //System.out.println("Valid Turn");
-                    //we can change direction.
-                    setPosition(info1.getPos());
-                    currDirection = nextDirection;
-                    return;
-                }
-            }
-
             /*
             either user did not input direction
             or user's desired input is invalid.

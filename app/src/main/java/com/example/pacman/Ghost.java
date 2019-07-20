@@ -5,9 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.util.Pair;
 
-import java.util.ArrayList;
 import java.util.Random;
-import java.lang.*;
 
 public class Ghost extends Runner implements GameObject {
 
@@ -21,13 +19,12 @@ public class Ghost extends Runner implements GameObject {
     private int bitmapWidth;
     private int bitmapHeight;
 
-    private int currDirection;
-    private int nextDirection;
     private boolean needToChangeDir =false;
 
     private boolean collision;
     private Pacman pacman; // used for chase and kill Pacman
 
+    private Arcade arcade;
     private MotionInArcade motionInArcade;
 
     private String GhostName;
@@ -57,6 +54,7 @@ public class Ghost extends Runner implements GameObject {
      //   this.GhostName = name;
 
         motionInArcade = new MotionInArcade(arcade);
+        this.arcade = arcade;
     }
 
     @Override
@@ -79,97 +77,51 @@ public class Ghost extends Runner implements GameObject {
             return;
         }
 
-        // The first Movement solution was based on Collision
-        // Siqi updated movement solution based on arcade, so this part is comment out
-
-//        CollisionDetector collisionDetector = new CollisionDetector();
-//
-//        int nextX = 0;
-//        int nextY = 0;
-//
-//        if (nextDirection != -1) {
-//            Pair<Integer, Integer> next = move(nextDirection, fps);
-//            nextX = next.first;
-//            nextY = next.second;
-//
-//            //Check collision
-//            ArrayList<Obstacle> obstacles =arcade.getObstacleList(nextX, nextY);
-//            Obstacle ghostReference = new Obstacle(nextX, nextY,
-//                    (int)(bitmapWidth*0.8), (int)(bitmapHeight*0.8));
-//
-//            collision = collisionDetector.collisionExist(ghostReference, obstacles);
-//            if (!collision) {
-//                setCenter(nextX, nextY);
-//                currDirection = nextDirection;
-//                return;
-//            }
-//        }
-//
-//        /*
-//        Either there is no new direction,
-//        or that direction does not work.
-//        Try moving in current direction, if it do
-//        not work as well, stay in current position
-//         */
-//        Pair<Integer, Integer> next = move(currDirection, fps);
-//        nextX = next.first;
-//        nextY = next.second;
-//
-//        //Check collision
-//        ArrayList<Obstacle> obstacles = arcade.getObstacleList(nextX, nextY);
-//        Obstacle ghostReference = new Obstacle(nextX, nextY,
-//                (int)(bitmapWidth * 0.8), (int)(bitmapHeight * 0.8));
-//
-//        collision = collisionDetector.collisionExist(ghostReference, obstacles);
-//        if(!collision) {
-//            setCenter(nextX, nextY);
-//        }
-
-        //next move in current direction
+        // next move in current direction
         TwoTuple next = move(currDirection, fps);
         currDirectionNextPosition = next;
+        // next move in next direction
+        nextDirectionNextPosition = move(nextDirection, fps);
 
         System.out.println("Ghost update: " + this.position.x + " " + this.position.y + " " + currDirectionNextPosition.x + " " + currDirectionNextPosition.y);
 
         //update motion info
         motionInArcade.updateMotionInfo(getMotionInfo());
 
-        //check if in decision region
-        if(motionInArcade.inDecisionRegion()) {
-            //System.out.println("in region");
-            //we need to take action
-            if (nextDirection != currDirection) {
-                //System.out.println("diff dir");
-                //We need to check user's desired direction
-                NextMotionInfo info1 = motionInArcade.isValidMotion(nextDirection);
-                if (info1.isValid()) {
-                    //System.out.println("Valid Turn");
-                    //we can change direction.
-                    setPosition(info1.getPos());
-                    currDirection = nextDirection;
-                    needToChangeDir = false;
-                    return;
-                }
+        // we don't need to check if it's in decision region when direction changed,
+        // because ghost will be on the middle of the block, which is contained in decision region
+        if (nextDirection != currDirection) {
+            //System.out.println("diff dir");
+            //We need to check user's desired direction
+            NextMotionInfo info1 = motionInArcade.isValidMotion(nextDirection);
+            if (info1.isValid()) {
+                //System.out.println("Valid Turn");
+                //we can change direction.
+                setPosition(info1.getPos());
+                currDirection = nextDirection;
+                needToChangeDir = false;
+                return;
             }
-
-            /*
+        }
+        /*
             either user did not input direction
             or user's desired input is invalid.
             We check if we can continue on current direction
              */
+        //check if in decision region
+        if(motionInArcade.inDecisionRegion()) {
+            //System.out.println("in region");
+            //we need to take action
             NextMotionInfo info2 = motionInArcade.isValidMotion(currDirection);
             if (!info2.isValid()) {
                 //System.out.println("Curr direction invalid");
-                //Now we must remain at current position
-                setPosition(info2.getPos());
+                setPosition(info2.getPos()); // Now we must remain at current position
                 needToChangeDir = true;
                 return;
             }
         }
 
-        //System.out.println("No disturb");
-        //We do not need to disturb current motion
-        needToChangeDir = false;
+
 
         /*
         Now we can keep the original motion,
@@ -183,13 +135,18 @@ public class Ghost extends Runner implements GameObject {
         if (checkNextMoveInBound.second){
             //System.out.println("No disturb");
             //We do not need to disturb current motion
+
             setPosition(currDirectionNextPosition);
+            needToChangeDir = false;
             return;
         }
         System.out.println("Bad Fps: " + fps + "  gap: " + speed / fps +
                 "  prev: " + this.position.x + " " + this.position.y + "  next: " + currDirectionNextPosition.x + " " + currDirectionNextPosition.y);
+        this.blockPos = arcade.mapBlock(this.position, currDirection);
+        System.out.println(this.blockPos.x + " " + this.blockPos.y);
         //setCenter(checkNextMoveInBound.first.first(), checkNextMoveInBound.first.second());
-        setPosition(currDirectionNextPosition);
+        setPosition(this.position);
+        needToChangeDir = true;
     }
 
     public void updateMovementStatus(long fps, Arcade arcade) {

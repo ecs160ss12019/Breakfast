@@ -1,6 +1,5 @@
 package com.example.pacman;
 
-import android.util.Log;
 import android.util.Pair;
 
 import java.util.ArrayList;
@@ -85,6 +84,7 @@ public class MotionInArcade {
     private int nextX;
     private int nextY;
     private int currDirection;
+    private int nextDirection;
 
     private TwoTuple currPos;
     private int blockCenterX;
@@ -331,7 +331,7 @@ public class MotionInArcade {
     */
     public void updateMotionInfo(ArrayList<Integer> motion) {
         //motion validation
-        if(motion.size() != 5) {
+        if(motion.size() != 8) {
             System.out.println("Error: motion info");
         }
 
@@ -340,6 +340,9 @@ public class MotionInArcade {
         this.nextX = motion.get(2);
         this.nextY = motion.get(3);
         this.currDirection = motion.get(4);
+        this.nextDirection = motion.get(5);
+        // this.nextX = motion.get(6);
+        // this.nextY = motion.get(7);
 
         /*
         First, let's find out which block is

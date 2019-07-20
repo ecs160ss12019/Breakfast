@@ -24,21 +24,26 @@ public class Runner implements GameObject {
     final int UP = 2;
     final int DOWN = 3;
 
-    //coordinate
-    TwoTuple position;
-    TwoTuple currDirectionNextPosition;
-    TwoTuple mScreen;
-
-    float speed;
-
     //currDirection means the pacman is going up, down, left, or right
     int currDirection;
-
     /*
     nextDirection means the user wants to head to this direction.
     We need to verify if this direction is okay to goto.
      */
     int nextDirection;
+
+    // block
+    TwoTuple blockPos;
+    //coordinate
+    TwoTuple position;
+    TwoTuple currDirectionNextPosition;
+    TwoTuple nextDirectionNextPosition;
+
+    TwoTuple mScreen;
+
+    float speed;
+
+
 
     public int getBitmapWidth() {
         return bitmapWidth;
@@ -86,6 +91,9 @@ public class Runner implements GameObject {
         motion.add(currDirectionNextPosition.x);
         motion.add(currDirectionNextPosition.y);
         motion.add(currDirection);
+        motion.add(nextDirection);
+        motion.add(nextDirectionNextPosition.x);
+        motion.add(nextDirectionNextPosition.y);
         return motion;
     }
 

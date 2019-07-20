@@ -175,14 +175,14 @@ public class Arcade{
                  */
                 if (currX == left && currY > up && currY < down) {
                     switch (currDirection) {
-                        case 0:
-                            //heading left
+                        case 0: //heading left
                             if (i == 0) {
                                 return new TwoTuple(i, j);
                             }
                             return new TwoTuple(i - 1, j);
-                        case 1:
-                            //heading right
+                        case 1: //heading right
+                        case 2: // up
+                        case 3: // down
                             return new TwoTuple(i, j);
                     }
                 }
@@ -201,8 +201,9 @@ public class Arcade{
                                 return new TwoTuple(i, j);
                             }
                             return new TwoTuple(i, j - 1);
-                        case 3:
-                            //heading down
+                        case 0: // left
+                        case 1: // right
+                        case 3: //heading down
                             return new TwoTuple(i, j);
                     }
                 }
