@@ -270,24 +270,40 @@ public class MotionInArcade {
         if (nextDirection == LEFT) {
             //System.out.println("Attempt to move Left");
             nextPos = new TwoTuple(posInArcade_X, posInArcade_Y - 1);
+
+            if(nextPos.second() == -1 || nextPos.first() == -1) {
+                System.out.println("LEFT index: " + nextPos.first() + " " + nextPos.second());
+            }
             valid = arcade.getBlock(nextPos).getType() == 16;
         }
 
         if (nextDirection == RIGHT) {
             //System.out.println("Attempt to move Right");
             nextPos = new TwoTuple(posInArcade_X, posInArcade_Y + 1);
+            if(nextPos.second() == -1 || nextPos.first() == -1) {
+                System.out.println("RIGHT index: " + -1);
+            }
+
             valid = arcade.getBlock(nextPos).getType() == 16;
         }
 
         if (nextDirection == UP) {
             //System.out.println("Attempt to move Up");
             nextPos = new TwoTuple(posInArcade_X - 1, posInArcade_Y);
+            if(nextPos.second() == -1 || nextPos.first() == -1) {
+                System.out.println("UP index: " + -1);
+            }
+
             valid = arcade.getBlock(nextPos).getType() == 16;
         }
 
         if (nextDirection == DOWN) {
             //System.out.println("Attempt to move Down");
             nextPos = new TwoTuple(posInArcade_X + 1, posInArcade_Y);
+
+            if(nextPos.second() == -1 || nextPos.first() == -1) {
+                System.out.println("DOWN  index: " + -1);
+            }
             valid = arcade.getBlock(nextPos).getType() == 16;
         }
 

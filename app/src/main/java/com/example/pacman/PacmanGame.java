@@ -120,7 +120,7 @@ class PacmanGame extends SurfaceView implements Runnable {
             // Store the answer in timeThisFrame
             //long timeThisFrame = System.currentTimeMillis() - frameStartTime;
             long timeThisFrame = (System.nanoTime() - frameStartTime) / 1000000;
-            System.out.println(timeThisFrame);
+
 
             // Make sure timeThisFrame is at least 1 millisecond
             // because accidentally dividing by zero crashes the game
@@ -130,6 +130,7 @@ class PacmanGame extends SurfaceView implements Runnable {
                 // mBat and mBall next frame/loop
                 mFPS = MILLIS_IN_SECOND / timeThisFrame;
             }
+            System.out.println("fps: " + mFPS);
         }
     }
 
@@ -139,7 +140,7 @@ class PacmanGame extends SurfaceView implements Runnable {
     the thread is running
      */
     public void updateGame() {
-        int direction = navigationButtons.checkAndUpdate(userInput);
+
 
         /*
         if player touched or is continuous touching
@@ -160,10 +161,39 @@ class PacmanGame extends SurfaceView implements Runnable {
         //if(navigationButtons.initialInputFlag) {
 
         //System.out.println("Pacman Location: " + pacman.getCenterX() + " " + pacman.getCenterY());
-        pacman.updateMovementStatus(direction, mFPS);
-        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
-        cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
-        //}
+
+
+        //FIXME
+        /*
+        concurrency may save us for now by boosting
+        the speed. However, we must fix the bug and
+        implement a better algorithm.
+         */
+        Thread pacManThread = new Thread(new Runnable(){
+            @Override
+            public void run() {
+                int direction = navigationButtons.checkAndUpdate(userInput);
+                pacman.updateMovementStatus(direction, mFPS);
+            }
+        });
+
+        Thread ghostsThread = new Thread(new Runnable(){
+            @Override
+            public void run() {
+                ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+            }
+        });
+
+        Thread cakeThread = new Thread(new Runnable(){
+            @Override
+            public void run() {
+                cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+            }
+        });
+
+        pacManThread.start();
+        ghostsThread.start();
+        cakeThread.start();
     }
 
     // This method is called by PacmanActivity
