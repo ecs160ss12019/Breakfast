@@ -91,10 +91,10 @@ public class Arcade{
     public TwoTuple pacmanPosition;
 
     //where the ghost should start from
-    private TwoTuple ghostPosition;
+    public TwoTuple ghostPosition;
 
     //where the cake should start from
-    private TwoTuple cakePosition;
+    public TwoTuple cakePosition;
 
     //pacman start position in pixel
     private TwoTuple pacmanPosition_pix;

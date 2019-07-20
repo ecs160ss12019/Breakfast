@@ -324,6 +324,7 @@ public class Pacman extends Runner implements GameObject{
         if (allowsMove) {
             //move and go
             posInArcade = movedTo(mathematicalMove, currDirection);
+            return;
         }
 
         //else no move, stay there
@@ -339,18 +340,18 @@ public class Pacman extends Runner implements GameObject{
         int movedDistance = 0;
         TwoTuple currPos = posInArcade;
 
-        System.out.println("Starting to move from: " + posInArcade.first() + " " + posInArcade.second());
+//        System.out.println("Starting to move from: " + posInArcade.first() + " " + posInArcade.second());
         boolean allowsMove = arcadeAnalyzer.allowsToGo(currPos, movingDirection);
         while (movedDistance <= mathematicalMove && allowsMove) {
             movedDistance += arcadeAnalyzer.blockDimension;
             currPos = TwoTuple.moveTo(currPos, movingDirection);
 
-            System.out.println("moved distance: " + movedDistance);
-            System.out.println("Moved to: " + currPos.first() + " " + currPos.second());
+//            System.out.println("moved distance: " + movedDistance);
+//            System.out.println("Moved to: " + currPos.first() + " " + currPos.second());
         }
 
-        System.out.println("!!!!!");
-        System.out.println("Finished moving to: " + currPos.first() + " " + currPos.second());
+//        System.out.println("!!!!!");
+//        System.out.println("Finished moving to: " + currPos.first() + " " + currPos.second());
         return currPos;
     }
 

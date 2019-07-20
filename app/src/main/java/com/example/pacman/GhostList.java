@@ -57,6 +57,37 @@ public class GhostList {
         }
     }
 
+    //Constructor2
+    public GhostList(Context context, int sx, int sy, Arcade arcade, ArcadeAnalyzer arcadeAnalyzer, float speed) {
+        this.context = context;
+        mScreen = new TwoTuple(sx,sy);
+        this.arcade = arcade;
+
+        //currently, the collection is 2*2 with 4 views in total
+        numRow = 2;
+        numCol = 2;
+
+        //load ghosts img from resource
+        Bitmap ghostsCollectionView = BitmapFactory.decodeResource(context.getResources(), R.drawable.ghosts);
+        BitmapDivider divider = new BitmapDivider(ghostsCollectionView);
+        ArrayList<Bitmap> unsizedGhostsViewList = divider.split(numRow, numCol);
+        ghostsViewList = new ArrayList<>();
+        for (int i = 0; i < unsizedGhostsViewList.size(); i++) {
+            Bitmap bitmap = Bitmap.createScaledBitmap(unsizedGhostsViewList.get(i),
+                    sy / 15, sy/15, true);
+            ghostsViewList.add(bitmap);
+        }
+
+        ghosts = new ArrayList<>();
+        for (int i=0; i<GHOSTS_NUM; i++) {
+
+            //**For ghostbehavior;
+            //Ghost ghost = new Ghost(context, sx, sy, arcade, pacman, ghostsViewList.get(i), i, speed, name);
+            Ghost ghost = new Ghost(context, sx, sy, arcade, pacman, ghostsViewList.get(i), i, arcadeAnalyzer, speed);
+            ghosts.add(ghost);
+        }
+    }
+
     public void updateMovementStatus(final long mFPS, final Arcade arcadeContainingPacman) {
         for (int i = 0; i < ghosts.size(); i++) {
             final int index = i;
