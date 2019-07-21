@@ -96,6 +96,7 @@ public class Ghost extends Runner implements GameObject {
 
         this.arcadeAnalyzer = arcadeAnalyzer;
         this.posInArcade = new TwoTuple(arcade.ghostPosition);
+        this.posInArcadeInit = posInArcade;
         this.arcade = arcade;
     }
 

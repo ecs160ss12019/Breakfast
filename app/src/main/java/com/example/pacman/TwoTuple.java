@@ -34,6 +34,22 @@ public class TwoTuple {
         return new TwoTuple(x + 1, y);
     }
 
+    public TwoTuple pixelToLeft(int gap) {
+        return new TwoTuple(x - gap, y);
+    }
+
+    public TwoTuple pixelToRight(int gap) {
+        return new TwoTuple(x + gap, y);
+    }
+
+    public TwoTuple pixelToUp(int gap) {
+        return new TwoTuple(x, y - gap);
+    }
+
+    public TwoTuple pixelToDown(int gap) {
+        return new TwoTuple(x, y + gap);
+    }
+
     public static TwoTuple moveTo(TwoTuple currPos, int direction) {
         if (direction == LEFT) {
             return currPos.toLeft();
@@ -49,6 +65,29 @@ public class TwoTuple {
 
         if (direction == DOWN) {
             return currPos.toDown();
+        }
+
+        else {
+            System.out.println("Two Tuple moving direction -1");
+            return new TwoTuple(Integer.MAX_VALUE, Integer.MAX_VALUE);
+        }
+    }
+
+    public static TwoTuple addPixelGap(TwoTuple posInScreen, int direction, int gap) {
+        if (direction == LEFT) {
+            return posInScreen.pixelToLeft(gap);
+        }
+
+        if (direction == RIGHT) {
+            return posInScreen.pixelToRight(gap);
+        }
+
+        if (direction == UP) {
+            return posInScreen.pixelToUp(gap);
+        }
+
+        if (direction == DOWN) {
+            return posInScreen.pixelToDown(gap);
         }
 
         else {
