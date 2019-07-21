@@ -65,9 +65,6 @@ class PacmanGame extends SurfaceView implements Runnable {
     //consoleReader for debugging use
     //ConsoleReader consoleReader;
 
-    //Initial Ghost Name
-    private String [] GhostName = {"Yellow", "Red", "Blue", "Pink"};
-
 
     // When we start the thread with:
     // mGameThread.start();
@@ -373,6 +370,8 @@ class PacmanGame extends SurfaceView implements Runnable {
         TwoTuple pacmanInitPos = new TwoTuple(arcades.getArcadeContainingPacman().pacmanPosition);
         pacman = new Pacman(context, mScreen, arcades.getArcadeContainingPacman(), pacmanInitPos,
                 arcadeAnalyzer, gameMode.getPacmanSpeed(), collision);
+
+//        String [] GhostName = {"Yellow", "Red", "Blue", "Pink"};
 
 //        ghosts = new GhostList(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(), arcadeAnalyzer,
 //                gameMode.getGhostsSpeed(), collision, pacman, GhostName);

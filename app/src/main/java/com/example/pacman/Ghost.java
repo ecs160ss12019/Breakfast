@@ -54,7 +54,7 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
         mScreen = screenResolution;
         this.currDirection = direction;
         this.nextDirection = -1;
-         this.GhostName = Name;
+        this.GhostName = Name;
 
         this.ghostView = ghostView;
         bitmapWidth = ghostView.getWidth();
@@ -643,12 +643,4 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
                 break;
         }
     }
-
-
-    // for ghostbehavior
-
-    public String getGhostName(){
-        return this.GhostName;
-    }
-
 }
