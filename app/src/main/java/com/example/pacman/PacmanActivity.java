@@ -6,6 +6,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -50,5 +51,29 @@ public class PacmanActivity extends Activity {
 
         // More code here later
         mPacmanGame.pause();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // System.out.println("key pressed----------------" + event.getKeyCode());
+        switch(event.getKeyCode()) {
+            case 19: // up arrow
+                // System.out.println("I pressed up------------");
+                mPacmanGame.arrowKey = TwoTuple.UP;
+                break;
+            case 20: // down arrow
+                // System.out.println("I pressed down------------");
+                mPacmanGame.arrowKey = TwoTuple.DOWN;
+                break;
+            case 21: // left arrow
+                //System.out.println("I pressed left------------");
+                mPacmanGame.arrowKey = TwoTuple.LEFT;
+                break;
+            case 22: // right arrow
+                //System.out.println("I pressed right------------");
+                mPacmanGame.arrowKey = TwoTuple.RIGHT;
+                break;
+        }
+        return true;
     }
 }

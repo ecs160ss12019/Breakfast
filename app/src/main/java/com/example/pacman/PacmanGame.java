@@ -65,6 +65,7 @@ class PacmanGame extends SurfaceView implements Runnable {
     //consoleReader for debugging use
     //ConsoleReader consoleReader;
 
+    int arrowKey = -1;
 
     // When we start the thread with:
     // mGameThread.start();
@@ -144,7 +145,12 @@ class PacmanGame extends SurfaceView implements Runnable {
     the thread is running
      */
     public void updateGame() {
-        final int direction = navigationButtons.checkAndUpdate(userInput);
+        final int direction; // check if user pressed touch button on screen; if not, check if user entered arrow key on keyboard (for testing)
+        if(navigationButtons.checkAndUpdate(userInput) != -1) direction = navigationButtons.checkAndUpdate(userInput);
+        else {
+            direction = arrowKey;
+            arrowKey = -1;
+        }
 
         /*
         if player touched or is continuous touching
