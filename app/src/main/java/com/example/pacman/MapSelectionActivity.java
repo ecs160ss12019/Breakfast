@@ -2,15 +2,15 @@ package com.example.pacman;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 
-public class WelcomeActivity extends Activity {
+public class MapSelectionActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,18 +19,18 @@ public class WelcomeActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //We don't want the title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_welcome);
-        playGame();
+        setContentView(R.layout.activity_map_selection);
+        gameOn();
     }
-    void playGame(){
-        Button playButton = (Button) findViewById(R.id.playButton);
-        playButton.setOnClickListener(new View.OnClickListener() {
+
+    void gameOn(){
+        TextView gaming = findViewById(R.id.gaming);
+        gaming.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(WelcomeActivity.this, MapSelectionActivity.class));
+                startActivity(new Intent(MapSelectionActivity.this, PacmanActivity.class));
             }
         });
 
     }
-
 }
