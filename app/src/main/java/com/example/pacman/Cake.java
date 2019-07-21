@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.util.Pair;
 
 import java.util.Random;
 
@@ -18,7 +17,6 @@ import java.util.Random;
 public class Cake extends Runner implements GameObject {
 
     //Added variables
-    private TwoTuple posInArcade;
     private ArcadeAnalyzer arcadeAnalyzer;
 
     private Arcade arcade;
@@ -28,12 +26,23 @@ public class Cake extends Runner implements GameObject {
     private Bitmap scaledCakeImg;
     private MotionInArcade motionInArcade;
 
+    private boolean isDead;
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public void setDead(boolean dead) {
+        isDead = dead;
+    }
+
 //    @Override
 //    public void draw(Canvas canvas){
 //        canvas.drawBitmap(scaledCakeImg, xCoordiante - bitmapWidth/2,
 //                        yCoordinate - bitmapHeight/2, null);
 //    }
-    public Cake(Context context, TwoTuple screenResolution, Arcade arcade, float speed){
+    public Cake(Context context, TwoTuple screenResolution, Arcade arcade, float speed, CollisionSubject collision){
+        super(collision);
         this.speed = speed;
         this.arcade = arcade;
         this.context = context;
@@ -265,7 +274,8 @@ public class Cake extends Runner implements GameObject {
     }
 
     //Constructor
-    public Cake(Context context, int sx, int sy, Arcade arcade, ArcadeAnalyzer arcadeAnalyzer, float speed){
+    public Cake(Context context, int sx, int sy, Arcade arcade, ArcadeAnalyzer arcadeAnalyzer, float speed, CollisionSubject collision){
+        super(collision);
         this.speed = speed;
         this.arcade = arcade;
         this.context = context;

@@ -40,16 +40,14 @@ class PacmanGame extends SurfaceView implements Runnable {
 
     //Our pacman!
     private Pacman pacman;
-
     private GhostList ghosts;
-
     private Cake cake;
-
     //Our Pellets
     private PelletList pelletList;
-
     //Our Arcade List
     private ArcadeList arcades;
+
+    private Collision collision;
 
     //Our Navigation Buttons!
     private NavigationButtons navigationButtons;
@@ -172,34 +170,51 @@ class PacmanGame extends SurfaceView implements Runnable {
         implement a better algorithm.
          */
 
-        Thread pacManThread = new Thread(new Runnable(){
-            @Override
-            public void run() {
-                pacman.updateMovementStatus(direction, mFPS);
-            }
-        });
+        collision.recordRunnersPosition();
 
-        Thread ghostsThread = new Thread(new Runnable(){
-            @Override
-            public void run() {
-                ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
-            }
-        });
+//        Thread pacManThread = new Thread(new Runnable(){
+//            @Override
+//            public void run() {
+//                pacman.updateMovementStatus(direction, mFPS);
+//            }
+//        });
+//
+//        Thread ghostsThread = new Thread(new Runnable(){
+//            @Override
+//            public void run() {
+//                ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+//            }
+//        });
+//
+//        Thread cakeThread = new Thread(new Runnable(){
+//            @Override
+//            public void run() {
+//                cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+//            }
+//        });
+//
+//        pacManThread.start();
+//        ghostsThread.start();
+//        cakeThread.start();
+//
+//        try {
+//            System.out.println("Waiting for threads to finish.");
+//            pacManThread.join();
+//            ghostsThread.join();
+//            cakeThread.join();
+//
+//        } catch (InterruptedException e) {
+//            System.out.println("Main thread Interrupted");
+//        }
 
-        Thread cakeThread = new Thread(new Runnable(){
-            @Override
-            public void run() {
-                cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
-            }
-        });
 
-        pacManThread.start();
-        ghostsThread.start();
-        cakeThread.start();
 
-//        pacman.updateMovementStatus(direction, mFPS);
-//        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
-//        cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+        pacman.updateMovementStatus(direction, mFPS);
+        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+        cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+
+        collision.updateRunnersPosition();
+        collision.notifyObservers();
     }
 
     // This method is called by PacmanActivity
@@ -301,23 +316,22 @@ class PacmanGame extends SurfaceView implements Runnable {
         arcadeAnalyzer.run();
 
 
-        pelletList = new PelletList(context,arcades.getArcades(), new TwoTuple(mScreen.x, mScreen.y));
+        collision = new Collision(arcades.getArcadeContainingPacman());
+
+        pelletList = new PelletList(context, arcades.getArcades(), new TwoTuple(mScreen.x, mScreen.y), collision);
 
         // Initialize the pacman and ghost
 //        pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize(),
 //                arcades.getArcadeContainingPacman(), gameMode.getPacmanSpeed());
         TwoTuple pacmanInitPos = new TwoTuple(arcades.getArcadeContainingPacman().pacmanPosition);
         pacman = new Pacman(context, mScreen, arcades.getArcadeContainingPacman(), pacmanInitPos,
-                arcadeAnalyzer, gameMode.getPacmanSpeed());
-
-        System.out.println("Finished pacman init");
-
+                arcadeAnalyzer, gameMode.getPacmanSpeed(), collision);
 
         ghosts = new GhostList(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(), arcadeAnalyzer,
-                gameMode.getGhostsSpeed());
+                gameMode.getGhostsSpeed(), collision);
 //
         cake = new Cake(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(),
-                arcadeAnalyzer, gameMode.getGhostsSpeed());
+                arcadeAnalyzer, gameMode.getGhostsSpeed(), collision);
 //
 //        collisionDetector = new CollisionDetector();
 

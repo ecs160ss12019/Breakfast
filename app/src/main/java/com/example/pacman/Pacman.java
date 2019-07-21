@@ -13,7 +13,6 @@ public class Pacman extends Runner implements GameObject{
      * create Pacman here
      */
     //coordinate
-    private TwoTuple posInArcade;
     private ArcadeAnalyzer arcadeAnalyzer;
     private Arcade arcade;
     private float speed;
@@ -357,7 +356,8 @@ public class Pacman extends Runner implements GameObject{
 
     //Constructor2
     public Pacman(Context context, TwoTuple screenResolution, Arcade arcade, TwoTuple posInArcade,
-                 ArcadeAnalyzer arcadeAnalyzer, float speed) {
+                 ArcadeAnalyzer arcadeAnalyzer, float speed, CollisionSubject collision) {
+        super(collision);
         this.context = context;
         this.mScreen = screenResolution;
         this.arcade = arcade;
@@ -407,7 +407,8 @@ public class Pacman extends Runner implements GameObject{
 
     //Constructor
     public Pacman(Context context, TwoTuple screenResolution, TwoTuple posInArcade, Pair<Integer, Integer> optimalSize,
-                  Arcade arcade, float speed) {
+                  Arcade arcade, float speed, Collision collision) {
+        super(collision);
         this.posInArcade = posInArcade;
         setPosition(arcade.getPacmanPosition_pix());
         this.context = context;

@@ -3,7 +3,6 @@ package com.example.pacman;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.util.Pair;
 
 import java.util.Random;
 
@@ -12,7 +11,6 @@ public class Ghost extends Runner implements GameObject {
     boolean alive;
 
     //ADDED variables
-    private TwoTuple posInArcade;
     private ArcadeAnalyzer arcadeAnalyzer;
     private Arcade arcade;
 
@@ -49,7 +47,8 @@ public class Ghost extends Runner implements GameObject {
     //             float speed, String name)
      public Ghost(Context context, TwoTuple screenResolution, Arcade arcade,
                  Pacman pacman, Bitmap ghostView,  int direction,
-                    float speed) {
+                    float speed, CollisionSubject collision) {
+         super(collision);
         this.context = context;
         mScreen = screenResolution;
         this.currDirection = direction;
@@ -74,7 +73,8 @@ public class Ghost extends Runner implements GameObject {
     //Constructor2
     public Ghost(Context context, int sx, int sy, Arcade arcade,
                  Pacman pacman, Bitmap ghostView, int direction, ArcadeAnalyzer arcadeAnalyzer,
-                 float speed) {
+                 float speed, CollisionSubject collision) {
+         super(collision);
         this.context = context;
         mScreenX = sx;
         mScreenY = sy;
@@ -167,7 +167,7 @@ public class Ghost extends Runner implements GameObject {
             return;
         }
 
-        // The first Movement solution was based on Collision
+        // The first Movement solution was based on CollisionSubject
         // Siqi updated movement solution based on arcade, so this part is comment out
 
 //        CollisionDetector collisionDetector = new CollisionDetector();
