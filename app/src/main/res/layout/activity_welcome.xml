@@ -8,7 +8,6 @@
     tools:context=".WelcomeActivity"
     android:background="@drawable/pacman_front_page">
 
-
     <Button
         android:id="@+id/playButton"
         android:layout_width="wrap_content"
