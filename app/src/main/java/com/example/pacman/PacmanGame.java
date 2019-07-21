@@ -182,6 +182,7 @@ class PacmanGame extends SurfaceView implements Runnable {
 
         collision.recordRunnersPosition();
 
+
 //        Thread pacManThread = new Thread(new Runnable(){
 //            @Override
 //            public void run() {
@@ -235,6 +236,23 @@ class PacmanGame extends SurfaceView implements Runnable {
                 pacman.updateMovementStatus(direction, mFPS);
             }
         });
+
+        //Here we update the score if Pacman have eaten any pellets valuable.
+        int type = collision.getScoreType();
+        if(type == 0){
+            score.pwrpelletEaten();
+        }else if(type == 1){
+            score.pelletEaten();
+        }
+//        System.out.println("SCORE: " + score.getScore());
+
+
+        //Here we update the score if Pacman have eaten cake + ghosts
+
+
+
+
+
 
 //        Thread ghostsThread = new Thread(new Runnable(){
 //            @Override
@@ -369,7 +387,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         collision = new Collision(arcades.getArcadeContainingPacman());
 
         pelletList = new PelletList(context, arcades.getArcades(), new TwoTuple(mScreen.x, mScreen.y), collision);
-
+        score = new PointSystem();
         // Initialize the pacman and ghost
 //        pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize(),
 //                arcades.getArcadeContainingPacman(), gameMode.getPacmanSpeed());
