@@ -1,7 +1,5 @@
 package com.example.pacman;
 
-import android.util.Log;
-
 /*
 * this class modifies the speed of game based on
 * the player selection
@@ -12,9 +10,9 @@ public class GameMode {
     private float ghostsSpeed;
     private float pacmanSpeed;
     private int screenX;
-    private final int easy = 0;
-    private final int normal = 1;
-    private final int hard = 2;
+    private final int EASY = 0;
+    private final int NORMAL = 1;
+    private final int HARD = 2;
 
     public float getGhostsSpeed() {
         return ghostsSpeed;
@@ -25,51 +23,45 @@ public class GameMode {
     }
 
     public GameMode(int inputMode, int screenX){
-        // mode is normal by default
         this.screenX = screenX;
-        modeSelection = 1;
+        // mode is normal by default
+        modeSelection = NORMAL;
         switch (inputMode) {
             case 0:
-                break;
+                modeSelection = EASY;
             case 1:
-                modeSelection = 1;
                 break;
             case 2:
-                modeSelection = 2;
+                modeSelection = HARD;
                 break;
         }
         modeManager();
-
     }
     public void modeManager(){
         switch (modeSelection){
-            case easy:
+            case EASY:
                 easyMode();
                 break;
-            case normal:
+            case NORMAL:
                 normalMode();
                 break;
-            case hard:
+            case HARD:
                 hardMode();
                 break;
         }
     }
     public void easyMode(){
-        // This code means the Pacman and ghosts can cover the width
-        // of the screen in 9 seconds
-        pacmanSpeed = screenX/12;
-        ghostsSpeed = screenX/12;
+        this.pacmanSpeed = screenX/50;
+        this.ghostsSpeed = screenX/50;
     }
     public void normalMode(){
         // This code means the Pacman and ghosts can cover the width
         // of the screen in 9 seconds
-        pacmanSpeed = screenX/9;
-        ghostsSpeed = screenX/9;
+        this.pacmanSpeed = screenX/8;
+        this.ghostsSpeed = screenX/8;
     }
     public void hardMode(){
-        // This code means the Pacman and ghosts can cover the width
-        // of the screen in 9 seconds
-        pacmanSpeed = screenX/4;
-        ghostsSpeed = screenX/4;
+        this.pacmanSpeed = screenX/15;
+        this.ghostsSpeed = screenX/15;
     }
 }

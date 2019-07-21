@@ -4,10 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import java.util.ArrayList;
-import java.util.Random;
 
-public class PelletList {
+import java.util.ArrayList;
+
+public class PelletList implements CollisionObserver {
     private ArrayList<ArrayList<PelletCell>> pelletList;
     ArrayList<Arcade> arcades;
     private ArrayList<Bitmap> pelletViewList;
@@ -17,6 +17,9 @@ public class PelletList {
     private int pwrBitmapWidth;
     private int pwrBitmapHeight;
 
+    private int indexOfArcadeContainPacman = 0; // TODO: hard code to 0
+    private CollisionSubject collision;
+
     /*
         We want to Draw the pellets based on the creation of the matrix arcade
      */
@@ -25,23 +28,26 @@ public class PelletList {
 //            System.out.println("2d array not zero ");
             for(int i = 0; i < pelletList.get(index).size(); ++i) {
 //                System.out.println("1d array not zero");
-                TwoTuple posOnScreen = map2screen(pelletList.get(index).get(i));
-                int type = pelletList.get(index).get(i).getType();
-                if (type == 1) {
-                    canvas.drawBitmap(pelletViewList.get(type),
-                            posOnScreen.first() - (bitmapWidth / 2),
-                            posOnScreen.second() - (bitmapHeight / 2), null);
-                } else {
-                    canvas.drawBitmap(pelletViewList.get(type),
-                            posOnScreen.first() - (pwrBitmapWidth / 2),
-                            posOnScreen.second() - (pwrBitmapHeight / 2), null);
+                PelletCell pellet = pelletList.get(index).get(i);
+                TwoTuple posOnScreen = map2screen(pellet);
+                int type = pellet.getType();
+                if (!pellet.isDead()) { // draw the pellet if it hasn't been eaten
+                    if (type == 1) {
+                        canvas.drawBitmap(pelletViewList.get(type),
+                                posOnScreen.first() - (bitmapWidth / 2),
+                                posOnScreen.second() - (bitmapHeight / 2), null);
+                    } else {
+                        canvas.drawBitmap(pelletViewList.get(type),
+                                posOnScreen.first() - (pwrBitmapWidth / 2),
+                                posOnScreen.second() - (pwrBitmapHeight / 2), null);
+                    }
                 }
             }
         }
     }
 
 
-    public PelletList(Context context, ArrayList<Arcade> arcades, TwoTuple screen) {
+    public PelletList(Context context, ArrayList<Arcade> arcades, TwoTuple screen, CollisionSubject collision) {
         this.arcades = arcades;
         pelletList = new ArrayList<>();
         pelletViewList = new ArrayList<>();
@@ -88,12 +94,14 @@ public class PelletList {
         }
 
 
-        for(int i = 0; i < pelletList.size(); ++i) {
-            System.out.println("PelletList line: " + i);
-            for(int j = 0; j < pelletList.get(0).size(); ++j) {
-                System.out.print(pelletList.get(i).get(j).getType() + " ");
-            }
-        }
+//        for(int i = 0; i < pelletList.size(); ++i) {
+//            System.out.println("PelletList line: " + i);
+//            for(int j = 0; j < pelletList.get(0).size(); ++j) {
+//                System.out.print(pelletList.get(i).get(j).getType() + " ");
+//            }
+//        }
+        this.collision = collision;
+        collision.registerObserver(this);
     }
 
     public TwoTuple map2screen(PelletCell pell) {
@@ -101,5 +109,28 @@ public class PelletList {
         int x_pixel = arcades.get(arcadeIndex).xReference + pell.getY() * arcades.get(arcadeIndex).getBlockWidth();
         int y_pixel = arcades.get(arcadeIndex).yReference + pell.getX() * arcades.get(arcadeIndex).getBlockHeight();
         return new TwoTuple(x_pixel, y_pixel);
+    }
+
+    // public TwoTuple map2Arcade()
+
+//    public PelletCell getPelletByBlockPosition(TwoTuple blockPosition) {
+//        return pelletList.get(blockPosition.x).get(blockPosition.y);
+//    }
+
+    // udpate if the pellets are eaten by pacman.
+    @Override
+    public void udpate(ArrayList<TwoTuple> route) {
+
+        ArrayList<PelletCell> pellets = pelletList.get(indexOfArcadeContainPacman);
+        for(PelletCell pellet : pellets) {
+            for (TwoTuple block : route) {
+                if(pellet.getPositionInArcade().equals(block)) {
+                    pellet.setDead(true);
+                }
+            }
+
+        }
+
+
     }
 }

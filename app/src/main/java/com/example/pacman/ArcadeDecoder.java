@@ -119,6 +119,9 @@ public class ArcadeDecoder {
         int ghostY = 0;
         int cakeX = 0;
         int cakeY = 0;
+        TwoTuple pacmanPosition;
+        TwoTuple ghostPosition;
+        TwoTuple cakePosition;
 
         /*
         start extraction
@@ -159,8 +162,13 @@ public class ArcadeDecoder {
         //close obj
         reader.endObject();
 
+        pacmanPosition = new TwoTuple(pacmanX, pacmanY);
+        ghostPosition = new TwoTuple(ghostX, ghostY);
+        cakePosition = new TwoTuple(cakeX, cakeY);
+
+
         return new Arcade(context, matrix, numRow, numCol,
-                imgFileRow, imgFileCol, pacmanX, pacmanY, ghostX, ghostY, cakeX, cakeY, inUse);
+                imgFileRow, imgFileCol, pacmanPosition, ghostPosition, cakePosition, inUse);
     }
 
     /*

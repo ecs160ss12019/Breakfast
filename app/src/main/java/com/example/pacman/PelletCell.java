@@ -1,6 +1,5 @@
 package com.example.pacman;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
 import java.util.ArrayList;
@@ -15,7 +14,13 @@ public class PelletCell implements GameObject{
     private int pelletX;
     private int pelletY;
 
-    //Constructor for pelletcell with given locations and type, also the arcadeIndex.
+    private boolean isDead;
+    public boolean isDead() { return isDead; }
+    public void setDead(boolean dead) { isDead = dead; }
+
+    private CollisionSubject collision;
+
+    // Constructor for pelletcell with given locations and type, also the arcadeIndex.
     public PelletCell(int pelletX, int pelletY, int type, int arcadeIndex) {
         this.arcadeIndex = arcadeIndex;
         this.type = type;
@@ -30,9 +35,8 @@ public class PelletCell implements GameObject{
     public int getY(){
         return pelletY;
     }
-    public int getType(){
-        return this.type;
-    }
+    public TwoTuple getPositionInArcade() { return new TwoTuple(pelletX, pelletY); }
+    public int getType(){ return this.type; }
     public int getArcadeIndex() {
         return arcadeIndex;
     }
@@ -47,11 +51,11 @@ public class PelletCell implements GameObject{
     //Eaten pellet
     public void updateStatus(long fps){}
     //get position for pellets(not screen position)
-    public int getCenterX(){return this.getX();}
+    public int getPositionX(){return this.getX();}
 
-    public int getCenterY(){return this.getY();}
+    public int getPositionY(){return this.getY();}
 
-    //set center position
+    //set position
     public void setCenter(int centerX, int centerY){}
     //getCurrDirection
     public int getCurrDirection(){return 0;}

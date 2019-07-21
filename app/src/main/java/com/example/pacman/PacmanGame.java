@@ -24,8 +24,7 @@ class PacmanGame extends SurfaceView implements Runnable {
     private final int MILLIS_IN_SECOND = 1000;
 
     // Holds the resolution of the screen
-    private int mScreenX;
-    private int mScreenY;
+    private TwoTuple mScreen;
 
     // Here is the Thread and two control variables
     private Thread mGameThread = null;
@@ -41,22 +40,23 @@ class PacmanGame extends SurfaceView implements Runnable {
 
     //Our pacman!
     private Pacman pacman;
-
     private GhostList ghosts;
-
     private Cake cake;
-
     //Our Pellets
     private PelletList pelletList;
-
     //Our Arcade List
     private ArcadeList arcades;
 
+    private Collision collision;
+
     //Our Navigation Buttons!
-    NavigationButtons navigationButtons;
+    private NavigationButtons navigationButtons;
 
     //Our CollisionDestructor
-    CollisionDetector collisionDetector;
+    private CollisionDetector collisionDetector;
+
+    //Our analyzer to get the vector field
+    private ArcadeAnalyzer arcadeAnalyzer;
 
     //consoleReader for debugging use
     //ConsoleReader consoleReader;
@@ -120,7 +120,7 @@ class PacmanGame extends SurfaceView implements Runnable {
             // Store the answer in timeThisFrame
             //long timeThisFrame = System.currentTimeMillis() - frameStartTime;
             long timeThisFrame = (System.nanoTime() - frameStartTime) / 1000000;
-            System.out.println(timeThisFrame);
+
 
             // Make sure timeThisFrame is at least 1 millisecond
             // because accidentally dividing by zero crashes the game
@@ -130,6 +130,7 @@ class PacmanGame extends SurfaceView implements Runnable {
                 // mBat and mBall next frame/loop
                 mFPS = MILLIS_IN_SECOND / timeThisFrame;
             }
+            System.out.println("fps: " + mFPS);
         }
     }
 
@@ -139,7 +140,7 @@ class PacmanGame extends SurfaceView implements Runnable {
     the thread is running
      */
     public void updateGame() {
-        int direction = navigationButtons.checkAndUpdate(userInput);
+        final int direction = navigationButtons.checkAndUpdate(userInput);
 
         /*
         if player touched or is continuous touching
@@ -160,10 +161,60 @@ class PacmanGame extends SurfaceView implements Runnable {
         //if(navigationButtons.initialInputFlag) {
 
         //System.out.println("Pacman Location: " + pacman.getCenterX() + " " + pacman.getCenterY());
+
+
+        //FIXME
+        /*
+        concurrency may save us for now by boosting
+        the speed. However, we must fix the bug and
+        implement a better algorithm.
+         */
+
+        collision.recordRunnersPosition();
+
+//        Thread pacManThread = new Thread(new Runnable(){
+//            @Override
+//            public void run() {
+//                pacman.updateMovementStatus(direction, mFPS);
+//            }
+//        });
+//
+//        Thread ghostsThread = new Thread(new Runnable(){
+//            @Override
+//            public void run() {
+//                ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+//            }
+//        });
+//
+//        Thread cakeThread = new Thread(new Runnable(){
+//            @Override
+//            public void run() {
+//                cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+//            }
+//        });
+//
+//        pacManThread.start();
+//        ghostsThread.start();
+//        cakeThread.start();
+//
+//        try {
+//            System.out.println("Waiting for threads to finish.");
+//            pacManThread.join();
+//            ghostsThread.join();
+//            cakeThread.join();
+//
+//        } catch (InterruptedException e) {
+//            System.out.println("Main thread Interrupted");
+//        }
+
+
+
         pacman.updateMovementStatus(direction, mFPS);
         ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
         cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
-        //}
+
+        collision.updateRunnersPosition();
+        collision.notifyObservers();
     }
 
     // This method is called by PacmanActivity
@@ -240,8 +291,9 @@ class PacmanGame extends SurfaceView implements Runnable {
 
         // Initialize these two members/fields
         // With the values passed in as parameters
-        mScreenX = x;
-        mScreenY = y;
+        mScreen = new TwoTuple(x, y);
+
+        System.out.println("Super: " + mScreen.x + " " + mScreen.y);
 
         // Initialize the objects
         // ready for drawing with
@@ -252,32 +304,42 @@ class PacmanGame extends SurfaceView implements Runnable {
         //Init fps to -1 so that we will know if the canvas is not ready
         mFPS = -1;
 
-        gameMode = new GameMode(1, mScreenX);
+        gameMode = new GameMode(0, mScreen.x);
         /* implement front page view (something like welcome to breakfast's Pac-Man game) */
 
         //initialize the Arcade list
-        arcades = new ArcadeList(context, mScreenX, mScreenY,
+        arcades = new ArcadeList(context, mScreen.x, mScreen.y,
                 R.raw.sample2);
 
-        pelletList = new PelletList(context,arcades.getArcades(), new TwoTuple(mScreenX, mScreenY));
+        //TODO for testing purpose, now we focus on 1 arcade
+        arcadeAnalyzer = new ArcadeAnalyzer(arcades.getArcadeContainingPacman());
+        arcadeAnalyzer.run();
 
 
+        collision = new Collision(arcades.getArcadeContainingPacman());
+
+        pelletList = new PelletList(context, arcades.getArcades(), new TwoTuple(mScreen.x, mScreen.y), collision);
 
         // Initialize the pacman and ghost
-        pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize(),
-                arcades.getArcadeContainingPacman(), gameMode.getPacmanSpeed());
+//        pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize(),
+//                arcades.getArcadeContainingPacman(), gameMode.getPacmanSpeed());
+        TwoTuple pacmanInitPos = new TwoTuple(arcades.getArcadeContainingPacman().pacmanPosition);
+        pacman = new Pacman(context, mScreen, arcades.getArcadeContainingPacman(), pacmanInitPos,
+                arcadeAnalyzer, gameMode.getPacmanSpeed(), collision);
 
-        ghosts = new GhostList(context, mScreenX, mScreenY, arcades.getArcadeContainingPacman(), gameMode.getGhostsSpeed());
-
-        cake = new Cake(context, mScreenX, mScreenY, arcades.getArcadeContainingPacman(), gameMode.getGhostsSpeed());
-
-        collisionDetector = new CollisionDetector();
+        ghosts = new GhostList(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(), arcadeAnalyzer,
+                gameMode.getGhostsSpeed(), collision);
+//
+        cake = new Cake(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(),
+                arcadeAnalyzer, gameMode.getGhostsSpeed(), collision);
+//
+//        collisionDetector = new CollisionDetector();
 
         //userInput handler
         userInput = new UserInput();
 
         //init Nav Buttons
-        navigationButtons = new NavigationButtons(context, mScreenX, mScreenY);
+        navigationButtons = new NavigationButtons(context, mScreen.x, mScreen.y);
 
         //init with system env variable
         //consoleReader = new ConsoleReader(System.console());
