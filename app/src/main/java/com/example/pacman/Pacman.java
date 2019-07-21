@@ -43,8 +43,6 @@ public class Pacman extends Runner implements GameObject{
     //did the pacman move?
     private boolean moved;
 
-
-
     @Override
     public void draw(Canvas canvas) {
         TwoTuple screenPos = arcade.mapScreen(posInArcade);
@@ -52,14 +50,13 @@ public class Pacman extends Runner implements GameObject{
                 screenPos.first() - (bitmapWidth/2), screenPos.second() - (bitmapHeight/2), null);
     }
 
-
-
     @Override
     public void updateStatus(long fps){
 
     }
 
     public void updateMovementStatus(int inputDirection, long fps) {
+
         /*
         We want to know where is the player heading,
         so we can update the currDirection of pacman
@@ -299,8 +296,6 @@ public class Pacman extends Runner implements GameObject{
 //        //setCenter(checkNextMoveInBound.first.first(), checkNextMoveInBound.first.second());
 //        setCenter(x, y);
 
-
-
         /***************************************/
         //New Method
         int mathematicalMove = mathematicalMoveDistance(fps);
@@ -362,7 +357,8 @@ public class Pacman extends Runner implements GameObject{
         this.mScreen = screenResolution;
         this.arcade = arcade;
         this.posInArcade = posInArcade;
-        this.currDirection = RIGHT;
+        this.posInArcadeInit = posInArcade;
+        this.currDirection = UP;
         this.nextDirection = -1;
 
         //currently, the collection is 2*2 with 4 views in total
@@ -403,7 +399,6 @@ public class Pacman extends Runner implements GameObject{
         this.speed = speed;
         this.arcadeAnalyzer = arcadeAnalyzer;
     }
-
 
     //Constructor
     public Pacman(Context context, TwoTuple screenResolution, TwoTuple posInArcade, Pair<Integer, Integer> optimalSize,
@@ -462,6 +457,11 @@ public class Pacman extends Runner implements GameObject{
 
     public int getNextposY(){
         return this.currDirectionNextPosition.y;
+    }
+
+    public void reBorn() {
+        this.posInArcade = this.posInArcadeInit;
+        this.setDead(false);
     }
 }
 

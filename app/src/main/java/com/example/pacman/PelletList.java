@@ -119,7 +119,7 @@ public class PelletList implements CollisionObserver {
 
     // udpate if the pellets are eaten by pacman.
     @Override
-    public void udpate(ArrayList<TwoTuple> route) {
+    public void update(ArrayList<TwoTuple> route) {
 
         ArrayList<PelletCell> pellets = pelletList.get(indexOfArcadeContainPacman);
         for(PelletCell pellet : pellets) {
@@ -130,7 +130,5 @@ public class PelletList implements CollisionObserver {
             }
 
         }
-
-
     }
 }

@@ -4,9 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
+import java.util.ArrayList;
 import java.util.Random;
 
-public class Ghost extends Runner implements GameObject {
+public class Ghost extends Runner implements GameObject, CollisionObserver {
 
     boolean alive;
 
@@ -324,6 +325,7 @@ public class Ghost extends Runner implements GameObject {
 
 //        System.out.println("Starting to move from: " + posInArcade.first() + " " + posInArcade.second());
         boolean allowsMove = arcadeAnalyzer.allowsToGo(currPos, movingDirection);
+        // System.out.println("mathematicalMove: " + mathematicalMove);
         while (movedDistance <= mathematicalMove && allowsMove) {
             movedDistance += arcadeAnalyzer.blockDimension;
             currPos = TwoTuple.moveTo(currPos, movingDirection);
@@ -361,6 +363,20 @@ public class Ghost extends Runner implements GameObject {
                 break;
         }
         updateLocation(fps, arcade);
+    }
+
+
+    // ghost kill pacman
+    @Override
+    public void update(ArrayList<TwoTuple> route) {
+        for(TwoTuple ghostBlock : this.blockRunThrough) {
+            for(TwoTuple pacmanBlock: route) {
+                if (ghostBlock.equals(pacmanBlock)) {
+                    this.pacman.setDead(true);
+                }
+            }
+        }
+
     }
 
     //**For ghost behavior;

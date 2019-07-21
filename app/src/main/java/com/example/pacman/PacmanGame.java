@@ -208,8 +208,12 @@ class PacmanGame extends SurfaceView implements Runnable {
 //        }
 
 
+        if(pacman.isDead()) {
+            pacman.reBorn();
+        } else {
+            pacman.updateMovementStatus(direction, mFPS);
+        }
 
-        pacman.updateMovementStatus(direction, mFPS);
         ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
         cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
 
@@ -328,7 +332,7 @@ class PacmanGame extends SurfaceView implements Runnable {
                 arcadeAnalyzer, gameMode.getPacmanSpeed(), collision);
 
         ghosts = new GhostList(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(), arcadeAnalyzer,
-                gameMode.getGhostsSpeed(), collision);
+                gameMode.getGhostsSpeed(), collision, pacman);
 //
         cake = new Cake(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(),
                 arcadeAnalyzer, gameMode.getGhostsSpeed(), collision);

@@ -42,12 +42,14 @@ public class Collision implements CollisionSubject {
     @Override
     public void notifyObservers() {
         for(CollisionObserver observer : observers) {
-            if (observer instanceof PelletList) {
-                // (PelletList)observer.update(pacman.blockRunThrough);
+            if (observer instanceof Ghost) {
+                //(Runner)observer
+                Ghost ghost = (Ghost)observer;
+                ghost.update(pacman.blockRunThrough);
             }
 
         }
-        pellets.udpate(pacman.blockRunThrough);
+        pellets.update(pacman.blockRunThrough);
     }
 
     // record the runners position before each frame

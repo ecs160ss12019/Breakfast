@@ -59,7 +59,7 @@ public class GhostList {
     }
 
     //Constructor2
-    public GhostList(Context context, int sx, int sy, Arcade arcade, ArcadeAnalyzer arcadeAnalyzer, float speed, CollisionSubject collision) {
+    public GhostList(Context context, int sx, int sy, Arcade arcade, ArcadeAnalyzer arcadeAnalyzer, float speed, CollisionSubject collision, Pacman pacman) {
         this.context = context;
         mScreen = new TwoTuple(sx,sy);
         this.arcade = arcade;

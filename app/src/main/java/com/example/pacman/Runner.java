@@ -33,6 +33,7 @@ public class Runner implements GameObject, CollisionObserver {
     int nextDirection;
 
     // block
+    TwoTuple posInArcadeInit;
     TwoTuple posInArcade;
     TwoTuple blockPosStart; // the block which the runner start with in one frame, set the same as posInArcade at the beginning of the frame
     TwoTuple blockPosEnd; // the block which the runner end with in one frame
@@ -166,8 +167,9 @@ public class Runner implements GameObject, CollisionObserver {
 
     }
 
+    // route is the route went through by Pacman
     @Override
-    public void udpate(ArrayList<TwoTuple> route) {
+    public void update(ArrayList<TwoTuple> route) {
 
     }
 }
