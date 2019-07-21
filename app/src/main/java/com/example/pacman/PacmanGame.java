@@ -238,14 +238,9 @@ class PacmanGame extends SurfaceView implements Runnable {
         });
 
         //Here we update the score if Pacman have eaten any pellets valuable.
-        int type = collision.getScoreType();
-        if(type == 0){
-            score.pwrpelletEaten();
-        }else if(type == 1){
-            score.pelletEaten();
-        }
-//        System.out.println("SCORE: " + score.getScore());
-
+//        int type = collision.getScoreType();
+        score.updateScore(collision.getScoreType());
+        System.out.println("SCORE: " + score.getScore());
 
         //Here we update the score if Pacman have eaten cake + ghosts
 
