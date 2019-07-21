@@ -50,6 +50,9 @@ class PacmanGame extends SurfaceView implements Runnable {
 
     private Collision collision;
 
+    //Our Score system
+    private PointSystem score;
+
     //Our Navigation Buttons!
     private NavigationButtons navigationButtons;
 

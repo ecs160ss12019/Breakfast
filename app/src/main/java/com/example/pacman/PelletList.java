@@ -21,10 +21,10 @@ public class PelletList implements CollisionObserver {
     private CollisionSubject collision;
 
     /*
-        We want to
+        We want to Draw the pellets based on the creation of the matrix arcade
      */
     public void draw(Canvas canvas){
-        for (int index = 0; index < arcades.size();++index){
+        for (int index = 0; index < arcades.size(); ++index){
 //            System.out.println("2d array not zero ");
             for(int i = 0; i < pelletList.get(index).size(); ++i) {
 //                System.out.println("1d array not zero");
@@ -77,7 +77,6 @@ public class PelletList implements CollisionObserver {
             ArrayList<PelletCell> newLine = new ArrayList<>();
             for (int i = 0; i < numRow; ++i) {
                 for (int j = 0; j < numCol; ++j) {
-//                  int pwrcount = 0;
                     int p = 2;
                     if(newLine.size() % 30 == 0){
                         p=1;
@@ -88,8 +87,6 @@ public class PelletList implements CollisionObserver {
                     }
                 }
             }
-
-//            System.out.println("Size of new line" + newLine.size());
             pelletList.add(newLine);
         }
 
@@ -126,9 +123,14 @@ public class PelletList implements CollisionObserver {
             for (TwoTuple block : route) {
                 if(pellet.getPositionInArcade().equals(block)) {
                     pellet.setDead(true);
+                    if(pellet.getType()==1){
+//                        points.pelletEaten();
+//                        System.out.println(points.getScore());
+                    }else{
+//                        points.pwrpelletEaten();
+                    }
                 }
             }
-
         }
     }
 }

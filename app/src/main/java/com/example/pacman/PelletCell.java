@@ -26,7 +26,7 @@ public class PelletCell implements GameObject{
         this.type = type;
         this.pelletX = pelletX;
         this.pelletY = pelletY;
-//        this.point = point;
+
     }
     //Overwritting the interface functions.
     public int getX(){
