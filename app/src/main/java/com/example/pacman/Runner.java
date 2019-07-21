@@ -34,6 +34,7 @@ public class Runner implements GameObject, CollisionObserver {
 
     // block
     TwoTuple posInArcade;
+    TwoTuple posInArcadeInit;
     TwoTuple blockPosStart; // the block which the runner start with in one frame, set the same as posInArcade at the beginning of the frame
     TwoTuple blockPosEnd; // the block which the runner end with in one frame
     ArrayList<TwoTuple> blockRunThrough; // the blocks which the runner run through in one frame

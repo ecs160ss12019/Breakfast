@@ -218,6 +218,34 @@ class PacmanGame extends SurfaceView implements Runnable {
 
         collision.updateRunnersPosition();
         collision.notifyObservers();
+        Thread pacManThread = new Thread(new Runnable(){
+            @Override
+            public void run() {
+                pacman.updateMovementStatus(direction, mFPS);
+            }
+        });
+
+//        Thread ghostsThread = new Thread(new Runnable(){
+//            @Override
+//            public void run() {
+//                ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+//            }
+//        });
+//
+//        Thread cakeThread = new Thread(new Runnable(){
+//            @Override
+//            public void run() {
+//                cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+//            }
+//        });
+//
+        pacManThread.start();
+//        ghostsThread.start();
+//        cakeThread.start();
+
+//        pacman.updateMovementStatus(direction, mFPS);
+//        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+//        cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
     }
 
     // This method is called by PacmanActivity
@@ -262,10 +290,9 @@ class PacmanGame extends SurfaceView implements Runnable {
         arcades.draw(canvas);
         pelletList.draw(canvas);
         pacman.draw(canvas);
-        ghosts.draw(canvas);
-        cake.draw(canvas);
+        //ghosts.draw(canvas);
+        //cake.draw(canvas);
         navigationButtons.draw(canvas);
-
     }
     /*
     implement onTouchEvent to handle user input
@@ -295,8 +322,6 @@ class PacmanGame extends SurfaceView implements Runnable {
         // Initialize these two members/fields
         // With the values passed in as parameters
         mScreen = new TwoTuple(x, y);
-
-        System.out.println("Super: " + mScreen.x + " " + mScreen.y);
 
         // Initialize the objects
         // ready for drawing with
