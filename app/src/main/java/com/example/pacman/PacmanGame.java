@@ -152,6 +152,7 @@ class PacmanGame extends SurfaceView implements Runnable {
             arrowKey = -1;
         }
 
+
         /*
         if player touched or is continuous touching
         updated pacman position and etc.
@@ -317,6 +318,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         //ghosts.draw(canvas);
         //cake.draw(canvas);
         navigationButtons.draw(canvas);
+
     }
     /*
     implement onTouchEvent to handle user input
