@@ -63,9 +63,11 @@ public class Collision implements CollisionSubject {
 
     // update runners position at the end of each frame
     public void updateRunnersPosition() {
-        System.out.println("updateRunnersPosition");
+//        System.out.println("updateRunnersPosition");
         for (Runner runner : runners) {
             runner.blockPosEnd = runner.posInArcade;
+//            System.out.printf("blockPosStart: (%s, %s), blockPosEnd: (%s, %s)\n",
+//                    runner.blockPosStart.x, runner.blockPosStart.y, runner.blockPosEnd.x, runner.blockPosEnd.y);
         }
         updateBlocksRunnerWhenThrough();
     }
@@ -73,28 +75,28 @@ public class Collision implements CollisionSubject {
     private void updateBlocksRunnerWhenThrough() {
         for (Runner runner : runners) {
             runner.blockRunThrough = new ArrayList<TwoTuple>();
-            int i = runner.blockPosStart.x;
-            int j = runner.blockPosStart.y;
+            int i;
+            int j;
             switch (runner.currDirection) {
-                case LEFT:
+                case UP:
                     for (i = runner.blockPosStart.x; i >= runner.blockPosEnd.x; i--) {
                         j = runner.blockPosStart.y;
                         runner.blockRunThrough.add(new TwoTuple(i,j));
                     }
                     break;
-                case RIGHT:
+                case DOWN:
                     for (i = runner.blockPosStart.x; i <= runner.blockPosEnd.x; i++) {
                         j = runner.blockPosStart.y;
                         runner.blockRunThrough.add(new TwoTuple(i,j));
                     }
                     break;
-                case UP:
+                case LEFT:
                     i = runner.blockPosStart.x;
                     for (j = runner.blockPosStart.y; j >= runner.blockPosEnd.y; j--) {
                         runner.blockRunThrough.add(new TwoTuple(i,j));
                     }
                     break;
-                case DOWN:
+                case RIGHT:
                     i = runner.blockPosStart.x;
                     for (j = runner.blockPosStart.y; j <= runner.blockPosEnd.y; j++) {
                         runner.blockRunThrough.add(new TwoTuple(i,j));

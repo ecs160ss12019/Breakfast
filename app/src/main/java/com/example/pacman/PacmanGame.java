@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -214,11 +215,39 @@ class PacmanGame extends SurfaceView implements Runnable {
             pacman.updateMovementStatus(direction, mFPS);
         }
 
-        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
-        cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+//        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+//        cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
 
         collision.updateRunnersPosition();
         collision.notifyObservers();
+        Thread pacManThread = new Thread(new Runnable(){
+            @Override
+            public void run() {
+                pacman.updateMovementStatus(direction, mFPS);
+            }
+        });
+
+//        Thread ghostsThread = new Thread(new Runnable(){
+//            @Override
+//            public void run() {
+//                ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+//            }
+//        });
+//
+//        Thread cakeThread = new Thread(new Runnable(){
+//            @Override
+//            public void run() {
+//                cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+//            }
+//        });
+//
+        pacManThread.start();
+//        ghostsThread.start();
+//        cakeThread.start();
+
+//        pacman.updateMovementStatus(direction, mFPS);
+//        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+//        cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
     }
 
     // This method is called by PacmanActivity
@@ -263,10 +292,9 @@ class PacmanGame extends SurfaceView implements Runnable {
         arcades.draw(canvas);
         pelletList.draw(canvas);
         pacman.draw(canvas);
-        ghosts.draw(canvas);
-        cake.draw(canvas);
+        //ghosts.draw(canvas);
+        //cake.draw(canvas);
         navigationButtons.draw(canvas);
-
     }
     /*
     implement onTouchEvent to handle user input
@@ -286,6 +314,17 @@ class PacmanGame extends SurfaceView implements Runnable {
         return true;
     }
 
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent keyEvent) {
+        System.out.println("----------I pressed key------------");
+        switch(keyCode) {
+            case 37: // left arrow
+                System.out.println("----------I pressed left------------");
+                break;
+        }
+        return true;
+    }
+
     //Constructor
     public PacmanGame(Context context, int x, int y) {
         // Super... calls the parent class
@@ -296,8 +335,6 @@ class PacmanGame extends SurfaceView implements Runnable {
         // Initialize these two members/fields
         // With the values passed in as parameters
         mScreen = new TwoTuple(x, y);
-
-        System.out.println("Super: " + mScreen.x + " " + mScreen.y);
 
         // Initialize the objects
         // ready for drawing with
@@ -331,11 +368,11 @@ class PacmanGame extends SurfaceView implements Runnable {
         pacman = new Pacman(context, mScreen, arcades.getArcadeContainingPacman(), pacmanInitPos,
                 arcadeAnalyzer, gameMode.getPacmanSpeed(), collision);
 
-        ghosts = new GhostList(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(), arcadeAnalyzer,
-                gameMode.getGhostsSpeed(), collision, pacman);
-//
-        cake = new Cake(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(),
-                arcadeAnalyzer, gameMode.getGhostsSpeed(), collision);
+//        ghosts = new GhostList(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(), arcadeAnalyzer,
+//                gameMode.getGhostsSpeed(), collision, pacman);
+////
+//        cake = new Cake(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(),
+//                arcadeAnalyzer, gameMode.getGhostsSpeed(), collision);
 //
 //        collisionDetector = new CollisionDetector();
 

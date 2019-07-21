@@ -97,6 +97,7 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
 
         this.arcadeAnalyzer = arcadeAnalyzer;
         this.posInArcade = new TwoTuple(arcade.ghostPosition);
+        this.posInArcadeInit = posInArcade;
         this.arcade = arcade;
     }
 
