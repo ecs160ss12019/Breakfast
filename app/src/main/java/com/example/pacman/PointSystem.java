@@ -39,6 +39,9 @@ public class PointSystem {
     public void cakeEaten(){
         this.bonus = true;
     }
+    public int getScore(){
+        return total;
+    }
 
 
 

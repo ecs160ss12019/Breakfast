@@ -116,7 +116,7 @@ public class PelletList implements CollisionObserver {
 
     // udpate if the pellets are eaten by pacman.
     @Override
-    public void udpate(ArrayList<TwoTuple> route, PointSystem points) {
+    public void udpate(ArrayList<TwoTuple> route) {
 
         ArrayList<PelletCell> pellets = pelletList.get(indexOfArcadeContainPacman);
         for(PelletCell pellet : pellets) {
@@ -124,9 +124,10 @@ public class PelletList implements CollisionObserver {
                 if(pellet.getPositionInArcade().equals(block)) {
                     pellet.setDead(true);
                     if(pellet.getType()==1){
-                        points.pelletEaten();
+//                        points.pelletEaten();
+//                        System.out.println(points.getScore());
                     }else{
-                        points.pwrpelletEaten();
+//                        points.pwrpelletEaten();
                     }
                 }
             }
