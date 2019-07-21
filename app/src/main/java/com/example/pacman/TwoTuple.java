@@ -66,4 +66,12 @@ public class TwoTuple {
         this.x = position.x;
         this.y = position.y;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) { return true; }
+        if (obj == null || obj.getClass() != this.getClass()) { return false; }
+        TwoTuple twoTuple = (TwoTuple) obj;
+        return x == twoTuple.x && y == twoTuple.y;
+    }
 }

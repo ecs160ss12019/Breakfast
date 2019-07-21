@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 
 import java.util.ArrayList;
 
-public class Runner implements GameObject {
+public class Runner implements GameObject, CollisionObserver {
 
     /*
     individual view height/width
@@ -33,7 +33,10 @@ public class Runner implements GameObject {
     int nextDirection;
 
     // block
-    TwoTuple blockPos;
+    TwoTuple posInArcade;
+    TwoTuple blockPosStart; // the block which the runner start with in one frame, set the same as posInArcade at the beginning of the frame
+    TwoTuple blockPosEnd; // the block which the runner end with in one frame
+    ArrayList<TwoTuple> blockRunThrough; // the blocks which the runner run through in one frame
     //coordinate
     TwoTuple position;
     TwoTuple currDirectionNextPosition;
@@ -43,7 +46,16 @@ public class Runner implements GameObject {
 
     float speed;
 
+    private CollisionSubject collision;
+    private boolean isDead;
 
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public void setDead(boolean dead) {
+        isDead = dead;
+    }
 
     public int getBitmapWidth() {
         return bitmapWidth;
@@ -70,6 +82,11 @@ public class Runner implements GameObject {
 
     public int getNextDirection() {
         return nextDirection;
+    }
+
+    public Runner(CollisionSubject collision) {
+        this.collision = collision;
+        collision.registerObserver(this);
     }
 
     //getMotionInfo
@@ -146,6 +163,11 @@ public class Runner implements GameObject {
 
     @Override
     public void updateStatus(long fps) {
+
+    }
+
+    @Override
+    public void udpate(ArrayList<TwoTuple> route) {
 
     }
 }

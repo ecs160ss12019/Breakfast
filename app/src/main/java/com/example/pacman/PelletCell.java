@@ -14,7 +14,13 @@ public class PelletCell implements GameObject{
     private int pelletX;
     private int pelletY;
 
-    //Constructor for pelletcell with given locations and type, also the arcadeIndex.
+    private boolean isDead;
+    public boolean isDead() { return isDead; }
+    public void setDead(boolean dead) { isDead = dead; }
+
+    private CollisionSubject collision;
+
+    // Constructor for pelletcell with given locations and type, also the arcadeIndex.
     public PelletCell(int pelletX, int pelletY, int type, int arcadeIndex) {
         this.arcadeIndex = arcadeIndex;
         this.type = type;
@@ -29,9 +35,8 @@ public class PelletCell implements GameObject{
     public int getY(){
         return pelletY;
     }
-    public int getType(){
-        return this.type;
-    }
+    public TwoTuple getPositionInArcade() { return new TwoTuple(pelletX, pelletY); }
+    public int getType(){ return this.type; }
     public int getArcadeIndex() {
         return arcadeIndex;
     }

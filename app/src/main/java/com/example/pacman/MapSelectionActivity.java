@@ -2,12 +2,14 @@ package com.example.pacman;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class MapSelectionActivity extends Activity {
@@ -20,6 +22,11 @@ public class MapSelectionActivity extends Activity {
         //We don't want the title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_map_selection);
+        RelativeLayout rel = findViewById(R.id.layout);
+        AnimationDrawable aniD = (AnimationDrawable) rel.getBackground();
+        aniD.setEnterFadeDuration(1000);
+        aniD.setExitFadeDuration(2500);
+        aniD.start();
         gameOn();
     }
 

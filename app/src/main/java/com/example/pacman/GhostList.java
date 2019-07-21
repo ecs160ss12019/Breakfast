@@ -28,7 +28,7 @@ public class GhostList {
     private ArrayList<Bitmap> ghostsViewList;
 
     //public GhostList(Context context, int sx, int sy, Arcade arcade, float speed, String name)
-    public GhostList(Context context, TwoTuple screenResolution, Arcade arcade, float speed) {
+    public GhostList(Context context, TwoTuple screenResolution, Arcade arcade, float speed, CollisionSubject collision) {
         this.context = context;
         mScreen = screenResolution;
         this.arcade = arcade;
@@ -52,13 +52,14 @@ public class GhostList {
         for (int i=0; i<GHOSTS_NUM; i++) {
             //**For ghostbehavior;
             //Ghost ghost = new Ghost(context, sx, sy, arcade, pacman, ghostsViewList.get(i), i, speed, name);
-            Ghost ghost = new Ghost(context, screenResolution, arcade, pacman, ghostsViewList.get(i), i, speed);
+            // ghosts move up by default, because they need to get out of "home"
+            Ghost ghost = new Ghost(context, screenResolution, arcade, pacman, ghostsViewList.get(i), TwoTuple.UP, speed, collision);
             ghosts.add(ghost);
         }
     }
 
     //Constructor2
-    public GhostList(Context context, int sx, int sy, Arcade arcade, ArcadeAnalyzer arcadeAnalyzer, float speed) {
+    public GhostList(Context context, int sx, int sy, Arcade arcade, ArcadeAnalyzer arcadeAnalyzer, float speed, CollisionSubject collision) {
         this.context = context;
         mScreen = new TwoTuple(sx,sy);
         this.arcade = arcade;
@@ -83,7 +84,7 @@ public class GhostList {
 
             //**For ghostbehavior;
             //Ghost ghost = new Ghost(context, sx, sy, arcade, pacman, ghostsViewList.get(i), i, speed, name);
-            Ghost ghost = new Ghost(context, sx, sy, arcade, pacman, ghostsViewList.get(i), i, arcadeAnalyzer, speed);
+            Ghost ghost = new Ghost(context, sx, sy, arcade, pacman, ghostsViewList.get(i), TwoTuple.UP, arcadeAnalyzer, speed, collision);
             ghosts.add(ghost);
         }
     }
