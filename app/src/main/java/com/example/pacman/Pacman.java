@@ -549,13 +549,11 @@ public class Pacman extends Runner implements GameObject{
         motionInArcade = new MotionInArcade(arcade);
     }
 
-    public int getNextposX(){
-        return this.currDirectionNextPosition.x;
-    }
+    public int getCurrentX(){return posInArcade.x;}
 
-    public int getNextposY(){
-        return this.currDirectionNextPosition.y;
-    }
+    public int getCurrentY(){return posInArcade.y;}
+
+
 
     public void reBorn() {
         this.posInArcade = this.posInArcadeInit;
