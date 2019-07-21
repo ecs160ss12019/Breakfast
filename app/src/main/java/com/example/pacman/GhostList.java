@@ -16,6 +16,7 @@ public class GhostList {
     private TwoTuple mScreen;
     //context of the game, used access Resource ptr
     private Context context;
+    private String[] NameArray;
 
     /*
        The img in the source folder is a collection of
@@ -28,10 +29,11 @@ public class GhostList {
     private ArrayList<Bitmap> ghostsViewList;
 
     //public GhostList(Context context, int sx, int sy, Arcade arcade, float speed, String name)
-    public GhostList(Context context, TwoTuple screenResolution, Arcade arcade, float speed, CollisionSubject collision) {
+    public GhostList(Context context, TwoTuple screenResolution, Arcade arcade, float speed, CollisionSubject collision, String[] Name) {
         this.context = context;
         mScreen = screenResolution;
         this.arcade = arcade;
+        this.NameArray = Name;
 
         //currently, the collection is 2*2 with 4 views in total
         numRow = 2;
@@ -53,16 +55,17 @@ public class GhostList {
             //**For ghostbehavior;
             //Ghost ghost = new Ghost(context, sx, sy, arcade, pacman, ghostsViewList.get(i), i, speed, name);
             // ghosts move up by default, because they need to get out of "home"
-            Ghost ghost = new Ghost(context, screenResolution, arcade, pacman, ghostsViewList.get(i), TwoTuple.UP, speed, collision);
+            Ghost ghost = new Ghost(context, screenResolution, arcade, pacman, ghostsViewList.get(i), TwoTuple.UP, speed, collision, Name[i]);
             ghosts.add(ghost);
         }
     }
 
     //Constructor2
-    public GhostList(Context context, int sx, int sy, Arcade arcade, ArcadeAnalyzer arcadeAnalyzer, float speed, CollisionSubject collision, Pacman pacman) {
+    public GhostList(Context context, int sx, int sy, Arcade arcade, ArcadeAnalyzer arcadeAnalyzer, float speed, CollisionSubject collision, Pacman pacman, String [] Name) {
         this.context = context;
         mScreen = new TwoTuple(sx,sy);
         this.arcade = arcade;
+        this.NameArray = Name;
 
         //currently, the collection is 2*2 with 4 views in total
         numRow = 2;
@@ -84,7 +87,7 @@ public class GhostList {
 
             //**For ghostbehavior;
             //Ghost ghost = new Ghost(context, sx, sy, arcade, pacman, ghostsViewList.get(i), i, speed, name);
-            Ghost ghost = new Ghost(context, sx, sy, arcade, pacman, ghostsViewList.get(i), TwoTuple.UP, arcadeAnalyzer, speed, collision);
+            Ghost ghost = new Ghost(context, sx, sy, arcade, pacman, ghostsViewList.get(i), TwoTuple.UP, arcadeAnalyzer, speed, collision, Name[i]);
             ghosts.add(ghost);
         }
     }
@@ -96,7 +99,8 @@ public class GhostList {
             Thread ghostThread = new Thread(new Runnable(){
                 @Override
                 public void run() {
-                    ghosts.get(index).updateMovementStatus(mFPS,arcadeContainingPacman);
+                    //ghosts.get(index).GhostBehavior(mFPS,arcadeContainingPacman);
+                    ghosts.get(index).GhostBehavior(mFPS);
                 }
             });
             ghostThread.start();
