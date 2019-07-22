@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -255,8 +254,8 @@ class PacmanGame extends SurfaceView implements Runnable {
 //        cakeThread.start();
 
 //        pacman.updateMovementStatus(direction, mFPS);
-//        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
-//        cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+        cake.updateMovementStatus(-1, mFPS);
     }
 
     // This method is called by PacmanActivity
@@ -323,16 +322,17 @@ class PacmanGame extends SurfaceView implements Runnable {
         return true;
     }
 
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent keyEvent) {
-        System.out.println("----------I pressed key------------");
-        switch(keyCode) {
-            case 37: // left arrow
-                System.out.println("----------I pressed left------------");
-                break;
-        }
-        return true;
-    }
+    // this has to be in Activity ....
+//    @Override
+//    public boolean onKeyUp(int keyCode, KeyEvent keyEvent) {
+//        System.out.println("----------I pressed key------------");
+//        switch(keyCode) {
+//            case 37: // left arrow
+//                System.out.println("----------I pressed left------------");
+//                break;
+//        }
+//        return true;
+//    }
 
     //Constructor
     public PacmanGame(Context context, int x, int y) {
@@ -371,19 +371,20 @@ class PacmanGame extends SurfaceView implements Runnable {
         pelletList = new PelletList(context, arcades.getArcades(), new TwoTuple(mScreen.x, mScreen.y), collision);
 
         // Initialize the pacman and ghost
-//        pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize(),
-//                arcades.getArcadeContainingPacman(), gameMode.getPacmanSpeed());
+
+        System.out.println("gameMode.getPacmanSpeed(): " + gameMode.getPacmanSpeed());
         TwoTuple pacmanInitPos = new TwoTuple(arcades.getArcadeContainingPacman().pacmanPosition);
-        pacman = new Pacman(context, mScreen, arcades.getArcadeContainingPacman(), pacmanInitPos,
-                arcadeAnalyzer, gameMode.getPacmanSpeed(), collision);
+        pacman = new Pacman(context, mScreen, pacmanInitPos, arcades.getOptimalPacmanSize(),
+                arcades.getArcadeContainingPacman(), gameMode.getPacmanSpeed(), collision);
+//        pacman = new Pacman(context, mScreen, arcades.getArcadeContainingPacman(), pacmanInitPos,
+//                arcadeAnalyzer, gameMode.getPacmanSpeed(), collision);
 
-//        String [] GhostName = {"Yellow", "Red", "Blue", "Pink"};
+        String [] GhostName = {"Yellow", "Red", "Blue", "Pink"};
+        ghosts = new GhostList(context, mScreen, arcades.getArcadeContainingPacman(), arcadeAnalyzer,
+                gameMode.getGhostsSpeed(), collision, pacman, GhostName);
 
-//        ghosts = new GhostList(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(), arcadeAnalyzer,
-//                gameMode.getGhostsSpeed(), collision, pacman, GhostName);
-////
-//        cake = new Cake(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(),
-//                arcadeAnalyzer, gameMode.getGhostsSpeed(), collision);
+        cake = new Cake(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(),
+                arcadeAnalyzer, gameMode.getGhostsSpeed(), collision);
 //
 //        collisionDetector = new CollisionDetector();
 

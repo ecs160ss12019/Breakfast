@@ -1,7 +1,5 @@
 package com.example.pacman;
 
-import android.util.Log;
-
 /*
 * this class modifies the speed of game based on
 * the player selection
@@ -63,8 +61,8 @@ public class GameMode {
     public void normalMode(){
         // This code means the Pacman and ghosts can cover the width
         // of the screen in 9 seconds
-        pacmanSpeed = screenX/3;
-        ghostsSpeed = screenX/3;
+        pacmanSpeed = screenX/8;
+        ghostsSpeed = screenX/8;
     }
     public void hardMode(){
         // This code means the Pacman and ghosts can cover the width
