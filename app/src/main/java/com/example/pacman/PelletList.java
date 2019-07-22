@@ -16,6 +16,7 @@ public class PelletList implements CollisionObserver {
     private int bitmapHeight;
     private int pwrBitmapWidth;
     private int pwrBitmapHeight;
+
     private int indexOfArcadeContainPacman = 0; // TODO: hard code to 0
     private CollisionSubject collision;
 
@@ -45,7 +46,7 @@ public class PelletList implements CollisionObserver {
         }
     }
 
-    //Constructor for the pelletList
+
     public PelletList(Context context, ArrayList<Arcade> arcades, TwoTuple screen, CollisionSubject collision) {
         this.arcades = arcades;
         pelletList = new ArrayList<>();
@@ -66,6 +67,7 @@ public class PelletList implements CollisionObserver {
                 pwrBitmapWidth , pwrBitmapHeight, true));
         pelletViewList.add(Bitmap.createScaledBitmap(pelletView,
                 bitmapWidth , bitmapHeight, true));
+
 
         //Random random = new Random();
         //Construct a matrix given the arcades with 0 and 1(pellet can be added).
@@ -91,7 +93,7 @@ public class PelletList implements CollisionObserver {
         this.collision = collision;
         collision.registerObserver(this);
     }
-    //Mapping the pellets to the screen
+
     public TwoTuple map2screen(PelletCell pell) {
         int arcadeIndex = pell.getArcadeIndex();
         int x_pixel = arcades.get(arcadeIndex).xReference + pell.getY() * arcades.get(arcadeIndex).getBlockWidth();
@@ -99,21 +101,34 @@ public class PelletList implements CollisionObserver {
         return new TwoTuple(x_pixel, y_pixel);
     }
 
-    // udpate if the pellets are eaten by pacman.
+    // public TwoTuple map2Arcade()
+
+//    public PelletCell getPelletByBlockPosition(TwoTuple blockPosition) {
+//        return pelletList.get(blockPosition.x).get(blockPosition.y);
+//    }
+
+    // update if the pellets are eaten by pacman.
     @Override
     public void update(ArrayList<TwoTuple> route) {
+
         ArrayList<PelletCell> pellets = pelletList.get(indexOfArcadeContainPacman);
         for(PelletCell pellet : pellets) {
             for (TwoTuple block : route) {
                 if(pellet.getPositionInArcade().equals(block)) {
                     pellet.setDead(true);
+                    if(pellet.getType()==1){
+//                        points.pelletEaten();
+//                        System.out.println(points.getScore());
+                    }else{
+//                        points.pwrpelletEaten();
+                    }
                 }
             }
         }
     }
 
-    //Getting the collison pelletType given the location as parameter
     public int getPelletType(ArrayList<TwoTuple> route) {
+
         ArrayList<PelletCell> pellets = pelletList.get(indexOfArcadeContainPacman);
         for (PelletCell pellet : pellets) {
             for (TwoTuple block : route) {
@@ -132,4 +147,5 @@ public class PelletList implements CollisionObserver {
         }
         return -1;
     }
+
 }
