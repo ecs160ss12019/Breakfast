@@ -327,34 +327,47 @@ public class Pacman extends Runner implements GameObject{
                 //movedTo(mathematicalMove, nextDirection);
 
                 if (essentialCheck(mathematicalMove)) {
-                    posInArcade = TwoTuple.moveTo(posInArcade, nextDirection);
+                    //posInArcade = TwoTuple.moveTo(posInArcade, nextDirection);
                     posInScreen = arcade.mapScreen(posInArcade);
                     pixelGap = 0;
                     currDirection = nextDirection;
                     return;
                 }
+
+                //System.out.println("Did not turn");
             }
         }
 
+        movedTo(mathematicalMove, currDirection);
         //Either not able to turn or not desired to turn
-        boolean allowsMove = arcadeAnalyzer.allowsToGo(posInArcade, currDirection);
-        if (allowsMove) {
-            //System.out.println("Allows to move");
-            //move and go
-            movedTo(mathematicalMove, currDirection);
-            //posInArcade = TwoTuple.moveTo(posInArcade, currDirection);
-            //posInScreen = arcade.mapScreen(posInArcade);
-            return;
-        }
+//        boolean allowsMove = arcadeAnalyzer.allowsToGo(posInArcade, currDirection);
+//        if (allowsMove) {
+//            //System.out.println("Allows to move");
+//            //move and go
+//            movedTo(mathematicalMove, currDirection);
+//            //posInArcade = TwoTuple.moveTo(posInArcade, currDirection);
+//            //posInScreen = arcade.mapScreen(posInArcade);
+//            return;
+//        }
 
         //else no move, always pin to that center
         //System.out.println("can not move");
-        posInScreen = arcade.mapScreen(posInArcade);
+        //posInScreen = arcade.mapScreen(posInArcade);
+//        if (essentialCheck(mathematicalMove)) {
+//            posInArcade = TwoTuple.moveTo(posInArcade, nextDirection);
+//            posInScreen = arcade.mapScreen(posInArcade);
+//            pixelGap = 0;
+//            currDirection = nextDirection;
+//            return;
+//        } else {
+//            movedTo(mathematicalMove, currDirection);
+//            return;
+//        }
     }
 
     //mathematical movement distance
     private int mathematicalMoveDistance(long fps) {
-        return (int)(70/fps);
+        return (int)(75/fps);
     }
 
 //    //move as far as possible
@@ -430,7 +443,7 @@ public class Pacman extends Runner implements GameObject{
 //                }
 
                 //Just close up, it is okay
-                System.out.println("Closing up");
+                //System.out.println("Closing up");
                 pixelGap = gap - blockDimension;
 
                 posInScreen = arcade.mapScreen(posInArcade);
@@ -544,20 +557,20 @@ public class Pacman extends Runner implements GameObject{
         int Sign_y_prev = (int)Math.signum(posInScreen.y - turningPoint.y);
 
         //try to add gap
-        TwoTuple posPost = TwoTuple.addPixelGap(turningPoint, currDirection, mathGap);
+        TwoTuple posPost = TwoTuple.addPixelGap(posInScreen, currDirection, mathGap);
 
         //update sign
         int Sign_x_post = (int)Math.signum(posPost.x - turningPoint.x);
         int Sign_y_post = (int)Math.signum(posPost.y - turningPoint.y);
 
-        System.out.println("Checking essential");
-        System.out.println("Curr: " + posInScreen.x + " " + posInScreen.y);
-        System.out.println("Turn: " + turningPoint.x + " " + turningPoint.y);
-        System.out.println("post: " + posPost.x + " " + posPost.y);
-        System.out.println(" ");
-        System.out.println("Checking sign");
-        System.out.println("Curr Diff: " + Sign_x_prev + " " + Sign_y_prev);
-        System.out.println("Post Diff: " + Sign_x_post + " " + Sign_y_post);
+//        System.out.println("Checking essential");
+//        System.out.println("Curr: " + posInScreen.x + " " + posInScreen.y);
+//        System.out.println("Turn: " + turningPoint.x + " " + turningPoint.y);
+//        System.out.println("post: " + posPost.x + " " + posPost.y);
+//        System.out.println(" ");
+//        System.out.println("Checking sign");
+//        System.out.println("Curr Diff: " + Sign_x_prev + " " + Sign_y_prev);
+//        System.out.println("Post Diff: " + Sign_x_post + " " + Sign_y_post);
 
         //We must advance to center!
         //Or we are on the center

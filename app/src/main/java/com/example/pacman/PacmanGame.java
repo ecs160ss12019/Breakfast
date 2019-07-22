@@ -135,7 +135,7 @@ class PacmanGame extends SurfaceView implements Runnable {
                 // mBat and mBall next frame/loop
                 mFPS = MILLIS_IN_SECOND / timeThisFrame;
             }
-            //System.out.println("fps: " + mFPS);
+            System.out.println("fps: " + mFPS);
         }
     }
 
