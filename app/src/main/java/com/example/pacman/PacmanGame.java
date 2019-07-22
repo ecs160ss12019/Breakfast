@@ -19,6 +19,8 @@ class PacmanGame extends SurfaceView implements Runnable {
     private Canvas mCanvas;
     private Paint mPaint;
 
+    private int numberHorizontalPixels;
+
     // How many frames per second did we get?
     private long mFPS;
     // The number of milliseconds in a second
@@ -151,8 +153,6 @@ class PacmanGame extends SurfaceView implements Runnable {
             direction = arrowKey;
             arrowKey = -1;
         }
-
-
         /*
         if player touched or is continuous touching
         updated pacman position and etc.
@@ -245,11 +245,6 @@ class PacmanGame extends SurfaceView implements Runnable {
 
         //Here we update the score if Pacman have eaten cake + ghosts
 
-
-
-
-
-
 //        Thread ghostsThread = new Thread(new Runnable(){
 //            @Override
 //            public void run() {
@@ -257,7 +252,7 @@ class PacmanGame extends SurfaceView implements Runnable {
 //            }
 //        });
 //
-//        Thread cakeThread = new Thread(new Runnable(){
+//        Thread cakeThread = new Thread(new Runnable() {
 //            @Override
 //            public void run() {
 //                cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
@@ -319,6 +314,10 @@ class PacmanGame extends SurfaceView implements Runnable {
         //cake.draw(canvas);
         navigationButtons.draw(canvas);
 
+        // score system:
+        mPaint.setTextSize(numberHorizontalPixels/40);
+        mCanvas.drawText("score: "+ score.getScore(), 50, (numberHorizontalPixels/40)*3, mPaint);
+
     }
     /*
     implement onTouchEvent to handle user input
@@ -355,6 +354,8 @@ class PacmanGame extends SurfaceView implements Runnable {
         // constructor of SurfaceView
         // provided by Android
         super(context);
+
+        numberHorizontalPixels = x;
 
         // Initialize these two members/fields
         // With the values passed in as parameters
