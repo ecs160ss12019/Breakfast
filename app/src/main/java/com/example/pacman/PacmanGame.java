@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -261,8 +262,8 @@ class PacmanGame extends SurfaceView implements Runnable {
 //        cakeThread.start();
 
 //        pacman.updateMovementStatus(direction, mFPS);
-        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
-        cake.updateMovementStatus(-1, mFPS);
+  //      ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+//        cake.updateMovementStatus(-1, mFPS);
     }
 
     // This method is called by PacmanActivity
@@ -312,8 +313,11 @@ class PacmanGame extends SurfaceView implements Runnable {
         navigationButtons.draw(canvas);
 
         // score system:
-        mPaint.setTextSize(numberHorizontalPixels/40);
-        mCanvas.drawText("score: "+ score.getScore(), 50, (numberHorizontalPixels/40)*3, mPaint);
+        Typeface plain = Typeface.createFromAsset(getContext().getAssets(), "fonts/myFont.ttf");
+        Paint paint = new Paint();
+        paint.setTextSize(numberHorizontalPixels/30);
+        paint.setTypeface(plain);
+        mCanvas.drawText("score: "+ score.getScore(), 50, (numberHorizontalPixels/40)*3, paint);
 
     }
     /*
@@ -397,8 +401,8 @@ class PacmanGame extends SurfaceView implements Runnable {
         ghosts = new GhostList(context, mScreen, arcades.getArcadeContainingPacman(), arcadeAnalyzer,
                 gameMode.getGhostsSpeed(), collision, pacman, GhostName);
 
-        cake = new Cake(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(),
-                arcadeAnalyzer, gameMode.getGhostsSpeed(), collision);
+        /* cake = new Cake(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(),
+                arcadeAnalyzer, gameMode.getGhostsSpeed(), collision); */
 //
 //        collisionDetector = new CollisionDetector();
 

@@ -16,7 +16,6 @@ public class PelletList implements CollisionObserver {
     private int bitmapHeight;
     private int pwrBitmapWidth;
     private int pwrBitmapHeight;
-
     private int indexOfArcadeContainPacman = 0; // TODO: hard code to 0
     private CollisionSubject collision;
 
@@ -67,7 +66,6 @@ public class PelletList implements CollisionObserver {
                 pwrBitmapWidth , pwrBitmapHeight, true));
         pelletViewList.add(Bitmap.createScaledBitmap(pelletView,
                 bitmapWidth , bitmapHeight, true));
-
 
         //Random random = new Random();
         //Construct a matrix given the arcades with 0 and 1(pellet can be added).

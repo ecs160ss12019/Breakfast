@@ -55,7 +55,7 @@ public class GhostList {
             //**For ghostbehavior;
             //Ghost ghost = new Ghost(context, sx, sy, arcade, pacman, ghostsViewList.get(i), i, speed, name);
             // ghosts move up by default, because they need to get out of "home"
-            Ghost ghost = new Ghost(context, screenResolution, arcade, pacman, ghostsViewList.get(i), TwoTuple.UP, speed, collision, Name[i]);
+            Ghost ghost = new Ghost(context, screenResolution, arcade, pacman, ghostsViewList.get(i), speed, collision, Name[i]);
             ghosts.add(ghost);
         }
     }
@@ -87,7 +87,7 @@ public class GhostList {
 
             //**For ghostbehavior;
             //Ghost ghost = new Ghost(context, sx, sy, arcade, pacman, ghostsViewList.get(i), i, speed, name);
-            Ghost ghost = new Ghost(context, screen, arcade, pacman, ghostsViewList.get(i), TwoTuple.UP, arcadeAnalyzer, speed, collision, Name[i]);
+           Ghost ghost = new Ghost(context, screen, arcade, pacman, ghostsViewList.get(i), arcadeAnalyzer, speed, collision, Name[i]);
             ghosts.add(ghost);
         }
     }
