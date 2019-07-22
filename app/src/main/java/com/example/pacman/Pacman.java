@@ -55,7 +55,7 @@ public class Pacman extends Runner implements GameObject{
     public void draw(Canvas canvas) {
         //TwoTuple screenPos = arcade.mapScreen(posInArcade);
         canvas.drawBitmap(pacmanViewList.get(currDirection),
-                posInScreen.first() - (bitmapWidth/2), posInScreen.second() - (bitmapHeight/2), null);
+                posInScreen.x - (bitmapWidth/2), posInScreen.y - (bitmapHeight/2), null);
     }
 
 //    @Override
@@ -316,27 +316,30 @@ public class Pacman extends Runner implements GameObject{
         if (mathematicalMove == 0) return;
 
         if (nextDirection != currDirection && nextDirection != -1) {
-            System.out.println("Want to turn");
+            //System.out.println("Want to turn");
 
             //try new direction
             boolean allowsTurn = arcadeAnalyzer.allowsToGo(posInArcade, nextDirection);
 
             if (allowsTurn) {
-                System.out.println("Allows to turn");
+                //System.out.println("Allows to turn");
                 //Turn and go
                 //movedTo(mathematicalMove, nextDirection);
-                posInArcade = TwoTuple.moveTo(posInArcade, nextDirection);
-                posInScreen = arcade.mapScreen(posInArcade);
-                pixelGap = 0;
-                currDirection = nextDirection;
-                return;
+
+                if (essentialCheck(mathematicalMove)) {
+                    posInArcade = TwoTuple.moveTo(posInArcade, nextDirection);
+                    posInScreen = arcade.mapScreen(posInArcade);
+                    pixelGap = 0;
+                    currDirection = nextDirection;
+                    return;
+                }
             }
         }
 
         //Either not able to turn or not desired to turn
         boolean allowsMove = arcadeAnalyzer.allowsToGo(posInArcade, currDirection);
         if (allowsMove) {
-            System.out.println("Allows to move");
+            //System.out.println("Allows to move");
             //move and go
             movedTo(mathematicalMove, currDirection);
             //posInArcade = TwoTuple.moveTo(posInArcade, currDirection);
@@ -344,21 +347,14 @@ public class Pacman extends Runner implements GameObject{
             return;
         }
 
-        //else no move, stay there
-        System.out.println("can not move");
+        //else no move, always pin to that center
+        //System.out.println("can not move");
+        posInScreen = arcade.mapScreen(posInArcade);
     }
 
     //mathematical movement distance
     private int mathematicalMoveDistance(long fps) {
-        System.out.println(7.0/fps);
-        pixelCounter += 4.0/fps;
-        System.out.println("PC " + pixelCounter);
-        if (pixelCounter > 1) {
-            int intPixel = (int) pixelCounter;
-            pixelCounter -= (int) pixelCounter;
-            return intPixel;
-        }
-        return 0;
+        return (int)(70/fps);
     }
 
 //    //move as far as possible
@@ -385,8 +381,9 @@ public class Pacman extends Runner implements GameObject{
     //move as far as possible
     private void movedTo(int mathematicalMove, int movingDirection) {
         int gap = mathematicalMove + pixelGap;
-        System.out.println("Math: " + mathematicalMove + ", PG: " + pixelGap);
-        System.out.println("Gap" + gap + ", Block: " + gap / blockDimension);
+//        System.out.println("Math: " + mathematicalMove + ", PG: " + pixelGap);
+//        System.out.println("Gap: " + gap + ", Block: " + gap / blockDimension);
+//        System.out.println("CurrArcadePos: " + posInArcade.x + " " + posInArcade.y);
 //        System.out.println("Starting to move from: " + posInArcade.first() + " " + posInArcade.second());
         boolean allowsMove = arcadeAnalyzer.allowsToGo(posInArcade, movingDirection);
 //        while (movedDistance <= mathematicalMove && allowsMove) {
@@ -399,21 +396,54 @@ public class Pacman extends Runner implements GameObject{
 
 //        System.out.println("!!!!!");
 //        System.out.println("Finished moving to: " + currPos.first() + " " + currPos.second());
+
+//        System.out.println("Before Looping: " + posInArcade.x + " " + posInArcade.y);
         while (true) {
-            if (!allowsMove || gap == 0) {
-//                System.out.println("Arcade Pos: " + " ROW: " + posInArcade.x + " " + " COL: " + posInArcade.y);
-//                System.out.println("Screen Pos: " + " X: " + posInScreen.x + " " + " Y: " + posInScreen.y);
-//                System.out.println(" ");
-//                System.out.println(" ");
-                //meets obstacle
+            if (gap == 0) {
                 posInScreen = arcade.mapScreen(posInArcade);
                 pixelGap = 0;
                 return;
             }
 
+            if (!allowsMove) {
+//                System.out.println("Arcade Pos: " + " ROW: " + posInArcade.x + " " + " COL: " + posInArcade.y);
+//                System.out.println("Screen Pos: " + " X: " + posInScreen.x + " " + " Y: " + posInScreen.y);
+//                System.out.println(" ");
+//                System.out.println(" ");
+
+                //Collide to wall, but still attempt to move, must stay at center
+                if (gap > 0) {
+                    posInScreen = arcade.mapScreen(posInArcade);
+                    pixelGap = 0;
+                    return;
+                }
+
+                //obstacle on right, gap subtracted to smaller than 0
+                gap = gap + blockDimension;
+
+//                boolean mustAdvanceToCenter = essentialCheck(gap);
+//                if (mustAdvanceToCenter && gap != 0) {
+//                    System.out.println("cannot close up");
+//                    posInScreen = arcade.mapScreen(posInArcade);
+//                    pixelGap = 0;
+//                    return;
+//                }
+
+                //Just close up, it is okay
+                System.out.println("Closing up");
+                pixelGap = gap - blockDimension;
+
+                posInScreen = arcade.mapScreen(posInArcade);
+                posInScreen = TwoTuple.addPixelGap(posInScreen, currDirection, pixelGap);
+
+//                System.out.println("Case 1 done: " + posInArcade.x + " " + posInArcade.y);
+//                System.out.println("Update screen Pos: " + posInScreen.x + " " + posInScreen.y);
+                return;
+            }
+
             //Now next block on this direction must be valid
             if (gap < 0) {
-                System.out.println("Case 1");
+//                System.out.println("Case 1");
 //                System.out.println("Arcade Pos: " + " ROW: " + posInArcade.x + " " + " COL: " + posInArcade.y);
 //                System.out.println("Screen Pos: " + " X: " + posInScreen.x + " " + " Y: " + posInScreen.y);
 //                System.out.println(" ");
@@ -422,16 +452,30 @@ public class Pacman extends Runner implements GameObject{
                 //gap < block size
                 gap = gap + blockDimension;
 
-                posInArcade = TwoTuple.moveTo(posInArcade, currDirection);
+//                System.out.println("Case 1: margin = " + gap);
 
-                if (arcadeAnalyzer.allowsToGo(posInArcade, movingDirection)) {
-                    pixelGap = gap - blockDimension;
-                } else {
-                    pixelGap = 0;
-                }
+                //posInArcade = TwoTuple.moveTo(posInArcade, currDirection);
+
+                pixelGap = gap - blockDimension;
+
+//                if (arcadeAnalyzer.allowsToGo(posInArcade, movingDirection)) {
+//                    System.out.println("Allows");
+//                    pixelGap = gap - blockDimension;
+//                } else {
+//                    if (essentialCheck(gap)) {
+//                        System.out.println("Essential");
+//                        pixelGap = 0;
+//                    } else {
+//                        System.out.println("not Essential");
+//                        pixelGap = gap - blockDimension;
+//                    }
+//                }
 
                 posInScreen = arcade.mapScreen(posInArcade);
                 posInScreen = TwoTuple.addPixelGap(posInScreen, currDirection, pixelGap);
+
+//                System.out.println("Case 1 done: " + posInArcade.x + " " + posInArcade.y);
+//                System.out.println("Update screen Pos: " + posInScreen.x + " " + posInScreen.y);
                 return;
             }
 
@@ -481,7 +525,49 @@ public class Pacman extends Runner implements GameObject{
             gap -= blockDimension;
             posInArcade = TwoTuple.moveTo(posInArcade, movingDirection);
             allowsMove = arcadeAnalyzer.allowsToGo(posInArcade, movingDirection);
+            //System.out.println("Looped Once: " + posInArcade.x + " " + posInArcade.y);
         }
+    }
+
+    private boolean essentialCheck(int mathGap) {
+        //Will it actually go pass the
+        //center of the turning block
+        //if we continue the previous motion?
+        //To due with this, lets try to
+        //add the gap on first!
+
+        //The turning point on screen
+        TwoTuple turningPoint = arcade.mapScreen(posInArcade);
+
+        //get sign
+        int Sign_x_prev = (int)Math.signum(posInScreen.x - turningPoint.x);
+        int Sign_y_prev = (int)Math.signum(posInScreen.y - turningPoint.y);
+
+        //try to add gap
+        TwoTuple posPost = TwoTuple.addPixelGap(turningPoint, currDirection, mathGap);
+
+        //update sign
+        int Sign_x_post = (int)Math.signum(posPost.x - turningPoint.x);
+        int Sign_y_post = (int)Math.signum(posPost.y - turningPoint.y);
+
+        System.out.println("Checking essential");
+        System.out.println("Curr: " + posInScreen.x + " " + posInScreen.y);
+        System.out.println("Turn: " + turningPoint.x + " " + turningPoint.y);
+        System.out.println("post: " + posPost.x + " " + posPost.y);
+        System.out.println(" ");
+        System.out.println("Checking sign");
+        System.out.println("Curr Diff: " + Sign_x_prev + " " + Sign_y_prev);
+        System.out.println("Post Diff: " + Sign_x_post + " " + Sign_y_post);
+
+        //We must advance to center!
+        //Or we are on the center
+        if (Sign_x_post != Sign_x_prev || Sign_y_post != Sign_y_prev ||
+                (Sign_x_prev == 0 && Sign_y_prev == 0)) {
+            System.out.println("true");
+            return true;
+        }
+        System.out.println("false");
+        return false;
     }
 
 
