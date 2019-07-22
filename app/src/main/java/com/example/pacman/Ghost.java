@@ -13,16 +13,8 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
 
     //ADDED variables
     private ArcadeAnalyzer arcadeAnalyzer;
-    private Arcade arcade;
 
     //coordinate
-    private int x;
-    private int y;
-    private int currDirectionNextX;
-    private int currDirectionNextY;
-    private float speed;
-    private int mScreenX;
-    private int mScreenY;
     private String GhostName;
 
     //context of the game, used access Resource ptr
@@ -34,25 +26,18 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
     private int bitmapWidth;
     private int bitmapHeight;
 
-    private boolean needToChangeDir =false;
-
-    private boolean collision;
     private Pacman pacman; // used for chase and kill Pacman
-
-    private MotionInArcade motionInArcade;
-
 
     // ** for ghostbehavior;
     //public Ghost(Context context, int sx, int sy, Arcade arcade,
     //             Pacman pacman, Bitmap ghostView,  int direction,
     //             float speed, String name)
      public Ghost(Context context, TwoTuple screenResolution, Arcade arcade,
-                 Pacman pacman, Bitmap ghostView,  int direction,
+                 Pacman pacman, Bitmap ghostView,
                     float speed, CollisionSubject collision, String Name) {
-         super(collision);
+         super(screenResolution, speed, collision);
         this.context = context;
-        mScreen = screenResolution;
-        this.currDirection = direction;
+        this.currDirection = UP;
         this.nextDirection = -1;
         this.GhostName = Name;
 
@@ -60,9 +45,7 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
         bitmapWidth = ghostView.getWidth();
         bitmapHeight = ghostView.getHeight();
 
-        this.speed = speed;
-
-        this.position = new TwoTuple(arcade.getGhostPosition_pix());
+        this.posInScreen = new TwoTuple(arcade.getGhostPosition_pix());
         this.pacman = pacman;
 
      // ** for ghostbehavior;
@@ -73,22 +56,18 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
     }
 
     //Constructor2
-    public Ghost(Context context, int sx, int sy, Arcade arcade,
-                 Pacman pacman, Bitmap ghostView, int direction, ArcadeAnalyzer arcadeAnalyzer,
+    public Ghost(Context context, TwoTuple screen, Arcade arcade,
+                 Pacman pacman, Bitmap ghostView, ArcadeAnalyzer arcadeAnalyzer,
                  float speed, CollisionSubject collision, String Name) {
-         super(collision);
+         super(screen, speed, collision);
         this.context = context;
-        mScreenX = sx;
-        mScreenY = sy;
-        this.currDirection = direction;
+        this.currDirection = UP;
         this.nextDirection = -1;
         this.GhostName = Name;
 
         this.ghostView = ghostView;
         bitmapWidth = ghostView.getWidth();
         bitmapHeight = ghostView.getHeight();
-
-        this.speed = speed;
 
         this.pacman = pacman;
 
@@ -110,9 +89,9 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
 
     @Override
     public void draw(Canvas canvas) {
-        TwoTuple screenPos =arcade.mapScreen(posInArcade);
-        canvas.drawBitmap(ghostView, screenPos.first() - bitmapWidth / 2,
-                screenPos.second() - bitmapHeight / 2, null);
+        // TwoTuple screenPos = arcade.mapScreen(posInArcade);
+        canvas.drawBitmap(ghostView, posInScreen.first() - bitmapWidth / 2,
+                posInScreen.second() - bitmapHeight / 2, null);
     }
 
     /*
@@ -156,11 +135,6 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
 //        canvas.drawBitmap(ghostView, this.position.x-bitmapWidth/2, this.position.y-bitmapHeight/2, null);
 //    }
 
-    @Override
-    public void updateStatus(long fps){
-
-    }
-
     public void updateLocation(long fps) {
         /*
         We cannot update is the fps is -1,
@@ -171,149 +145,35 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
             return;
         }
 
-        // The first Movement solution was based on CollisionSubject
-        // Siqi updated movement solution based on arcade, so this part is comment out
-
-//        CollisionDetector collisionDetector = new CollisionDetector();
+//        /***************************************/
+//        //New Method
+//        int mathematicalMove = mathematicalMoveDistance(fps);
 //
-//        int nextX = 0;
-//        int nextY = 0;
+//        if (nextDirection != currDirection && nextDirection != -1) {
+//            //try new direction
+//            boolean allowsTurn = arcadeAnalyzer.allowsToGo(posInArcade, nextDirection);
 //
-//        if (nextDirection != -1) {
-//            Pair<Integer, Integer> next = move(nextDirection, fps);
-//            nextX = next.first;
-//            nextY = next.second;
+//            if (allowsTurn) {
+//                //Turn and go
+//                posInArcade = movedTo(mathematicalMove, nextDirection);
 //
-//            //Check collision
-//            ArrayList<Obstacle> obstacles =arcade.getObstacleList(nextX, nextY);
-//            Obstacle ghostReference = new Obstacle(nextX, nextY,
-//                    (int)(bitmapWidth*0.8), (int)(bitmapHeight*0.8));
-//
-//            collision = collisionDetector.collisionExist(ghostReference, obstacles);
-//            if (!collision) {
-//                setCenter(nextX, nextY);
 //                currDirection = nextDirection;
+//                needToChangeDir = false;
 //                return;
 //            }
 //        }
 //
-//        /*
-//        Either there is no new direction,
-//        or that direction does not work.
-//        Try moving in current direction, if it do
-//        not work as well, stay in current position
-//         */
-//        Pair<Integer, Integer> next = move(currDirection, fps);
-//        nextX = next.first;
-//        nextY = next.second;
-//
-//        //Check collision
-//        ArrayList<Obstacle> obstacles = arcade.getObstacleList(nextX, nextY);
-//        Obstacle ghostReference = new Obstacle(nextX, nextY,
-//                (int)(bitmapWidth * 0.8), (int)(bitmapHeight * 0.8));
-//
-//        collision = collisionDetector.collisionExist(ghostReference, obstacles);
-//        if(!collision) {
-//            setCenter(nextX, nextY);
-//        }
-
-//        //next move in current direction
-//        TwoTuple next = move(currDirection, fps);
-//        currDirectionNextX = next.first();
-//        currDirectionNextY = next.second();
-//
-//        //System.out.println("Global update: " + x + " " + y + " " + currDirectionNextX + " " + currDirectionNextY);
-//
-//        //update motion info
-//        motionInArcade.updateMotionInfo(getMotionInfo());
-//
-//        //check if in decision region
-//        if(motionInArcade.inDecisionRegion()) {
-//            //System.out.println("in region");
-//            //we need to take action
-//            if (nextDirection != currDirection) {
-//                //System.out.println("diff dir");
-//                //We need to check user's desired direction
-//                NextMotionInfo info1 = motionInArcade.isValidMotion(nextDirection);
-//                if (info1.isValid()) {
-//                    //System.out.println("Valid Turn");
-//                    //we can change direction.
-//                    setCenter(info1.getPos().first(), info1.getPos().second());
-//                    currDirection = nextDirection;
-//                    needToChangeDir = false;
-//                    return;
-//                }
-//            }
-//
-//            /*
-//            either user did not input direction
-//            or user's desired input is invalid.
-//            We check if we can continue on current direction
-//             */
-//            NextMotionInfo info2 = motionInArcade.isValidMotion(currDirection);
-//            if (!info2.isValid()) {
-//                //System.out.println("Curr direction invalid");
-//                //Now we must remain at current position
-//                setCenter(info2.getPos().first(), info2.getPos().second());
-//                needToChangeDir = true;
-//                return;
-//            }
-//        }
-//
-//        //System.out.println("No disturb");
-//        //We do not need to disturb current motion
-//        needToChangeDir = false;
-//
-//        /*
-//        Now we can keep the original motion,
-//        but we still need to know if the next move
-//        is still on path.
-//         */
-//
-//        Pair<TwoTuple, Boolean> checkNextMoveInBound = motionInArcade.mostDistantPathBlock(
-//                new TwoTuple(currDirectionNextX, currDirectionNextY), nextDirection);
-//
-//        if (checkNextMoveInBound.second){
-//            //System.out.println("No disturb");
-//            //We do not need to disturb current motion
-//            setCenter(currDirectionNextX, currDirectionNextY);
+//        //Either not able to turn or not desired to turn
+//        boolean allowsMove = arcadeAnalyzer.allowsToGo(posInArcade, currDirection);
+//        if (allowsMove) {
+//            //move and go
+//            posInArcade = movedTo(mathematicalMove, currDirection);
 //            return;
 //        }
-//        System.out.println("Bad Fps: " + fps + "  gap: " + speed / fps +
-//                "  prev: " + x + " " + y + "  next: " + currDirectionNextX + " " + currDirectionNextY);
-//        //setCenter(checkNextMoveInBound.first.first(), checkNextMoveInBound.first.second());
-//        setCenter(x, y);
-
-
-        /***************************************/
-        //New Method
-        int mathematicalMove = mathematicalMoveDistance(fps);
-
-        if (nextDirection != currDirection && nextDirection != -1) {
-            //try new direction
-            boolean allowsTurn = arcadeAnalyzer.allowsToGo(posInArcade, nextDirection);
-
-            if (allowsTurn) {
-                //Turn and go
-                posInArcade = movedTo(mathematicalMove, nextDirection);
-
-                currDirection = nextDirection;
-                needToChangeDir = false;
-                return;
-            }
-        }
-
-        //Either not able to turn or not desired to turn
-        boolean allowsMove = arcadeAnalyzer.allowsToGo(posInArcade, currDirection);
-        if (allowsMove) {
-            //move and go
-            posInArcade = movedTo(mathematicalMove, currDirection);
-            return;
-        }
-
-        needToChangeDir = true;
-
-        //else no move, stay there
+//
+//        needToChangeDir = true;
+//
+//        //else no move, stay there
     }
 
     //mathematical movement distance
@@ -342,35 +202,6 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
         return currPos;
     }
 
-/*
-    public void updateMovementStatus(long fps) {
-        int inputDirection = -1;
-        if(needToChangeDir == true) {
-            Random randomGenerator = new Random();
-            inputDirection = randomGenerator.nextInt(4);
-        }
-        switch (inputDirection) {
-            case -1:
-                //nextDirection = -1;
-                break;
-            case 0:
-                nextDirection = UP;
-                break;
-            case 1:
-                nextDirection = DOWN;
-                break;
-            case 2:
-                nextDirection = LEFT;
-                break;
-            case 3:
-                nextDirection = RIGHT;
-                break;
-        }
-        updateLocation(fps);
-    }
-
-*/
-
     // ghost kill pacman
     @Override
     public void update(ArrayList<TwoTuple> route) {
@@ -386,7 +217,6 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
 
     //**For ghost behavior;
 
-
     //This is the GhostBehavior Function, each of the ghost has a unique behavior;
     //The red Ghost will keep tracing the pacman;
     //The pink ghost will get in front of pacman to cut the him off;
@@ -395,17 +225,63 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
     public void GhostBehavior(long fps){
         switch (this.GhostName){
             case "Red":
-                int HorizontalGap = pacman.getCurrentX()-posInArcade.x;
-                int VerticleGap = pacman.getCurrentY()-posInArcade.y;
+                int HorizontalGap = pacman.getCurrentX()-this.posInScreen.x;
+                int VerticleGap = pacman.getCurrentY()-this.posInScreen.y;
                 if(Math.abs(HorizontalGap) > Math.abs(VerticleGap)){
                     if(HorizontalGap < 0 ){
-                        nextDirection = DOWN;
+                        nextDirection = LEFT;
                         updateLocation(fps);
                         if(needToChangeDir){
                             if(VerticleGap < 0){
-                                nextDirection = LEFT;
+                                nextDirection = DOWN;
                                 updateLocation(fps);
                                 if(needToChangeDir) {
+                                    nextDirection = UP;
+                                    updateLocation(fps);
+                                }
+                            }
+                            else{
+                                nextDirection = UP;
+                                updateLocation(fps);
+                                if(needToChangeDir){
+                                    nextDirection = DOWN;
+                                    updateLocation(fps);
+                                }
+                            }
+                        }
+                    }
+                    else{
+                        nextDirection = RIGHT;
+                        updateLocation(fps);
+                        if(needToChangeDir){
+                            if(VerticleGap < 0){
+                                nextDirection = DOWN;
+                                updateLocation(fps);
+                                if(needToChangeDir) {
+                                    nextDirection = UP;
+                                    updateLocation(fps);
+                                }
+                            }
+                            else{
+                                nextDirection = UP;
+                                updateLocation(fps);
+                                if(needToChangeDir){
+                                    nextDirection = DOWN;
+                                    updateLocation(fps);
+                                }
+                            }
+                        }
+                    }
+                }
+                else{
+                    if(VerticleGap < 0){
+                        nextDirection = DOWN;
+                        updateLocation(fps);
+                        if(needToChangeDir){
+                            if(HorizontalGap < 0){
+                                nextDirection = LEFT;
+                                updateLocation(fps);
+                                if(needToChangeDir){
                                     nextDirection = RIGHT;
                                     updateLocation(fps);
                                 }
@@ -424,10 +300,10 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
                         nextDirection = UP;
                         updateLocation(fps);
                         if(needToChangeDir){
-                            if(VerticleGap < 0){
+                            if(HorizontalGap < 0){
                                 nextDirection = LEFT;
                                 updateLocation(fps);
-                                if(needToChangeDir) {
+                                if(needToChangeDir){
                                     nextDirection = RIGHT;
                                     updateLocation(fps);
                                 }
@@ -443,59 +319,13 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
                         }
                     }
                 }
-                else{
-                    if(VerticleGap < 0){
-                        nextDirection = LEFT;
-                        updateLocation(fps);
-                        if(needToChangeDir){
-                            if(HorizontalGap < 0){
-                                nextDirection = DOWN;
-                                updateLocation(fps);
-                                if(needToChangeDir){
-                                    nextDirection = UP;
-                                    updateLocation(fps);
-                                }
-                            }
-                            else{
-                                nextDirection = UP;
-                                updateLocation(fps);
-                                if(needToChangeDir){
-                                    nextDirection = RIGHT;
-                                    updateLocation(fps);
-                                }
-                            }
-                        }
-                    }
-                    else{
-                        nextDirection = RIGHT;
-                        updateLocation(fps);
-                        if(needToChangeDir){
-                            if(HorizontalGap < 0){
-                                nextDirection = DOWN;
-                                updateLocation(fps);
-                                if(needToChangeDir){
-                                    nextDirection = UP;
-                                    updateLocation(fps);
-                                }
-                            }
-                            else{
-                                nextDirection = UP;
-                                updateLocation(fps);
-                                if(needToChangeDir){
-                                    nextDirection = DOWN;
-                                    updateLocation(fps);
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
 
+                break;
             case "Pink":
                 //int HorizontalGap1 = pacman.getNextposX()-this.x;
                 //int VerticleGap1 = pacman.getNextposY()-this.y;
-                int HorizontalGap1 = pacman.getCurrentX()-this.x;
-                int VerticleGap1 = pacman.getCurrentY()-this.y;
+                int HorizontalGap1 = pacman.getCurrentX()-this.posInScreen.x;
+                int VerticleGap1 = pacman.getCurrentY()-this.posInScreen.y;
                 if(Math.abs(HorizontalGap1) > Math.abs(VerticleGap1)){
                     if(HorizontalGap1 < 0 ){
                         nextDirection = LEFT;
@@ -642,11 +472,5 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
                 updateLocation(fps);
                 break;
         }
-    }
-
-
-    public void reBorn() {
-        this.posInArcade = this.posInArcadeInit;
-        this.setDead(false);
     }
 }

@@ -5,8 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
-import java.util.Random;
-
 /*
 * This is equivalent to the original cherry in Pac-Man game:
 * random generate the cake onto the sceen and double the points earned;
@@ -19,14 +17,14 @@ public class Cake extends Runner implements GameObject {
     //Added variables
     private ArcadeAnalyzer arcadeAnalyzer;
 
-    private Arcade arcade;
     private Context context;
     private boolean needToChangeDir =false;
     private Bitmap rawCakeImg;
     private Bitmap scaledCakeImg;
-    private MotionInArcade motionInArcade;
 
     private boolean isDead;
+    //eaten means whether points was added.
+    private boolean eaten;
 
     public boolean isDead() {
         return isDead;
@@ -42,14 +40,14 @@ public class Cake extends Runner implements GameObject {
 //                        yCoordinate - bitmapHeight/2, null);
 //    }
     public Cake(Context context, TwoTuple screenResolution, Arcade arcade, float speed, CollisionSubject collision){
-        super(collision);
+        super(screenResolution, speed, collision);
         this.speed = speed;
         this.arcade = arcade;
         this.context = context;
         currDirection = 0;
         nextDirection = -1;
         mScreen = screenResolution;
-        position = arcade.getCakePosition_pix();
+        posInScreen = arcade.getCakePosition_pix();
         rawCakeImg = BitmapFactory.decodeResource(context.getResources(), R.drawable.cake);
         scaledCakeImg = Bitmap.createScaledBitmap(rawCakeImg,
                         mScreen.y / 15, mScreen.y/15, true);
@@ -108,11 +106,6 @@ public class Cake extends Runner implements GameObject {
 //                        position.y - bitmapHeight/2, null);
 //    }
 
-    @Override
-    public void updateStatus(long fps){
-
-    }
-
     public void updateLocation(long fps, Arcade arcade) {
         /*
         We cannot update is the fps is -1,
@@ -122,73 +115,6 @@ public class Cake extends Runner implements GameObject {
         if (fps == -1 || fps == 0) {
             return;
         }
-
-//        //next move in current direction
-//        TwoTuple next = move(currDirection, fps);
-//        currDirectionNextX = next.first();
-//        currDirectionNextY = next.second();
-//
-////        System.out.println("Global update: " + xCoordiante + " "
-////        + yCoordinate + " " + currDirectionNextX + " " + currDirectionNextY);
-//
-//        //update motion info
-//        motionInArcade.updateMotionInfo(getMotionInfo());
-//
-//        //check if in decision region
-//        if(motionInArcade.inDecisionRegion()) {
-//            //System.out.println("in region");
-//            //we need to take action
-//            if (nextDirection != currDirection) {
-//                //System.out.println("diff dir");
-//                //We need to check user's desired direction
-//                NextMotionInfo info1 = motionInArcade.isValidMotion(nextDirection);
-//                if (info1.isValid()) {
-//                    //System.out.println("Valid Turn");
-//                    //we can change direction.
-//                    setCenter(info1.getPos().first(), info1.getPos().second());
-//                    currDirection = nextDirection;
-//                    needToChangeDir = false;
-//                    return;
-//                }
-//            }
-//
-//            /*
-//            either user did not input direction
-//            or user's desired input is invalid.
-//            We check if we can continue on current direction
-//             */
-//            NextMotionInfo info2 = motionInArcade.isValidMotion(currDirection);
-//            if (!info2.isValid()) {
-//                //System.out.println("Curr direction invalid");
-//                //Now we must remain at current position
-//                setCenter(info2.getPos().first(), info2.getPos().second());
-//                needToChangeDir = true;
-//                return;
-//            }
-//        }
-//
-//        //System.out.println("No disturb");
-//        //We do not need to disturb current motion
-//        needToChangeDir = false;
-//        /*
-//        Now we can keep the original motion,
-//        but we still need to know if the next move
-//        is still on path.
-//         */
-//
-//        Pair<TwoTuple, Boolean> checkNextMoveInBound = motionInArcade.mostDistantPathBlock(
-//                new TwoTuple(currDirectionNextX, currDirectionNextY), nextDirection);
-//
-//        if (checkNextMoveInBound.second){
-//            //System.out.println("No disturb");
-//            //We do not need to disturb current motion
-//            setCenter(currDirectionNextX, currDirectionNextY);
-//            return;
-//        }
-//        System.out.println("Bad Fps: " + fps + "  gap: " + speed / fps +
-//                "  prev: " + xCoordiante + " " + yCoordinate + "  next: " + currDirectionNextX + " " + currDirectionNextY);
-//        //setCenter(checkNextMoveInBound.first.first(), checkNextMoveInBound.first.second());
-//        setCenter(xCoordiante, yCoordinate);
 
 
         /***************************************/
@@ -247,47 +173,18 @@ public class Cake extends Runner implements GameObject {
         return currPos;
     }
 
-    public void updateMovementStatus(long fps, Arcade arcade) {
-        int inputDirection = -1;
-        if(needToChangeDir == true) {
-            Random randomGenerator = new Random();
-            inputDirection = randomGenerator.nextInt(4);
-        }
-        switch (inputDirection) {
-            case -1:
-                //nextDirection = -1;
-                break;
-            case 0:
-                nextDirection = UP;
-                break;
-            case 1:
-                nextDirection = DOWN;
-                break;
-            case 2:
-                nextDirection = LEFT;
-                break;
-            case 3:
-                nextDirection = RIGHT;
-                break;
-        }
-        updateLocation(fps, arcade);
-    }
-
     //Constructor
-    public Cake(Context context, int sx, int sy, Arcade arcade, ArcadeAnalyzer arcadeAnalyzer, float speed, CollisionSubject collision){
-        super(collision);
-        this.speed = speed;
+    public Cake(Context context, TwoTuple screen, Arcade arcade, ArcadeAnalyzer arcadeAnalyzer, float speed, CollisionSubject collision){
+        super(screen, speed, collision);
         this.arcade = arcade;
         this.context = context;
         currDirection = 0;
         nextDirection = -1;
-//        mScreenX = sx;
-//        mScreenY = sy;
 //        xCoordiante = arcade.getCakeX_pix();
 //        yCoordinate = arcade.getCakeY_pix();
         rawCakeImg = BitmapFactory.decodeResource(context.getResources(), R.drawable.cake);
         scaledCakeImg = Bitmap.createScaledBitmap(rawCakeImg,
-                sy / 15, sy/15, true);
+                screen.y / 15, screen.y/15, true);
         bitmapHeight = scaledCakeImg.getHeight();
         bitmapWidth = scaledCakeImg.getWidth();
         motionInArcade = new MotionInArcade(arcade);

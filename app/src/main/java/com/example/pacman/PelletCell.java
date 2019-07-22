@@ -13,10 +13,17 @@ public class PelletCell implements GameObject{
     private int type;
     private int pelletX;
     private int pelletY;
+    private boolean scoreAdded;
 
     private boolean isDead;
     public boolean isDead() { return isDead; }
     public void setDead(boolean dead) { isDead = dead; }
+    public boolean scoreAdded(){
+        return scoreAdded;
+    }
+    public void addedpoint(){
+        this.scoreAdded = true;
+    }
 
     private CollisionSubject collision;
 
@@ -26,7 +33,8 @@ public class PelletCell implements GameObject{
         this.type = type;
         this.pelletX = pelletX;
         this.pelletY = pelletY;
-
+        this.isDead = false;
+        this.scoreAdded = false;
     }
     //Overwritting the interface functions.
     public int getX(){

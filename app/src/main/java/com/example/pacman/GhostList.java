@@ -61,9 +61,9 @@ public class GhostList {
     }
 
     //Constructor2
-    public GhostList(Context context, int sx, int sy, Arcade arcade, ArcadeAnalyzer arcadeAnalyzer, float speed, CollisionSubject collision, Pacman pacman, String [] Name) {
+    public GhostList(Context context, TwoTuple screen, Arcade arcade, ArcadeAnalyzer arcadeAnalyzer, float speed, CollisionSubject collision, Pacman pacman, String [] Name) {
         this.context = context;
-        mScreen = new TwoTuple(sx,sy);
+        mScreen = screen;
         this.arcade = arcade;
         this.NameArray = Name;
 
@@ -78,7 +78,7 @@ public class GhostList {
         ghostsViewList = new ArrayList<>();
         for (int i = 0; i < unsizedGhostsViewList.size(); i++) {
             Bitmap bitmap = Bitmap.createScaledBitmap(unsizedGhostsViewList.get(i),
-                    sy / 15, sy/15, true);
+                    screen.y / 15, screen.y/15, true);
             ghostsViewList.add(bitmap);
         }
 
@@ -87,7 +87,7 @@ public class GhostList {
 
             //**For ghostbehavior;
             //Ghost ghost = new Ghost(context, sx, sy, arcade, pacman, ghostsViewList.get(i), i, speed, name);
-            Ghost ghost = new Ghost(context, sx, sy, arcade, pacman, ghostsViewList.get(i), TwoTuple.UP, arcadeAnalyzer, speed, collision, Name[i]);
+            Ghost ghost = new Ghost(context, screen, arcade, pacman, ghostsViewList.get(i), TwoTuple.UP, arcadeAnalyzer, speed, collision, Name[i]);
             ghosts.add(ghost);
         }
     }
@@ -96,16 +96,16 @@ public class GhostList {
         for (int i = 0; i < ghosts.size(); i++) {
             final int index = i;
 
-            Thread ghostThread = new Thread(new Runnable(){
-                @Override
-                public void run() {
-                    //ghosts.get(index).updateMovementStatus(mFPS);
-                    ghosts.get(index).GhostBehavior(mFPS);
-                }
-            });
-            ghostThread.start();
+//            Thread ghostThread = new Thread(new Runnable(){
+//                @Override
+//                public void run() {
+//                    //ghosts.get(index).GhostBehavior(mFPS,arcadeContainingPacman);
+//                    ghosts.get(index).GhostBehavior(mFPS);
+//                }
+//            });
+//            ghostThread.start();
 
-            //ghosts.get(index).updateMovementStatus(mFPS,arcadeContainingPacman);
+            ghosts.get(index).updateMovementStatus(-1, mFPS);
         }
     }
 
