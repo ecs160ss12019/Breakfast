@@ -99,7 +99,7 @@ public class GhostList {
             Thread ghostThread = new Thread(new Runnable(){
                 @Override
                 public void run() {
-                    //ghosts.get(index).GhostBehavior(mFPS,arcadeContainingPacman);
+                    //ghosts.get(index).updateMovementStatus(mFPS);
                     ghosts.get(index).GhostBehavior(mFPS);
                 }
             });

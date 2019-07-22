@@ -341,9 +341,9 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
 //        System.out.println("Finished moving to: " + currPos.first() + " " + currPos.second());
         return currPos;
     }
-    /*
 
-    public void updateMovementStatus(long fps, Arcade arcade) {
+/*
+    public void updateMovementStatus(long fps) {
         int inputDirection = -1;
         if(needToChangeDir == true) {
             Random randomGenerator = new Random();
@@ -366,10 +366,10 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
                 nextDirection = RIGHT;
                 break;
         }
-        updateLocation(fps, arcade);
+        updateLocation(fps);
     }
-    */
 
+*/
 
     // ghost kill pacman
     @Override
@@ -395,63 +395,17 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
     public void GhostBehavior(long fps){
         switch (this.GhostName){
             case "Red":
-                int HorizontalGap = pacman.getCurrentX()-this.x;
-                int VerticleGap = pacman.getCurrentY()-this.y;
+                int HorizontalGap = pacman.getCurrentX()-posInArcade.x;
+                int VerticleGap = pacman.getCurrentY()-posInArcade.y;
                 if(Math.abs(HorizontalGap) > Math.abs(VerticleGap)){
                     if(HorizontalGap < 0 ){
-                        nextDirection = LEFT;
-                        updateLocation(fps);
-                        if(needToChangeDir){
-                            if(VerticleGap < 0){
-                                nextDirection = DOWN;
-                                updateLocation(fps);
-                                if(needToChangeDir) {
-                                    nextDirection = UP;
-                                    updateLocation(fps);
-                                }
-                            }
-                            else{
-                                nextDirection = UP;
-                                updateLocation(fps);
-                                if(needToChangeDir){
-                                    nextDirection = DOWN;
-                                    updateLocation(fps);
-                                }
-                            }
-                        }
-                    }
-                    else{
-                        nextDirection = RIGHT;
-                        updateLocation(fps);
-                        if(needToChangeDir){
-                            if(VerticleGap < 0){
-                                nextDirection = DOWN;
-                                updateLocation(fps);
-                                if(needToChangeDir) {
-                                    nextDirection = UP;
-                                    updateLocation(fps);
-                                }
-                            }
-                            else{
-                                nextDirection = UP;
-                                updateLocation(fps);
-                                if(needToChangeDir){
-                                    nextDirection = DOWN;
-                                    updateLocation(fps);
-                                }
-                            }
-                        }
-                    }
-                }
-                else{
-                    if(VerticleGap < 0){
                         nextDirection = DOWN;
                         updateLocation(fps);
                         if(needToChangeDir){
-                            if(HorizontalGap < 0){
+                            if(VerticleGap < 0){
                                 nextDirection = LEFT;
                                 updateLocation(fps);
-                                if(needToChangeDir){
+                                if(needToChangeDir) {
                                     nextDirection = RIGHT;
                                     updateLocation(fps);
                                 }
@@ -470,10 +424,10 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
                         nextDirection = UP;
                         updateLocation(fps);
                         if(needToChangeDir){
-                            if(HorizontalGap < 0){
+                            if(VerticleGap < 0){
                                 nextDirection = LEFT;
                                 updateLocation(fps);
-                                if(needToChangeDir){
+                                if(needToChangeDir) {
                                     nextDirection = RIGHT;
                                     updateLocation(fps);
                                 }
@@ -489,8 +443,54 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
                         }
                     }
                 }
-
+                else{
+                    if(VerticleGap < 0){
+                        nextDirection = LEFT;
+                        updateLocation(fps);
+                        if(needToChangeDir){
+                            if(HorizontalGap < 0){
+                                nextDirection = DOWN;
+                                updateLocation(fps);
+                                if(needToChangeDir){
+                                    nextDirection = UP;
+                                    updateLocation(fps);
+                                }
+                            }
+                            else{
+                                nextDirection = UP;
+                                updateLocation(fps);
+                                if(needToChangeDir){
+                                    nextDirection = RIGHT;
+                                    updateLocation(fps);
+                                }
+                            }
+                        }
+                    }
+                    else{
+                        nextDirection = RIGHT;
+                        updateLocation(fps);
+                        if(needToChangeDir){
+                            if(HorizontalGap < 0){
+                                nextDirection = DOWN;
+                                updateLocation(fps);
+                                if(needToChangeDir){
+                                    nextDirection = UP;
+                                    updateLocation(fps);
+                                }
+                            }
+                            else{
+                                nextDirection = UP;
+                                updateLocation(fps);
+                                if(needToChangeDir){
+                                    nextDirection = DOWN;
+                                    updateLocation(fps);
+                                }
+                            }
+                        }
+                    }
+                }
                 break;
+
             case "Pink":
                 //int HorizontalGap1 = pacman.getNextposX()-this.x;
                 //int VerticleGap1 = pacman.getNextposY()-this.y;
@@ -642,5 +642,11 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
                 updateLocation(fps);
                 break;
         }
+    }
+
+
+    public void reBorn() {
+        this.posInArcade = this.posInArcadeInit;
+        this.setDead(false);
     }
 }
