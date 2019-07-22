@@ -89,6 +89,5 @@ public class GhostBehavior {
             }
 
             return DirectionQ.peek();
-
     }
 }
