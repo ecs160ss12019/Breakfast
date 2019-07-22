@@ -72,6 +72,14 @@ public class Collision implements CollisionSubject {
         updateBlocksRunnerWhenThrough();
     }
 
+    public int getScoreType(){
+        int pelType = -1;
+        for (Runner runner : runners) {
+            pelType = pellets.getPelletType(runner.blockRunThrough);
+        }
+        return pelType;
+    }
+
     private void updateBlocksRunnerWhenThrough() {
         for (Runner runner : runners) {
             runner.blockRunThrough = new ArrayList<TwoTuple>();

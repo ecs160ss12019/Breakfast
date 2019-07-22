@@ -90,13 +90,6 @@ public class PelletList implements CollisionObserver {
             pelletList.add(newLine);
         }
 
-
-//        for(int i = 0; i < pelletList.size(); ++i) {
-//            System.out.println("PelletList line: " + i);
-//            for(int j = 0; j < pelletList.get(0).size(); ++j) {
-//                System.out.print(pelletList.get(i).get(j).getType() + " ");
-//            }
-//        }
         this.collision = collision;
         collision.registerObserver(this);
     }
@@ -133,4 +126,26 @@ public class PelletList implements CollisionObserver {
             }
         }
     }
+
+    public int getPelletType(ArrayList<TwoTuple> route) {
+
+        ArrayList<PelletCell> pellets = pelletList.get(indexOfArcadeContainPacman);
+        for (PelletCell pellet : pellets) {
+            for (TwoTuple block : route) {
+                if (pellet.getPositionInArcade().equals(block)) {
+                    if (!pellet.scoreAdded()) {
+                        if (pellet.getType() == 1) {
+                            pellet.addedpoint();
+                            return 1;
+                        } else if (pellet.getType() == 0) {
+                            pellet.addedpoint();
+                            return 0;
+                        }
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+
 }

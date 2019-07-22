@@ -22,6 +22,13 @@ public class PointSystem {
             this.total = this.total + this.point;
         }
     }
+    public void updateScore(int type){
+        if(type == 0){
+            pwrpelletEaten();
+        }else if(type == 1){
+            pelletEaten();
+        }
+    }
     public void ghostEaten(){
         if(bonus){
             this.total = this.total + 2*ghost;
