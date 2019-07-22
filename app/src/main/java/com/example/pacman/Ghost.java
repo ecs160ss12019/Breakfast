@@ -18,13 +18,14 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
     private String GhostName;
 
     //context of the game, used access Resource ptr
-//    //context of the game, used access Resource ptr
+    //context of the game, used access Resource ptr
     private Context context;
 
     private Bitmap ghostView;
 
     private int bitmapWidth;
     private int bitmapHeight;
+    private boolean needToChangeDir = false;
 
     private Pacman pacman; // used for chase and kill Pacman
 
@@ -48,9 +49,6 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
         this.posInScreen = new TwoTuple(arcade.getGhostPosition_pix());
         this.posInArcade = new TwoTuple(arcade.ghostPosition);
         this.pacman = pacman;
-
-     // ** for ghostbehavior;
-     //   this.GhostName = name;
 
         motionInArcade = new MotionInArcade(arcade);
         this.arcade = arcade;
@@ -79,6 +77,7 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
 
         this.arcadeAnalyzer = arcadeAnalyzer;
         this.posInArcade = new TwoTuple(arcade.ghostPosition);
+        this.posInScreen = new TwoTuple(arcade.getGhostPosition_pix());
         this.posInArcadeInit = posInArcade;
         this.arcade = arcade;
     }
@@ -149,31 +148,31 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
 
 //        /***************************************/
 //        //New Method
-//        int mathematicalMove = mathematicalMoveDistance(fps);
-//
-//        if (nextDirection != currDirection && nextDirection != -1) {
-//            //try new direction
-//            boolean allowsTurn = arcadeAnalyzer.allowsToGo(posInArcade, nextDirection);
-//
-//            if (allowsTurn) {
-//                //Turn and go
-//                posInArcade = movedTo(mathematicalMove, nextDirection);
-//
-//                currDirection = nextDirection;
-//                needToChangeDir = false;
-//                return;
-//            }
-//        }
-//
-//        //Either not able to turn or not desired to turn
-//        boolean allowsMove = arcadeAnalyzer.allowsToGo(posInArcade, currDirection);
-//        if (allowsMove) {
-//            //move and go
-//            posInArcade = movedTo(mathematicalMove, currDirection);
-//            return;
-//        }
-//
-//        needToChangeDir = true;
+        int mathematicalMove = mathematicalMoveDistance(fps);
+
+        if (nextDirection != currDirection && nextDirection != -1) {
+            //try new direction
+            boolean allowsTurn = arcadeAnalyzer.allowsToGo(posInArcade, nextDirection);
+
+            if (allowsTurn) {
+                //Turn and go
+                posInArcade = movedTo(mathematicalMove, nextDirection);
+
+                currDirection = nextDirection;
+                needToChangeDir = false;
+                return;
+           }
+        }
+
+        //Either not able to turn or not desired to turn
+        boolean allowsMove = arcadeAnalyzer.allowsToGo(posInArcade, currDirection);
+        if (allowsMove) {
+            //move and go
+            posInArcade = movedTo(mathematicalMove, currDirection);
+            return;
+        }
+
+        needToChangeDir = true;
 //
 //        //else no move, stay there
     }
@@ -214,7 +213,6 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
                 }
             }
         }
-
     }
 
     //**For ghost behavior;
@@ -474,5 +472,6 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
                 updateLocation(fps);
                 break;
         }
+
     }
 }

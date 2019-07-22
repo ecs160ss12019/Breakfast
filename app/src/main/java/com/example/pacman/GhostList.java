@@ -96,16 +96,16 @@ public class GhostList {
         for (int i = 0; i < ghosts.size(); i++) {
             final int index = i;
 
-//            Thread ghostThread = new Thread(new Runnable(){
-//                @Override
-//                public void run() {
-//                    //ghosts.get(index).GhostBehavior(mFPS,arcadeContainingPacman);
-//                    ghosts.get(index).GhostBehavior(mFPS);
-//                }
-//            });
-//            ghostThread.start();
+            Thread ghostThread = new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    //ghosts.get(index).GhostBehavior(mFPS,arcadeContainingPacman);
+                    ghosts.get(index).GhostBehavior(mFPS);
+                }
+            });
+            ghostThread.start();
 
-            ghosts.get(index).updateMovementStatus(-1, mFPS);
+//            ghosts.get(index).updateMovementStatus(-1, mFPS);
         }
     }
 
