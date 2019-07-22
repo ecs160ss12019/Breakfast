@@ -32,10 +32,10 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
     //public Ghost(Context context, int sx, int sy, Arcade arcade,
     //             Pacman pacman, Bitmap ghostView,  int direction,
     //             float speed, String name)
-     public Ghost(Context context, TwoTuple screenResolution, Arcade arcade,
+    public Ghost(Context context, TwoTuple screenResolution, Arcade arcade,
                  Pacman pacman, Bitmap ghostView,
                     float speed, CollisionSubject collision, String Name) {
-         super(screenResolution, speed, collision);
+        super(screenResolution, speed, collision);
         this.context = context;
         this.currDirection = UP;
         this.nextDirection = -1;
@@ -46,6 +46,7 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
         bitmapHeight = ghostView.getHeight();
 
         this.posInScreen = new TwoTuple(arcade.getGhostPosition_pix());
+        this.posInArcade = new TwoTuple(arcade.ghostPosition);
         this.pacman = pacman;
 
      // ** for ghostbehavior;
@@ -90,6 +91,7 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
     @Override
     public void draw(Canvas canvas) {
         // TwoTuple screenPos = arcade.mapScreen(posInArcade);
+        System.out.println("Draw Ghost");
         canvas.drawBitmap(ghostView, posInScreen.first() - bitmapWidth / 2,
                 posInScreen.second() - bitmapHeight / 2, null);
     }

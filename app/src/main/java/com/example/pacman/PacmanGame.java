@@ -75,6 +75,9 @@ class PacmanGame extends SurfaceView implements Runnable {
     // will stop the thread
     @Override
     public void run() {
+
+
+
         // mPlaying gives us finer control
         // rather than just relying on the calls to run
         // mPlaying must be true AND
@@ -270,7 +273,7 @@ class PacmanGame extends SurfaceView implements Runnable {
 //        cakeThread.start();
 
 //        pacman.updateMovementStatus(direction, mFPS);
-//        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
 //        cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
 
 //        long updateUseTime = (System.nanoTime() - updateStartTime) / 1000000;
@@ -321,7 +324,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         arcades.draw(canvas);
         pelletList.draw(canvas);
         pacman.draw(canvas);
-        //ghosts.draw(canvas);
+        ghosts.draw(canvas);
         //cake.draw(canvas);
         navigationButtons.draw(canvas);
 
@@ -401,9 +404,10 @@ class PacmanGame extends SurfaceView implements Runnable {
         pacman = new Pacman(context, mScreen, arcades.getArcadeContainingPacman(), pacmanInitPos,
                 arcadeAnalyzer, gameMode.getPacmanSpeed(), collision);
 
-//        String [] GhostName = {"Yellow", "Red", "Blue", "Pink"};
-
-//        ghosts = new GhostList(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(), arcadeAnalyzer,
+        String [] GhostName = {"Yellow", "Red", "Blue", "Pink"};
+        ghosts = new GhostList(context, mScreen, arcades.getArcadeContainingPacman(),
+                gameMode.getGhostsSpeed(), collision, GhostName);
+//        ghosts = new GhostList(context, mScreen, arcades.getArcadeContainingPacman(), arcadeAnalyzer,
 //                gameMode.getGhostsSpeed(), collision, pacman, GhostName);
 ////
 //        cake = new Cake(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(),

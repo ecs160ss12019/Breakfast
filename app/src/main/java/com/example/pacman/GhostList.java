@@ -87,7 +87,7 @@ public class GhostList {
 
             //**For ghostbehavior;
             //Ghost ghost = new Ghost(context, sx, sy, arcade, pacman, ghostsViewList.get(i), i, speed, name);
-           Ghost ghost = new Ghost(context, screen, arcade, pacman, ghostsViewList.get(i), arcadeAnalyzer, speed, collision, Name[i]);
+            Ghost ghost = new Ghost(context, screen, arcade, pacman, ghostsViewList.get(i), arcadeAnalyzer, speed, collision, Name[i]);
             ghosts.add(ghost);
         }
     }

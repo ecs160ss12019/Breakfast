@@ -363,7 +363,7 @@ public class Runner implements GameObject, CollisionObserver {
         // next move in next direction
         nextDirectionNextPosition = move(nextDirection, fps);
 
-        System.out.println("Game Object update: " + this.posInScreen.x + " " + this.posInScreen.y + " " + currDirectionNextPosition.x + " " + currDirectionNextPosition.y);
+        System.out.println(this.getClass().toString() + " Game Object update: " + this.posInScreen.x + " " + this.posInScreen.y + " " + currDirectionNextPosition.x + " " + currDirectionNextPosition.y);
 
         //update motion info
         motionInArcade.updateMotionInfo(getMotionInfo());
