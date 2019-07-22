@@ -33,59 +33,47 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
     //public Ghost(Context context, int sx, int sy, Arcade arcade,
     //             Pacman pacman, Bitmap ghostView,  int direction,
     //             float speed, String name)
-    public Ghost(Context context, TwoTuple screenResolution, Arcade arcade,
-                 Pacman pacman, Bitmap ghostView,
-                    float speed, CollisionSubject collision, String Name) {
-        super(screenResolution, speed, collision);
-        this.context = context;
+
+    private Ghost(Context context, TwoTuple screen, Bitmap ghostView, float speed, String name, Pacman pacman, CollisionSubject collision) {
+        super(screen, speed, collision);
+
         this.currDirection = UP;
         this.nextDirection = -1;
-        this.GhostName = Name;
 
+        this.context = context;
         this.ghostView = ghostView;
         bitmapWidth = ghostView.getWidth();
         bitmapHeight = ghostView.getHeight();
+        this.GhostName = name;
+        this.pacman = pacman;
+    }
 
+    // Constructor1:
+    public Ghost(Context context, TwoTuple screen, Bitmap ghostView, float speed, String name,
+                 Pacman pacman, CollisionSubject collision, Arcade arcade) {
+        this(context, screen, ghostView, speed, name, pacman, collision);
+
+        this.arcade = arcade;
         this.posInScreen = new TwoTuple(arcade.getGhostPosition_pix());
         this.posInArcade = new TwoTuple(arcade.ghostPosition);
-        this.pacman = pacman;
+        this.posInArcadeInit = posInArcade;
 
         motionInArcade = new MotionInArcade(arcade);
-        this.arcade = arcade;
+
     }
 
     //Constructor2
-    public Ghost(Context context, TwoTuple screen, Arcade arcade,
-                 Pacman pacman, Bitmap ghostView, ArcadeAnalyzer arcadeAnalyzer,
-                 float speed, CollisionSubject collision, String Name) {
-         super(screen, speed, collision);
-        this.context = context;
-        this.currDirection = UP;
-        this.nextDirection = -1;
-        this.GhostName = Name;
+    public Ghost(Context context, TwoTuple screen, Bitmap ghostView, float speed, String name,
+                 Pacman pacman, CollisionSubject collision, Arcade arcade, ArcadeAnalyzer arcadeAnalyzer) {
+        this(context, screen, ghostView, speed, name, pacman, collision);
 
-        this.ghostView = ghostView;
-        bitmapWidth = ghostView.getWidth();
-        bitmapHeight = ghostView.getHeight();
-
-        this.pacman = pacman;
-
-        // ** for ghostbehavior;
-        //   this.GhostName = name;
-
-        motionInArcade = new MotionInArcade(arcade);
+        this.arcade = arcade;
+        this.posInArcade = new TwoTuple(arcade.ghostPosition);
+        this.posInScreen = arcade.mapScreen(posInArcade);
+        this.posInArcadeInit = posInArcade;
 
         this.arcadeAnalyzer = arcadeAnalyzer;
-        this.posInArcade = new TwoTuple(arcade.ghostPosition);
-        this.posInScreen = new TwoTuple(arcade.getGhostPosition_pix());
-        this.posInArcadeInit = posInArcade;
-        this.arcade = arcade;
     }
-
-//    @Override
-//    public void draw(Canvas canvas) {
-//        canvas.drawBitmap(ghostView, x - bitmapWidth / 2, y - bitmapHeight / 2, null);
-//    }
 
     @Override
     public void draw(Canvas canvas) {

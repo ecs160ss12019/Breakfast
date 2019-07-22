@@ -229,7 +229,7 @@ class PacmanGame extends SurfaceView implements Runnable {
             pacman.updateMovementStatus(direction, mFPS);
         }
 
-//        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
 //        cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
 
         collision.updateRunnersPosition();
@@ -397,20 +397,23 @@ class PacmanGame extends SurfaceView implements Runnable {
         pelletList = new PelletList(context, arcades.getArcades(), new TwoTuple(mScreen.x, mScreen.y), collision);
         score = new PointSystem();
         // Initialize the pacman and ghost
-//        pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize(),
-//                arcades.getArcadeContainingPacman(), gameMode.getPacmanSpeed());
-        TwoTuple pacmanInitPos = new TwoTuple(arcades.getArcadeContainingPacman().pacmanPosition);
-        pacman = new Pacman(context, mScreen, arcades.getArcadeContainingPacman(), pacmanInitPos,
-                arcadeAnalyzer, gameMode.getPacmanSpeed(), collision);
+//        pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize(), arcades.getArcadeContainingPacman(), gameMode.getPacmanSpeed());
+//        ghosts = new GhostList(context, mScreen, arcades.getArcadeContainingPacman(), gameMode.getGhostsSpeed(), collision, GhostName);
+//        cake = new Cake(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(), arcadeAnalyzer, gameMode.getGhostsSpeed(), collision);
 
-        String [] GhostName = {"Yellow", "Red", "Blue", "Pink"};
-//        ghosts = new GhostList(context, mScreen, arcades.getArcadeContainingPacman(),
-//                gameMode.getGhostsSpeed(), collision, GhostName);
-        ghosts = new GhostList(context, mScreen, arcades.getArcadeContainingPacman(), arcadeAnalyzer,
-                gameMode.getGhostsSpeed(), collision, pacman, GhostName);
-////
-//        cake = new Cake(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(),
-//                arcadeAnalyzer, gameMode.getGhostsSpeed(), collision);
+        // trying to use Builder design pattern to limit the parameters we need to put in constructor, maybe it's overused.
+        RunnerBuilder builder = new RunnerBuilder(context, mScreen, arcades.getArcadeContainingPacman(), collision);
+
+        builder.setSpeed(gameMode.getPacmanSpeed());
+        pacman =  builder.createPacman(arcadeAnalyzer);
+
+        builder.setSpeed(gameMode.getGhostsSpeed());
+        builder.setPacman(pacman);
+        ghosts = builder.createGhosts(); // build ghosts with out analyzer, which means will use the earlier algorithm
+
+        builder.setSpeed(gameMode.getGhostsSpeed());
+        cake = builder.createCake(); // build cake with out analyzer, which means will use the earlier algorithm
+
 //
 //        collisionDetector = new CollisionDetector();
 

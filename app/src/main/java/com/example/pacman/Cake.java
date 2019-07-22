@@ -34,27 +34,39 @@ public class Cake extends Runner implements GameObject {
         isDead = dead;
     }
 
-//    @Override
-//    public void draw(Canvas canvas){
-//        canvas.drawBitmap(scaledCakeImg, xCoordiante - bitmapWidth/2,
-//                        yCoordinate - bitmapHeight/2, null);
-//    }
-    public Cake(Context context, TwoTuple screenResolution, Arcade arcade, float speed, CollisionSubject collision){
-        super(screenResolution, speed, collision);
-        this.speed = speed;
-        this.arcade = arcade;
+    private Cake(Context context, TwoTuple screen, float speed, CollisionSubject collision) {
+        super(screen, speed, collision);
         this.context = context;
-        currDirection = 0;
+        currDirection = TwoTuple.LEFT;
         nextDirection = -1;
-        mScreen = screenResolution;
-        posInScreen = arcade.getCakePosition_pix();
         rawCakeImg = BitmapFactory.decodeResource(context.getResources(), R.drawable.cake);
-        scaledCakeImg = Bitmap.createScaledBitmap(rawCakeImg,
-                        mScreen.y / 15, mScreen.y/15, true);
+        scaledCakeImg = Bitmap.createScaledBitmap(rawCakeImg,mScreen.y / 15, mScreen.y/15, true);
         bitmapHeight = scaledCakeImg.getHeight();
         bitmapWidth = scaledCakeImg.getWidth();
-        motionInArcade = new MotionInArcade(arcade);
+    }
 
+    // Constructor1
+    public Cake(Context context, TwoTuple screen, float speed, CollisionSubject collision, Arcade arcade){
+        this(context, screen, speed, collision);
+
+        this.arcade = arcade;
+        this.posInScreen = arcade.getCakePosition_pix();
+        this.posInArcade = new TwoTuple(arcade.cakePosition);
+        this.posInArcadeInit = posInArcade;
+
+        motionInArcade = new MotionInArcade(arcade);
+    }
+
+    //Constructor2
+    public Cake(Context context, TwoTuple screen, float speed, CollisionSubject collision, Arcade arcade, ArcadeAnalyzer arcadeAnalyzer){
+        this(context, screen, speed, collision);
+
+        this.arcade = arcade;
+        this.posInArcade = new TwoTuple(arcade.cakePosition);
+        this.posInScreen = arcade.mapScreen(posInArcade);
+        this.posInArcadeInit = posInArcade;
+
+        this.arcadeAnalyzer = arcadeAnalyzer;
     }
 
     @Override
@@ -171,26 +183,5 @@ public class Cake extends Runner implements GameObject {
 //        System.out.println("!!!!!");
 //        System.out.println("Finished moving to: " + currPos.first() + " " + currPos.second());
         return currPos;
-    }
-
-    //Constructor
-    public Cake(Context context, TwoTuple screen, Arcade arcade, ArcadeAnalyzer arcadeAnalyzer, float speed, CollisionSubject collision){
-        super(screen, speed, collision);
-        this.arcade = arcade;
-        this.context = context;
-        currDirection = 0;
-        nextDirection = -1;
-//        xCoordiante = arcade.getCakeX_pix();
-//        yCoordinate = arcade.getCakeY_pix();
-        rawCakeImg = BitmapFactory.decodeResource(context.getResources(), R.drawable.cake);
-        scaledCakeImg = Bitmap.createScaledBitmap(rawCakeImg,
-                screen.y / 15, screen.y/15, true);
-        bitmapHeight = scaledCakeImg.getHeight();
-        bitmapWidth = scaledCakeImg.getWidth();
-        motionInArcade = new MotionInArcade(arcade);
-
-
-        this.posInArcade = new TwoTuple(arcade.cakePosition);
-        this.arcadeAnalyzer = arcadeAnalyzer;
     }
 }

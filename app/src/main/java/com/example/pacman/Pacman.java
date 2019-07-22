@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.util.Pair;
 
 import java.util.ArrayList;
 
@@ -583,19 +582,12 @@ public class Pacman extends Runner implements GameObject{
         return false;
     }
 
+    private Pacman(Context context, TwoTuple screen, float speed, CollisionSubject collision) {
+        super(screen, speed, collision);
 
-    //Constructor2
-    public Pacman(Context context, TwoTuple screenResolution, Arcade arcade, TwoTuple posInArcade,
-                 ArcadeAnalyzer arcadeAnalyzer, float speed, CollisionSubject collision) {
-        super(screenResolution, 1000, collision);
         this.context = context;
-        this.mScreen = screenResolution;
-        this.arcade = arcade;
-        this.posInArcade = posInArcade;
-        this.pixelGap = 0;
+
         this.posInArcadeInit = posInArcade;
-        this.posInScreen = arcade.mapScreen(posInArcade);
-        this.blockDimension = arcadeAnalyzer.blockDimension;
         this.currDirection = UP;
         this.nextDirection = -1;
 
@@ -622,7 +614,7 @@ public class Pacman extends Runner implements GameObject{
                     optimalSize.first, optimalSize.second, true);
             */
             Bitmap bitmap = Bitmap.createScaledBitmap(unsizedPacmanViewList.get(i),
-                    screenResolution.y / 15, screenResolution.y/15, true);
+                    screen.y / 15, screen.y/15, true);
             pacmanViewList.add(bitmap);
         }
 
@@ -635,64 +627,38 @@ public class Pacman extends Runner implements GameObject{
         // Configure the speed of the Pacman
         // This code means the Pacman can cover the width of the screen in 8 second
         this.speed = speed;
-        this.arcadeAnalyzer = arcadeAnalyzer;
     }
 
-    //Constructor
-    public Pacman(Context context, TwoTuple screenResolution, TwoTuple posInArcade, Pair<Integer, Integer> optimalSize,
-                  Arcade arcade, float speed, Collision collision) {
-        super(screenResolution, speed, collision);
-        this.posInArcade = posInArcade;
-        //setPosition(arcade.getPacmanPosition_pix());
-        this.context = context;
-        mScreen = screenResolution;
-        this.currDirection = RIGHT;
-        this.nextDirection = -1;
+    //Constructor1: set up pacman based on pixel
+    public Pacman(Context context, TwoTuple screen, float speed, CollisionSubject collision, Arcade arcade) {
+        this(context, screen, speed, collision);
 
-        //currently, the collection is 2*2 with 4 views in total
-        numRow = 2;
-        numCol = 2;
-
-        //load pacman img from resource
-        Bitmap pacmanCollectionView = BitmapFactory.decodeResource(context.getResources(), R.drawable.pacman);
-
-        /*
-        resize to fit screen and
-        split the collection into small bitmaps (Left, Right, Up, Down)
-        */
-        BitmapDivider divider = new BitmapDivider(pacmanCollectionView);
-        ArrayList<Bitmap> unsizedPacmanViewList = divider.split(numRow, numCol);
-
-        pacmanViewList = new ArrayList<>();
-        for (int i = 0; i < unsizedPacmanViewList.size(); i++) {
-
-            //FIXME Pacman size?
-            /*
-            Bitmap bitmap = Bitmap.createScaledBitmap(unsizedPacmanViewList.get(i),
-                    optimalSize.first, optimalSize.second, true);
-            */
-            Bitmap bitmap = Bitmap.createScaledBitmap(unsizedPacmanViewList.get(i),
-                    screenResolution.y / 15, screenResolution.y/15, true);
-            pacmanViewList.add(bitmap);
-        }
-
-        /*
-        initialize the size of bitmap after split
-         */
-        bitmapWidth = pacmanViewList.get(0).getWidth();
-        bitmapHeight = pacmanViewList.get(0).getHeight();
-
-        // Configure the speed of the Pacman
-        // This code means the Pacman can cover the width of the screen in 8 second
-        this.speed = speed;
+        this.arcade = arcade;
+        this.posInScreen = arcade.getPacmanPosition_pix();
+        this.posInArcade = arcade.pacmanPosition;
+        this.posInArcadeInit = posInArcade;
 
         motionInArcade = new MotionInArcade(arcade);
     }
 
+    //Constructor2: set up pacman based on block
+    public Pacman(Context context, TwoTuple screen, float speed, CollisionSubject collision, Arcade arcade, ArcadeAnalyzer arcadeAnalyzer) {
+        this(context, screen, speed, collision);
+
+        this.arcade = arcade;
+        this.posInArcade = arcade.pacmanPosition;
+        this.posInScreen = arcade.mapScreen(posInArcade); // calculate posInScreen based on posInArcade;
+        this.posInArcadeInit = posInArcade;
+
+        this.pixelGap = 0;
+        this.arcadeAnalyzer = arcadeAnalyzer;
+        this.blockDimension = arcadeAnalyzer.blockDimension;
+    }
+
+
     public int getCurrentX(){return posInArcade.x;}
 
     public int getCurrentY(){return posInArcade.y;}
-
 
 
     public void reBorn() {
