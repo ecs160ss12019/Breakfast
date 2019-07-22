@@ -27,7 +27,7 @@ public class GhostList {
     private int numRow;
     private int numCol;
     private ArrayList<Bitmap> ghostsViewList;
-
+/*
     //public GhostList(Context context, int sx, int sy, Arcade arcade, float speed, String name)
     public GhostList(Context context, TwoTuple screenResolution, Arcade arcade, float speed, CollisionSubject collision, String[] Name) {
         this.context = context;
@@ -59,6 +59,7 @@ public class GhostList {
             ghosts.add(ghost);
         }
     }
+  */
 
     //Constructor2
     public GhostList(Context context, TwoTuple screen, Arcade arcade, ArcadeAnalyzer arcadeAnalyzer, float speed, CollisionSubject collision, Pacman pacman, String [] Name) {
@@ -87,7 +88,7 @@ public class GhostList {
 
             //**For ghostbehavior;
             //Ghost ghost = new Ghost(context, sx, sy, arcade, pacman, ghostsViewList.get(i), i, speed, name);
-           Ghost ghost = new Ghost(context, screen, arcade, pacman, ghostsViewList.get(i), arcadeAnalyzer, speed, collision, Name[i]);
+           Ghost ghost = new Ghost(context, screen, arcade, pacman, ghostsViewList.get(i), arcadeAnalyzer, speed, collision, NameArray[i]);
             ghosts.add(ghost);
         }
     }

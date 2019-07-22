@@ -693,6 +693,8 @@ public class Pacman extends Runner implements GameObject{
 
     public int getCurrentY(){return posInArcade.y;}
 
+    public int getCurrentDir(){return this.currDirection;}
+
 
 
     public void reBorn() {
