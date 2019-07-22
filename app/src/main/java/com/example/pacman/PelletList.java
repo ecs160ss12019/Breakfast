@@ -119,7 +119,7 @@ public class PelletList implements CollisionObserver {
         ArrayList<PelletCell> pellets = pelletList.get(indexOfArcadeContainPacman);
         for (PelletCell pellet : pellets) {
             for (TwoTuple block : route) {
-                if (pellet.getPositionInArcade().equals(block)) {
+               // if (pellet.getPositionInArcade().equals(block)) {
                     if (!pellet.scoreAdded()) {
                         if (pellet.getType() == 1) {
                             pellet.addedpoint();
@@ -129,7 +129,7 @@ public class PelletList implements CollisionObserver {
                             return 0;
                         }
                     }
-                }
+              //  }
             }
         }
         return -1;

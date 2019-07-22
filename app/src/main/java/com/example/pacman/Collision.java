@@ -81,7 +81,6 @@ public class Collision implements CollisionSubject {
         int ghost = -1;
         for (Runner runner : runners) {
             pelType = pellets.getPelletType(runner.blockRunThrough);
-
         }
         return pelType;
     }

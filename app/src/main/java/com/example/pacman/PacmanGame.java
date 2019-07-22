@@ -261,8 +261,8 @@ class PacmanGame extends SurfaceView implements Runnable {
 //        cakeThread.start();
 
 //        pacman.updateMovementStatus(direction, mFPS);
-        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
-        cake.updateMovementStatus(-1, mFPS);
+  //      ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+//        cake.updateMovementStatus(-1, mFPS);
     }
 
     // This method is called by PacmanActivity
@@ -397,8 +397,8 @@ class PacmanGame extends SurfaceView implements Runnable {
         ghosts = new GhostList(context, mScreen, arcades.getArcadeContainingPacman(), arcadeAnalyzer,
                 gameMode.getGhostsSpeed(), collision, pacman, GhostName);
 
-        cake = new Cake(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(),
-                arcadeAnalyzer, gameMode.getGhostsSpeed(), collision);
+        /* cake = new Cake(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(),
+                arcadeAnalyzer, gameMode.getGhostsSpeed(), collision); */
 //
 //        collisionDetector = new CollisionDetector();
 
