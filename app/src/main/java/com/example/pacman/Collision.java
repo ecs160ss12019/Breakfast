@@ -14,6 +14,7 @@ public class Collision implements CollisionSubject {
     private Pacman pacman;
     private PelletList pellets;
     private Arcade arcade;
+    private Cake cake;
 
     private int numRow;
     private int numCol;
@@ -32,6 +33,7 @@ public class Collision implements CollisionSubject {
         if(observer instanceof  Runner) runners.add((Runner) observer);
         if(observer instanceof Pacman) pacman = (Pacman) observer;
         if(observer instanceof PelletList) pellets = (PelletList) observer;
+        if(observer instanceof Cake) cake = (Cake) observer;
     }
 
     @Override
@@ -71,11 +73,15 @@ public class Collision implements CollisionSubject {
         }
         updateBlocksRunnerWhenThrough();
     }
-
+    // specify whether eaten a cake, or pellet or powerpellet
     public int getScoreType(){
         int pelType = -1;
+        int cakes = -1;
+        int bonus = -1;
+        int ghost = -1;
         for (Runner runner : runners) {
             pelType = pellets.getPelletType(runner.blockRunThrough);
+
         }
         return pelType;
     }

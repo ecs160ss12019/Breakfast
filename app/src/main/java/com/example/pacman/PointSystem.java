@@ -50,6 +50,4 @@ public class PointSystem {
         return total;
     }
 
-
-
 }

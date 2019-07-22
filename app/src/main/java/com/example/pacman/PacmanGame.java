@@ -238,10 +238,8 @@ class PacmanGame extends SurfaceView implements Runnable {
         });
 
         //Here we update the score if Pacman have eaten any pellets valuable.
-//        int type = collision.getScoreType();
         score.updateScore(collision.getScoreType());
-        System.out.println("SCORE: " + score.getScore());
-
+//        System.out.println("SCORE: " + score.getScore());
         //Here we update the score if Pacman have eaten cake + ghosts
 
 //        Thread ghostsThread = new Thread(new Runnable(){
@@ -310,7 +308,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         pelletList.draw(canvas);
         pacman.draw(canvas);
         //ghosts.draw(canvas);
-        //cake.draw(canvas);
+//        cake.draw(canvas);
         navigationButtons.draw(canvas);
 
         // score system:

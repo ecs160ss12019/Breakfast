@@ -23,6 +23,8 @@ public class Cake extends Runner implements GameObject {
     private Bitmap scaledCakeImg;
 
     private boolean isDead;
+    //eaten means whether points was added.
+    private boolean eaten;
 
     public boolean isDead() {
         return isDead;

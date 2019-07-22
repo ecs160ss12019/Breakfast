@@ -46,7 +46,7 @@ public class PelletList implements CollisionObserver {
         }
     }
 
-
+    //Constructor for the pelletList
     public PelletList(Context context, ArrayList<Arcade> arcades, TwoTuple screen, CollisionSubject collision) {
         this.arcades = arcades;
         pelletList = new ArrayList<>();
@@ -93,7 +93,7 @@ public class PelletList implements CollisionObserver {
         this.collision = collision;
         collision.registerObserver(this);
     }
-
+    //Mapping the pellets to the screen
     public TwoTuple map2screen(PelletCell pell) {
         int arcadeIndex = pell.getArcadeIndex();
         int x_pixel = arcades.get(arcadeIndex).xReference + pell.getY() * arcades.get(arcadeIndex).getBlockWidth();
@@ -101,34 +101,21 @@ public class PelletList implements CollisionObserver {
         return new TwoTuple(x_pixel, y_pixel);
     }
 
-    // public TwoTuple map2Arcade()
-
-//    public PelletCell getPelletByBlockPosition(TwoTuple blockPosition) {
-//        return pelletList.get(blockPosition.x).get(blockPosition.y);
-//    }
-
     // udpate if the pellets are eaten by pacman.
     @Override
     public void update(ArrayList<TwoTuple> route) {
-
         ArrayList<PelletCell> pellets = pelletList.get(indexOfArcadeContainPacman);
         for(PelletCell pellet : pellets) {
             for (TwoTuple block : route) {
                 if(pellet.getPositionInArcade().equals(block)) {
                     pellet.setDead(true);
-                    if(pellet.getType()==1){
-//                        points.pelletEaten();
-//                        System.out.println(points.getScore());
-                    }else{
-//                        points.pwrpelletEaten();
-                    }
                 }
             }
         }
     }
 
+    //Getting the collison pelletType given the location as parameter
     public int getPelletType(ArrayList<TwoTuple> route) {
-
         ArrayList<PelletCell> pellets = pelletList.get(indexOfArcadeContainPacman);
         for (PelletCell pellet : pellets) {
             for (TwoTuple block : route) {
@@ -147,5 +134,4 @@ public class PelletList implements CollisionObserver {
         }
         return -1;
     }
-
 }
