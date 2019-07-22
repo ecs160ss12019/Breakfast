@@ -20,6 +20,7 @@ class PacmanGame extends SurfaceView implements Runnable {
     private Paint mPaint;
 
     private int numberHorizontalPixels;
+    private String modeSelected;
 
     // How many frames per second did we get?
     private long mFPS;
@@ -317,7 +318,8 @@ class PacmanGame extends SurfaceView implements Runnable {
         Paint paint = new Paint();
         paint.setTextSize(numberHorizontalPixels/30);
         paint.setTypeface(plain);
-        mCanvas.drawText("score: "+ score.getScore(), 50, (numberHorizontalPixels/40)*3, paint);
+        mCanvas.drawText("Score: "+ score.getScore(), 50, (numberHorizontalPixels/40)*3, paint);
+        mCanvas.drawText("Speed: "+ modeSelected, 50, (numberHorizontalPixels/40)*4, paint);
 
     }
     /*
@@ -372,8 +374,19 @@ class PacmanGame extends SurfaceView implements Runnable {
         //Init fps to -1 so that we will know if the canvas is not ready
         mFPS = -1;
 
-        gameMode = new GameMode(0, mScreen.x);
+        gameMode = new GameMode(1, mScreen.x);
         /* implement front page view (something like welcome to breakfast's Pac-Man game) */
+        switch (gameMode.getDisplayMode()){
+            case 0:
+                modeSelected = "Easy";
+                break;
+            case 1:
+                modeSelected = "Normal";
+                break;
+            case 2:
+                modeSelected = "Hard";
+                break;
+        }
 
         //initialize the Arcade list
         arcades = new ArcadeList(context, mScreen.x, mScreen.y,
