@@ -135,7 +135,7 @@ class PacmanGame extends SurfaceView implements Runnable {
                 // mBat and mBall next frame/loop
                 mFPS = MILLIS_IN_SECOND / timeThisFrame;
             }
-            System.out.println("fps: " + mFPS);
+            //System.out.println("fps: " + mFPS);
         }
     }
 
@@ -145,7 +145,6 @@ class PacmanGame extends SurfaceView implements Runnable {
     the thread is running
      */
     public void updateGame() {
-        long updateStartTime = System.nanoTime();
         final int direction; // check if user pressed touch button on screen; if not, check if user entered arrow key on keyboard (for testing)
         if(navigationButtons.checkAndUpdate(userInput) != -1) direction = navigationButtons.checkAndUpdate(userInput);
         else {

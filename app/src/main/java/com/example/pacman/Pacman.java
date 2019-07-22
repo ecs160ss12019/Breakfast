@@ -15,8 +15,7 @@ public class Pacman extends Runner implements GameObject{
 
     //pixel based, this is used for display purpose
     private TwoTuple posInScreen;
-    private int frameCounter = 0;
-    private final int frameCounterMax = 1;
+    private float pixelCounter = 0;
 
     //pixel based, block width=height
     int blockDimension;
@@ -144,13 +143,13 @@ public class Pacman extends Runner implements GameObject{
                 nextDirection = DOWN;
                 break;
         }
-
-        if (frameCounter == frameCounterMax) {
-            updateLocation(fps);
-            frameCounter = 0;
-            return;
-        }
-        frameCounter++;
+        updateLocation(fps);
+//        if (frameCounter == frameCounterMax) {
+//            updateLocation(fps);
+//            frameCounter = 0;
+//            return;
+//        }
+//        frameCounter++;
     }
 
     private void updateLocation(long fps) {
@@ -314,11 +313,16 @@ public class Pacman extends Runner implements GameObject{
         //New Method
         int mathematicalMove = mathematicalMoveDistance(fps);
 
+        if (mathematicalMove == 0) return;
+
         if (nextDirection != currDirection && nextDirection != -1) {
+            System.out.println("Want to turn");
+
             //try new direction
             boolean allowsTurn = arcadeAnalyzer.allowsToGo(posInArcade, nextDirection);
 
             if (allowsTurn) {
+                System.out.println("Allows to turn");
                 //Turn and go
                 //movedTo(mathematicalMove, nextDirection);
                 posInArcade = TwoTuple.moveTo(posInArcade, nextDirection);
@@ -332,20 +336,29 @@ public class Pacman extends Runner implements GameObject{
         //Either not able to turn or not desired to turn
         boolean allowsMove = arcadeAnalyzer.allowsToGo(posInArcade, currDirection);
         if (allowsMove) {
+            System.out.println("Allows to move");
             //move and go
-            //posInArcade = movedTo(mathematicalMove, currDirection);
-            //movedTo(mathematicalMove, currDirection);
-            posInArcade = TwoTuple.moveTo(posInArcade, currDirection);
-            posInScreen = arcade.mapScreen(posInArcade);
+            movedTo(mathematicalMove, currDirection);
+            //posInArcade = TwoTuple.moveTo(posInArcade, currDirection);
+            //posInScreen = arcade.mapScreen(posInArcade);
             return;
         }
 
         //else no move, stay there
+        System.out.println("can not move");
     }
 
     //mathematical movement distance
     private int mathematicalMoveDistance(long fps) {
-        return (int)(speed / fps);
+        System.out.println(7.0/fps);
+        pixelCounter += 4.0/fps;
+        System.out.println("PC " + pixelCounter);
+        if (pixelCounter > 1) {
+            int intPixel = (int) pixelCounter;
+            pixelCounter -= (int) pixelCounter;
+            return intPixel;
+        }
+        return 0;
     }
 
 //    //move as far as possible
@@ -372,7 +385,8 @@ public class Pacman extends Runner implements GameObject{
     //move as far as possible
     private void movedTo(int mathematicalMove, int movingDirection) {
         int gap = mathematicalMove + pixelGap;
-
+        System.out.println("Math: " + mathematicalMove + ", PG: " + pixelGap);
+        System.out.println("Gap" + gap + ", Block: " + gap / blockDimension);
 //        System.out.println("Starting to move from: " + posInArcade.first() + " " + posInArcade.second());
         boolean allowsMove = arcadeAnalyzer.allowsToGo(posInArcade, movingDirection);
 //        while (movedDistance <= mathematicalMove && allowsMove) {
@@ -474,7 +488,7 @@ public class Pacman extends Runner implements GameObject{
     //Constructor2
     public Pacman(Context context, TwoTuple screenResolution, Arcade arcade, TwoTuple posInArcade,
                  ArcadeAnalyzer arcadeAnalyzer, float speed, CollisionSubject collision) {
-        super(screenResolution, speed, collision);
+        super(screenResolution, 1000, collision);
         this.context = context;
         this.mScreen = screenResolution;
         this.arcade = arcade;
