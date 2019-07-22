@@ -16,7 +16,6 @@ public class PelletList implements CollisionObserver {
     private int bitmapHeight;
     private int pwrBitmapWidth;
     private int pwrBitmapHeight;
-
     private int indexOfArcadeContainPacman = 0; // TODO: hard code to 0
     private CollisionSubject collision;
 
@@ -68,7 +67,6 @@ public class PelletList implements CollisionObserver {
         pelletViewList.add(Bitmap.createScaledBitmap(pelletView,
                 bitmapWidth , bitmapHeight, true));
 
-
         //Random random = new Random();
         //Construct a matrix given the arcades with 0 and 1(pellet can be added).
         for (int index = 0; index < arcades.size(); ++index) {
@@ -119,7 +117,7 @@ public class PelletList implements CollisionObserver {
         ArrayList<PelletCell> pellets = pelletList.get(indexOfArcadeContainPacman);
         for (PelletCell pellet : pellets) {
             for (TwoTuple block : route) {
-               // if (pellet.getPositionInArcade().equals(block)) {
+                if (pellet.getPositionInArcade().equals(block)) {
                     if (!pellet.scoreAdded()) {
                         if (pellet.getType() == 1) {
                             pellet.addedpoint();
@@ -129,7 +127,7 @@ public class PelletList implements CollisionObserver {
                             return 0;
                         }
                     }
-              //  }
+                }
             }
         }
         return -1;

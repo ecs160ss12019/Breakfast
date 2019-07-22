@@ -15,7 +15,7 @@ public class GameOverActivity extends Activity {
         //Set the game in full screen mode
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_welcome);
+        setContentView(R.layout.activity_gameover);
         mainMenu();
     }
     void mainMenu(){
