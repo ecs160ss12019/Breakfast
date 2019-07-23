@@ -49,7 +49,6 @@ public class Collision implements CollisionSubject {
                 Ghost ghost = (Ghost)observer;
                 ghost.update(pacman.blockRunThrough);
             }
-
         }
         pellets.update(pacman.blockRunThrough);
     }
@@ -77,12 +76,11 @@ public class Collision implements CollisionSubject {
     public int getScoreType(){
         int pelType = -1;
         int cakes = -1;
-        int bonus = -1;
-        int ghost = -1;
         for (Runner runner : runners) {
             pelType = pellets.getPelletType(runner.blockRunThrough);
         }
         return pelType;
+
     }
 
     private void updateBlocksRunnerWhenThrough() {
