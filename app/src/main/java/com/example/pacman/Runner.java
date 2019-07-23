@@ -263,8 +263,8 @@ public class Runner implements GameObject, CollisionObserver {
                 break;
         }
 
-        //updateLocationByPixelFirst(fps);
-        updateLocationByBlockFirst(fps);
+        if (arcadeAnalyzer == null) updateLocationByPixelFirst(fps);
+        else updateLocationByBlockFirst(fps);
     }
 
     // Siqi developed two different algorithms
