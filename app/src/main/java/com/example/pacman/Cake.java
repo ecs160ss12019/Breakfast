@@ -14,9 +14,6 @@ import android.graphics.Canvas;
 * */
 public class Cake extends Runner implements GameObject {
 
-    //Added variables
-    private ArcadeAnalyzer arcadeAnalyzer;
-
     private Context context;
     private boolean needToChangeDir =false;
     private Bitmap rawCakeImg;
@@ -67,6 +64,7 @@ public class Cake extends Runner implements GameObject {
         this.posInArcadeInit = posInArcade;
 
         this.arcadeAnalyzer = arcadeAnalyzer;
+        this.blockDimension = arcadeAnalyzer.blockDimension;
     }
 
     @Override

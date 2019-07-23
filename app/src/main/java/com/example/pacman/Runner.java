@@ -51,8 +51,12 @@ public class Runner implements GameObject, CollisionObserver {
     TwoTuple mScreen;
 
     float speed;
-    MotionInArcade motionInArcade;
     Arcade arcade;
+    MotionInArcade motionInArcade;
+
+    //pixel based, block width=height
+    int blockDimension;
+    ArcadeAnalyzer arcadeAnalyzer;
 
     private CollisionSubject collision;
     private boolean isDead;
@@ -259,13 +263,14 @@ public class Runner implements GameObject, CollisionObserver {
                 break;
         }
 
-        updatePositionByPixel(fps);
+        //updateLocationByPixelFirst(fps);
+        updateLocationByBlockFirst(fps);
     }
 
     // Siqi developed two different algorithms
 
     // first is pixel based
-    public void updatePositionByPixel(long fps) {
+    public void updateLocationByPixelFirst(long fps) {
 
         /*
         1. We use a pixel based algorithm to control motion
@@ -429,8 +434,238 @@ public class Runner implements GameObject, CollisionObserver {
     }
 
     // second is Arcade based
-    public void updatePositionByBlock(long fps) {
+    public void updateLocationByBlockFirst(long fps) {
+        if (fps == -1 || fps == 0) {
+            return;
+        }
 
+        int mathematicalMove = mathematicalMoveDistance(fps);
+
+        if (mathematicalMove == 0) return;
+
+        if (nextDirection != currDirection && nextDirection != -1) {
+            //System.out.println("Want to turn");
+
+            //try new direction
+            boolean allowsTurn = arcadeAnalyzer.allowsToGo(posInArcade, nextDirection);
+
+            if (allowsTurn) {
+                //System.out.println("Allows to turn");
+                //Turn and go
+                //movedTo(mathematicalMove, nextDirection);
+
+                if (essentialCheck(mathematicalMove)) {
+                    //posInArcade = TwoTuple.moveTo(posInArcade, nextDirection);
+                    posInScreen = arcade.mapScreen(posInArcade);
+                    pixelGap = 0;
+                    currDirection = nextDirection;
+                    if(this instanceof Ghost || this instanceof Cake) needToChangeDir = false; // just turned, not need to turn
+                    return;
+                }
+
+                //System.out.println("Did not turn");
+            }
+            if(this instanceof Ghost || this instanceof Cake) needToChangeDir = true; // not allow to turn, try a new direction
+        }
+
+        movedTo(mathematicalMove, currDirection);
+    }
+
+    private int mathematicalMoveDistance(long fps) {
+        return (int)(75/fps);
+    }
+
+    //move as far as possible
+    private void movedTo(int mathematicalMove, int movingDirection) {
+        int gap = mathematicalMove + pixelGap;
+//        System.out.println("Math: " + mathematicalMove + ", PG: " + pixelGap);
+//        System.out.println("Gap: " + gap + ", Block: " + gap / blockDimension);
+//        System.out.println("CurrArcadePos: " + posInArcade.x + " " + posInArcade.y);
+//        System.out.println("Starting to move from: " + posInArcade.first() + " " + posInArcade.second());
+        boolean allowsMove = arcadeAnalyzer.allowsToGo(posInArcade, movingDirection);
+//        while (movedDistance <= mathematicalMove && allowsMove) {
+//            movedDistance += arcadeAnalyzer.blockDimension;
+//            currPos = TwoTuple.moveTo(currPos, movingDirection);
+//
+////            System.out.println("moved distance: " + movedDistance);
+////            System.out.println("Moved to: " + currPos.first() + " " + currPos.second());
+//        }
+
+//        System.out.println("!!!!!");
+//        System.out.println("Finished moving to: " + currPos.first() + " " + currPos.second());
+
+//        System.out.println("Before Looping: " + posInArcade.x + " " + posInArcade.y);
+        while (true) {
+            if (gap == 0) {
+                posInScreen = arcade.mapScreen(posInArcade);
+                pixelGap = 0;
+                return;
+            }
+
+            if (!allowsMove) {
+//                System.out.println("Arcade Pos: " + " ROW: " + posInArcade.x + " " + " COL: " + posInArcade.y);
+//                System.out.println("Screen Pos: " + " X: " + posInScreen.x + " " + " Y: " + posInScreen.y);
+//                System.out.println(" ");
+//                System.out.println(" ");
+
+                //Collide to wall, but still attempt to move, must stay at center
+                if (gap > 0) {
+                    posInScreen = arcade.mapScreen(posInArcade);
+                    pixelGap = 0;
+                    return;
+                }
+
+                //obstacle on right, gap subtracted to smaller than 0
+                gap = gap + blockDimension;
+
+//                boolean mustAdvanceToCenter = essentialCheck(gap);
+//                if (mustAdvanceToCenter && gap != 0) {
+//                    System.out.println("cannot close up");
+//                    posInScreen = arcade.mapScreen(posInArcade);
+//                    pixelGap = 0;
+//                    return;
+//                }
+
+                //Just close up, it is okay
+                //System.out.println("Closing up");
+                pixelGap = gap - blockDimension;
+
+                posInScreen = arcade.mapScreen(posInArcade);
+                posInScreen = TwoTuple.addPixelGap(posInScreen, currDirection, pixelGap);
+
+//                System.out.println("Case 1 done: " + posInArcade.x + " " + posInArcade.y);
+//                System.out.println("Update screen Pos: " + posInScreen.x + " " + posInScreen.y);
+                if(this instanceof Ghost || this instanceof Cake) needToChangeDir = true; // not allow to move, need to change direction
+                return;
+            }
+
+            //Now next block on this direction must be valid
+            if (gap < 0) {
+//                System.out.println("Case 1");
+//                System.out.println("Arcade Pos: " + " ROW: " + posInArcade.x + " " + " COL: " + posInArcade.y);
+//                System.out.println("Screen Pos: " + " X: " + posInScreen.x + " " + " Y: " + posInScreen.y);
+//                System.out.println(" ");
+//                System.out.println(" ");
+
+                //gap < block size
+                gap = gap + blockDimension;
+
+//                System.out.println("Case 1: margin = " + gap);
+
+                //posInArcade = TwoTuple.moveTo(posInArcade, currDirection);
+
+                pixelGap = gap - blockDimension;
+
+//                if (arcadeAnalyzer.allowsToGo(posInArcade, movingDirection)) {
+//                    System.out.println("Allows");
+//                    pixelGap = gap - blockDimension;
+//                } else {
+//                    if (essentialCheck(gap)) {
+//                        System.out.println("Essential");
+//                        pixelGap = 0;
+//                    } else {
+//                        System.out.println("not Essential");
+//                        pixelGap = gap - blockDimension;
+//                    }
+//                }
+
+                posInScreen = arcade.mapScreen(posInArcade);
+                posInScreen = TwoTuple.addPixelGap(posInScreen, currDirection, pixelGap);
+
+//                System.out.println("Case 1 done: " + posInArcade.x + " " + posInArcade.y);
+//                System.out.println("Update screen Pos: " + posInScreen.x + " " + posInScreen.y);
+                return;
+            }
+
+            //gap < 1/2 dimension, no change in arcade, change in screen
+//            //return after done
+////            if(gap < blockDimension / 2) {
+//////                System.out.println("Case 2");
+//////                System.out.println("Arcade Pos: " + " ROW: " + posInArcade.x + " " + " COL: " + posInArcade.y);
+//////                System.out.println("Screen Pos: " + " X: " + posInScreen.x + " " + " Y: " + posInScreen.y);
+//////                System.out.println(" ");
+//////                System.out.println(" ");
+////                //no need to move one more
+////                //posInArcade = TwoTuple.moveTo(posInArcade, movingDirection);
+////                if (arcadeAnalyzer.allowsToGo(posInArcade, movingDirection)) {
+////                    posInScreen = TwoTuple.addPixelGap(posInScreen, movingDirection, gap);
+////                }
+////
+////                return;
+////            }
+//
+//            //gap < dimension, gap >= 1/2 dimension, change in arcade, change in screen
+//            //return after done
+////            if(gap < blockDimension) {
+//////                System.out.println("Case 3");
+//////                System.out.println("Arcade Pos: " + " ROW: " + posInArcade.x + " " + " COL: " + posInArcade.y);
+//////                System.out.println("Screen Pos: " + " X: " + posInScreen.x + " " + " Y: " + posInScreen.y);
+//////                System.out.println(" ");
+//////                System.out.println(" ");
+////                //move one more
+////                posInArcade = TwoTuple.moveTo(posInArcade, movingDirection);
+////                if (arcadeAnalyzer.allowsToGo(posInArcade, movingDirection)) {
+////                    posInScreen = TwoTuple.addPixelGap(posInScreen, movingDirection, gap);
+////                } else {
+////                    posInScreen = arcade.mapScreen(posInArcade);
+////                }
+////                return;
+////            }
+//
+//            //gap > dimension, change in arcade, change in screen
+//            //continue after done
+////            System.out.println("Case 4");
+////            System.out.println("Gap: " + gap);
+////            System.out.println("Arcade Pos: " + " ROW: " + posInArcade.x + " " + " COL: " + posInArcade.y);
+////            System.out.println("Screen Pos: " + " X: " + posInScreen.x + " " + " Y: " + posInScreen.y);
+////            System.out.println(" ");
+////            System.out.println(" ");
+            gap -= blockDimension;
+            posInArcade = TwoTuple.moveTo(posInArcade, movingDirection);
+            allowsMove = arcadeAnalyzer.allowsToGo(posInArcade, movingDirection);
+            //System.out.println("Looped Once: " + posInArcade.x + " " + posInArcade.y);
+        }
+    }
+
+    private boolean essentialCheck(int mathGap) {
+        //Will it actually go pass the
+        //center of the turning block
+        //if we continue the previous motion?
+        //To due with this, lets try to
+        //add the gap on first!
+
+        //The turning point on screen
+        TwoTuple turningPoint = arcade.mapScreen(posInArcade);
+
+        //get sign
+        int Sign_x_prev = (int)Math.signum(posInScreen.x - turningPoint.x);
+        int Sign_y_prev = (int)Math.signum(posInScreen.y - turningPoint.y);
+
+        //try to add gap
+        TwoTuple posPost = TwoTuple.addPixelGap(posInScreen, currDirection, mathGap);
+
+        //update sign
+        int Sign_x_post = (int)Math.signum(posPost.x - turningPoint.x);
+        int Sign_y_post = (int)Math.signum(posPost.y - turningPoint.y);
+
+//        System.out.println("Checking essential");
+//        System.out.println("Curr: " + posInScreen.x + " " + posInScreen.y);
+//        System.out.println("Turn: " + turningPoint.x + " " + turningPoint.y);
+//        System.out.println("post: " + posPost.x + " " + posPost.y);
+//        System.out.println(" ");
+//        System.out.println("Checking sign");
+//        System.out.println("Curr Diff: " + Sign_x_prev + " " + Sign_y_prev);
+//        System.out.println("Post Diff: " + Sign_x_post + " " + Sign_y_post);
+
+        //We must advance to center!
+        //Or we are on the center
+        if (Sign_x_post != Sign_x_prev || Sign_y_post != Sign_y_prev ||
+                (Sign_x_prev == 0 && Sign_y_prev == 0)) {
+            System.out.println("true");
+            return true;
+        }
+        System.out.println("false");
+        return false;
     }
 
     @Override
@@ -443,4 +678,6 @@ public class Runner implements GameObject, CollisionObserver {
     public void update(ArrayList<TwoTuple> route) {
 
     }
+
+
 }

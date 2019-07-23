@@ -436,11 +436,12 @@ class PacmanGame extends SurfaceView implements Runnable {
 
         builder.setSpeed(gameMode.getGhostsSpeed());
         builder.setPacman(pacman);
-        ghosts = builder.createGhosts(); // build ghosts with out analyzer, which means will use the earlier algorithm
+        //ghosts = builder.createGhosts(); // build ghosts without analyzer, which means will use the earlier algorithm
+        ghosts = builder.createGhosts(arcadeAnalyzer); // build ghosts with analyzer, use the new algorithm
 
         builder.setSpeed(gameMode.getGhostsSpeed());
-        cake = builder.createCake(); // build cake with out analyzer, which means will use the earlier algorithm
-
+        //cake = builder.createCake(); // build cake without analyzer, which means will use the earlier algorithm
+        cake = builder.createCake(arcadeAnalyzer);
 //
 //      collisionDetector = new CollisionDetector();
 

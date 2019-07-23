@@ -11,9 +11,6 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
 
     boolean alive;
 
-    //ADDED variables
-    private ArcadeAnalyzer arcadeAnalyzer;
-
     //coordinate
     private String GhostName;
 
@@ -73,12 +70,13 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
         this.posInArcadeInit = posInArcade;
 
         this.arcadeAnalyzer = arcadeAnalyzer;
+        this.blockDimension = arcadeAnalyzer.blockDimension;
     }
 
     @Override
     public void draw(Canvas canvas) {
         // TwoTuple screenPos = arcade.mapScreen(posInArcade);
-        System.out.println("Draw Ghost");
+        //System.out.println("Draw Ghost");
         canvas.drawBitmap(ghostView, posInScreen.first() - bitmapWidth / 2,
                 posInScreen.second() - bitmapHeight / 2, null);
     }
