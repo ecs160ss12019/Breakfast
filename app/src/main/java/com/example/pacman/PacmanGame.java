@@ -161,6 +161,9 @@ class PacmanGame extends SurfaceView implements Runnable {
             direction = arrowKey;
             arrowKey = -1;
         }
+        if(menu.check(userInput) == 0) {
+            pause();
+        }
 
 
         /*
