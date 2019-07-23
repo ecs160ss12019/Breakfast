@@ -60,6 +60,8 @@ class PacmanGame extends SurfaceView implements Runnable {
     //Our Navigation Buttons!
     private NavigationButtons navigationButtons;
 
+    private Menu menu;
+
     //Our CollisionDestructor
     private CollisionDetector collisionDetector;
 
@@ -250,12 +252,7 @@ class PacmanGame extends SurfaceView implements Runnable {
 //        int type = collision.getScoreType();
         score.updateScore(collision.getScoreType());
         //System.out.println("SCORE: " + score.getScore());
-
         //Here we update the score if Pacman have eaten cake + ghosts
-
-
-
-
 
 
         Thread ghostsThread = new Thread(new Runnable(){
@@ -331,6 +328,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         ghosts.draw(canvas);
         //cake.draw(canvas);
         navigationButtons.draw(canvas);
+        menu.draw(canvas);
 
         // score system:
 
@@ -451,7 +449,7 @@ class PacmanGame extends SurfaceView implements Runnable {
 
         //init Nav Buttons
         navigationButtons = new NavigationButtons(context, mScreen.x, mScreen.y);
-
+        menu = new Menu(context, mScreen.x, mScreen.y);
         //init with system env variable
         //consoleReader = new ConsoleReader(System.console());
     }
