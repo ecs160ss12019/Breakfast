@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -18,6 +19,9 @@ class PacmanGame extends SurfaceView implements Runnable {
     private SurfaceHolder mOurHolder;
     private Canvas mCanvas;
     private Paint mPaint;
+
+    private int numberHorizontalPixels;
+    private String modeSelected;
 
     // How many frames per second did we get?
     private long mFPS;
@@ -149,8 +153,9 @@ class PacmanGame extends SurfaceView implements Runnable {
      */
     public void updateGame() {
         final int direction; // check if user pressed touch button on screen; if not, check if user entered arrow key on keyboard (for testing)
-        if(navigationButtons.checkAndUpdate(userInput) != -1) direction = navigationButtons.checkAndUpdate(userInput);
-        else {
+        if(navigationButtons.checkAndUpdate(userInput) != -1) {
+            direction = navigationButtons.checkAndUpdate(userInput);
+        } else {
             direction = arrowKey;
             arrowKey = -1;
         }
@@ -327,6 +332,15 @@ class PacmanGame extends SurfaceView implements Runnable {
         //cake.draw(canvas);
         navigationButtons.draw(canvas);
 
+        // score system:
+
+        Typeface plain = Typeface.createFromAsset(getContext().getAssets(), "fonts/myFont.ttf");
+        Paint paint = new Paint();
+        paint.setTextSize(numberHorizontalPixels/30);
+        paint.setTypeface(plain);
+        mCanvas.drawText("Score: "+ score.getScore(), 50, (numberHorizontalPixels/40)*3, paint);
+        mCanvas.drawText("Speed: "+ modeSelected, 50, (numberHorizontalPixels/40)*4, paint);
+
 
 //        long drawUseTime = (System.nanoTime() - drawStartTime) / 1000000;
 //        System.out.println("drawUseTime: " + drawUseTime);
@@ -341,6 +355,9 @@ class PacmanGame extends SurfaceView implements Runnable {
             case MotionEvent.ACTION_DOWN:
                 //update UserInput only, update other game objects somewhere else
                 userInput.updateUserInput(motionEvent.getX(), motionEvent.getY());
+                if (mPlaying == false){
+                    resume();
+                }
                 break;
             case MotionEvent.ACTION_UP:
                 userInput.updateUserInput(Float.MAX_VALUE, Float.MAX_VALUE);
@@ -367,6 +384,8 @@ class PacmanGame extends SurfaceView implements Runnable {
         // provided by Android
         super(context);
 
+        numberHorizontalPixels = x;
+
         // Initialize these two members/fields
         // With the values passed in as parameters
         mScreen = new TwoTuple(x, y);
@@ -380,8 +399,18 @@ class PacmanGame extends SurfaceView implements Runnable {
         //Init fps to -1 so that we will know if the canvas is not ready
         mFPS = -1;
 
-        gameMode = new GameMode(0, mScreen.x);
-        /* implement front page view (something like welcome to breakfast's Pac-Man game) */
+        gameMode = new GameMode(1, mScreen.x);
+        switch (gameMode.getDisplayMode()){
+            case 0:
+                modeSelected = "Easy";
+                break;
+            case 1:
+                modeSelected = "Normal";
+                break;
+            case 2:
+                modeSelected = "Hard";
+                break;
+        }
 
         //initialize the Arcade list
         arcades = new ArcadeList(context, mScreen.x, mScreen.y,
@@ -415,7 +444,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         cake = builder.createCake(); // build cake with out analyzer, which means will use the earlier algorithm
 
 //
-//        collisionDetector = new CollisionDetector();
+//      collisionDetector = new CollisionDetector();
 
         //userInput handler
         userInput = new UserInput();
