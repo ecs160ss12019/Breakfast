@@ -405,7 +405,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         score = new PointSystem();
         // Initialize the pacman and ghost
 //        pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize(), arcades.getArcadeContainingPacman(), gameMode.getPacmanSpeed());
-//        ghosts = new GhostList(context, mScreen, arcades.getArcadeContainingPacman(), gameMode.getGhostsSpeed(), collision, GhostName);
+//        ghosts = new GhostList(context, mScreen, arcades.getArcadeContainingPacman(), gameMode.getGhostsSpeed(), collision);
 //        cake = new Cake(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(), arcadeAnalyzer, gameMode.getGhostsSpeed(), collision);
 
         // trying to use Builder design pattern to limit the parameters we need to put in constructor, maybe it's overused.

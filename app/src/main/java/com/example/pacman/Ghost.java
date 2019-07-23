@@ -16,7 +16,6 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
 
     //coordinate
     private String GhostName;
-    int blockDimension;
 
 
     //context of the game, used access Resource ptr
@@ -45,11 +44,6 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
  */
 
     //Currently used Constructor
-    public Ghost(Context context, TwoTuple screen, Arcade arcade,
-                 Pacman pacman, Bitmap ghostView, ArcadeAnalyzer arcadeAnalyzer,
-                 float speed, CollisionSubject collision, String Name) {
-         super(screen, speed, collision);
-        this.context = context;
     private Ghost(Context context, TwoTuple screen, Bitmap ghostView, float speed, String name, Pacman pacman, CollisionSubject collision) {
         super(screen, speed, collision);
 
@@ -164,7 +158,6 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
 
             if (allowsTurn) {
                 //Turn and go
-                posInArcade = movedTo(mathematicalMove, nextDirection);
 
                 if (essentialCheck(mathematicalMove)) {
                     //posInArcade = TwoTuple.moveTo(posInArcade, nextDirection);
@@ -419,6 +412,7 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
         }
     }
 
+    /*
     //**For ghost behavior;
 
     //This is the GhostBehavior Function, each of the ghost has a unique behavior;
@@ -677,5 +671,24 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
                 break;
         }
 
+    }
+    */
+
+    public void GhostBehavior(long fps) {
+        GhostBehavior GB = new GhostBehavior(pacman.posInArcade, this.posInArcade, pacman.getCurrentDir(), arcadeAnalyzer);
+        switch (this.GhostName) {
+            case "Red":
+                nextDirection = GB.chase();
+                updateLocation(fps);
+            case "Pink":
+                nextDirection = GB.chase();
+                updateLocation(fps);
+            case "Blue":
+                nextDirection = GB.RandomMove();
+                updateLocation(fps);
+            case "Yellow":
+                nextDirection = GB.RandomMove();
+                updateLocation(fps);
+        }
     }
 }
