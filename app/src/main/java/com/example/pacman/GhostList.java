@@ -99,6 +99,7 @@ public class GhostList {
         }
     }
 
+
     public void draw(Canvas canvas) {
         for (Ghost ghost : ghosts) {
             ghost.draw(canvas);

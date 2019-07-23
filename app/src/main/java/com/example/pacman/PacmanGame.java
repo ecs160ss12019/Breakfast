@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -60,8 +59,6 @@ class PacmanGame extends SurfaceView implements Runnable {
     //Our Navigation Buttons!
     private NavigationButtons navigationButtons;
 
-    private Menu menu;
-
     //Our CollisionDestructor
     private CollisionDetector collisionDetector;
 
@@ -81,9 +78,6 @@ class PacmanGame extends SurfaceView implements Runnable {
     // will stop the thread
     @Override
     public void run() {
-
-
-
         // mPlaying gives us finer control
         // rather than just relying on the calls to run
         // mPlaying must be true AND
@@ -155,17 +149,11 @@ class PacmanGame extends SurfaceView implements Runnable {
      */
     public void updateGame() {
         final int direction; // check if user pressed touch button on screen; if not, check if user entered arrow key on keyboard (for testing)
-        if(navigationButtons.checkAndUpdate(userInput) != -1) {
-            direction = navigationButtons.checkAndUpdate(userInput);
-        } else {
+        if(navigationButtons.checkAndUpdate(userInput) != -1) direction = navigationButtons.checkAndUpdate(userInput);
+        else {
             direction = arrowKey;
             arrowKey = -1;
         }
-        if(menu.check(userInput) == 0) {
-            pause();
-        }
-
-
         /*
         if player touched or is continuous touching
         updated pacman position and etc.
@@ -233,13 +221,12 @@ class PacmanGame extends SurfaceView implements Runnable {
 //        }
 
 
-        if(pacman.isDead()) {
-            pacman.reBorn();
-        } else {
-            pacman.updateMovementStatus(direction, mFPS);
-        }
-
-        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+//        if(pacman.isDead()) {
+//            pacman.reBorn();
+//        } else {
+//            pacman.updateMovementStatus(direction, mFPS);
+//        }
+//        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
 //        cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
 
         collision.updateRunnersPosition();
@@ -247,16 +234,18 @@ class PacmanGame extends SurfaceView implements Runnable {
         Thread pacManThread = new Thread(new Runnable(){
             @Override
             public void run() {
-                pacman.updateMovementStatus(direction, mFPS);
+                if(pacman.isDead()) {
+                    pacman.reBorn();
+                } else {
+                    pacman.updateMovementStatus(direction, mFPS);
+                }
             }
         });
 
         //Here we update the score if Pacman have eaten any pellets valuable.
-//        int type = collision.getScoreType();
         score.updateScore(collision.getScoreType());
-        //System.out.println("SCORE: " + score.getScore());
+        System.out.println("SCORE: " + score.getScore());
         //Here we update the score if Pacman have eaten cake + ghosts
-
 
         Thread ghostsThread = new Thread(new Runnable(){
             @Override
@@ -264,8 +253,8 @@ class PacmanGame extends SurfaceView implements Runnable {
                 ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
             }
         });
-
-//        Thread cakeThread = new Thread(new Runnable(){
+//
+//        Thread cakeThread = new Thread(new Runnable() {
 //            @Override
 //            public void run() {
 //                cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
@@ -277,12 +266,8 @@ class PacmanGame extends SurfaceView implements Runnable {
 //        cakeThread.start();
 
 //        pacman.updateMovementStatus(direction, mFPS);
-        // ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
-//        cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
-
-//        long updateUseTime = (System.nanoTime() - updateStartTime) / 1000000;
-//        System.out.println("updateUseTime: " + updateUseTime);
-
+  //      ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+//        cake.updateMovementStatus(-1, mFPS);
     }
 
     // This method is called by PacmanActivity
@@ -299,7 +284,6 @@ class PacmanGame extends SurfaceView implements Runnable {
         } catch (InterruptedException e) {
             Log.e("Error:", "joining thread");
         }
-
     }
 
     // This method is called by PacmanActivity
@@ -319,7 +303,6 @@ class PacmanGame extends SurfaceView implements Runnable {
      */
     @Override
     public void draw(Canvas canvas) {
-        long drawStartTime = System.nanoTime();
         super.draw(canvas);
 
         // Fill the screen with a solid color
@@ -329,12 +312,10 @@ class PacmanGame extends SurfaceView implements Runnable {
         pelletList.draw(canvas);
         pacman.draw(canvas);
         ghosts.draw(canvas);
-        //cake.draw(canvas);
+//        cake.draw(canvas);
         navigationButtons.draw(canvas);
-        menu.draw(canvas);
 
         // score system:
-
         Typeface plain = Typeface.createFromAsset(getContext().getAssets(), "fonts/myFont.ttf");
         Paint paint = new Paint();
         paint.setTextSize(numberHorizontalPixels/30);
@@ -342,9 +323,6 @@ class PacmanGame extends SurfaceView implements Runnable {
         mCanvas.drawText("Score: "+ score.getScore(), 50, (numberHorizontalPixels/40)*3, paint);
         mCanvas.drawText("Speed: "+ modeSelected, 50, (numberHorizontalPixels/40)*4, paint);
 
-
-//        long drawUseTime = (System.nanoTime() - drawStartTime) / 1000000;
-//        System.out.println("drawUseTime: " + drawUseTime);
     }
     /*
     implement onTouchEvent to handle user input
@@ -356,9 +334,6 @@ class PacmanGame extends SurfaceView implements Runnable {
             case MotionEvent.ACTION_DOWN:
                 //update UserInput only, update other game objects somewhere else
                 userInput.updateUserInput(motionEvent.getX(), motionEvent.getY());
-                if (mPlaying == false){
-                    resume();
-                }
                 break;
             case MotionEvent.ACTION_UP:
                 userInput.updateUserInput(Float.MAX_VALUE, Float.MAX_VALUE);
@@ -367,16 +342,17 @@ class PacmanGame extends SurfaceView implements Runnable {
         return true;
     }
 
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent keyEvent) {
-        System.out.println("----------I pressed key------------");
-        switch(keyCode) {
-            case 37: // left arrow
-                System.out.println("----------I pressed left------------");
-                break;
-        }
-        return true;
-    }
+    // this has to be in Activity ....
+//    @Override
+//    public boolean onKeyUp(int keyCode, KeyEvent keyEvent) {
+//        System.out.println("----------I pressed key------------");
+//        switch(keyCode) {
+//            case 37: // left arrow
+//                System.out.println("----------I pressed left------------");
+//                break;
+//        }
+//        return true;
+//    }
 
     //Constructor
     public PacmanGame(Context context, int x, int y) {
@@ -401,6 +377,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         mFPS = -1;
 
         gameMode = new GameMode(1, mScreen.x);
+        /* implement front page view (something like welcome to breakfast's Pac-Man game) */
         switch (gameMode.getDisplayMode()){
             case 0:
                 modeSelected = "Easy";
@@ -453,7 +430,7 @@ class PacmanGame extends SurfaceView implements Runnable {
 
         //init Nav Buttons
         navigationButtons = new NavigationButtons(context, mScreen.x, mScreen.y);
-        menu = new Menu(context, mScreen.x, mScreen.y);
+        // menu = new Menu(context, mScreen.x, mScreen.y);
         //init with system env variable
         //consoleReader = new ConsoleReader(System.console());
     }
