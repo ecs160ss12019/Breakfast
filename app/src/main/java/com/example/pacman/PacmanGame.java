@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -60,8 +59,6 @@ class PacmanGame extends SurfaceView implements Runnable {
     //Our Navigation Buttons!
     private NavigationButtons navigationButtons;
 
-    private Menu menu;
-
     //Our CollisionDestructor
     private CollisionDetector collisionDetector;
 
@@ -81,9 +78,6 @@ class PacmanGame extends SurfaceView implements Runnable {
     // will stop the thread
     @Override
     public void run() {
-
-
-
         // mPlaying gives us finer control
         // rather than just relying on the calls to run
         // mPlaying must be true AND
@@ -155,17 +149,11 @@ class PacmanGame extends SurfaceView implements Runnable {
      */
     public void updateGame() {
         final int direction; // check if user pressed touch button on screen; if not, check if user entered arrow key on keyboard (for testing)
-        if(navigationButtons.checkAndUpdate(userInput) != -1) {
-            direction = navigationButtons.checkAndUpdate(userInput);
-        } else {
+        if(navigationButtons.checkAndUpdate(userInput) != -1) direction = navigationButtons.checkAndUpdate(userInput);
+        else {
             direction = arrowKey;
             arrowKey = -1;
         }
-        if(menu.check(userInput) == 0) {
-            pause();
-        }
-
-
         /*
         if player touched or is continuous touching
         updated pacman position and etc.
@@ -239,7 +227,7 @@ class PacmanGame extends SurfaceView implements Runnable {
             pacman.updateMovementStatus(direction, mFPS);
         }
 
-        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+//        ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
 //        cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
 
         collision.updateRunnersPosition();
@@ -252,20 +240,18 @@ class PacmanGame extends SurfaceView implements Runnable {
         });
 
         //Here we update the score if Pacman have eaten any pellets valuable.
-//        int type = collision.getScoreType();
         score.updateScore(collision.getScoreType());
-        //System.out.println("SCORE: " + score.getScore());
+        System.out.println("SCORE: " + score.getScore());
         //Here we update the score if Pacman have eaten cake + ghosts
 
-
-        Thread ghostsThread = new Thread(new Runnable(){
-            @Override
-            public void run() {
-                ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
-            }
-        });
-
-//        Thread cakeThread = new Thread(new Runnable(){
+//        Thread ghostsThread = new Thread(new Runnable(){
+//            @Override
+//            public void run() {
+//                ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+//            }
+//        });
+//
+//        Thread cakeThread = new Thread(new Runnable() {
 //            @Override
 //            public void run() {
 //                cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
@@ -273,16 +259,12 @@ class PacmanGame extends SurfaceView implements Runnable {
 //        });
 //
         pacManThread.start();
-        ghostsThread.start();
+//        ghostsThread.start();
 //        cakeThread.start();
 
 //        pacman.updateMovementStatus(direction, mFPS);
-        // ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
-//        cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
-
-//        long updateUseTime = (System.nanoTime() - updateStartTime) / 1000000;
-//        System.out.println("updateUseTime: " + updateUseTime);
-
+  //      ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+//        cake.updateMovementStatus(-1, mFPS);
     }
 
     // This method is called by PacmanActivity
@@ -299,7 +281,6 @@ class PacmanGame extends SurfaceView implements Runnable {
         } catch (InterruptedException e) {
             Log.e("Error:", "joining thread");
         }
-
     }
 
     // This method is called by PacmanActivity
@@ -319,7 +300,6 @@ class PacmanGame extends SurfaceView implements Runnable {
      */
     @Override
     public void draw(Canvas canvas) {
-        long drawStartTime = System.nanoTime();
         super.draw(canvas);
 
         // Fill the screen with a solid color
@@ -328,13 +308,11 @@ class PacmanGame extends SurfaceView implements Runnable {
         arcades.draw(canvas);
         pelletList.draw(canvas);
         pacman.draw(canvas);
-        ghosts.draw(canvas);
-        //cake.draw(canvas);
+        //ghosts.draw(canvas);
+//        cake.draw(canvas);
         navigationButtons.draw(canvas);
-        menu.draw(canvas);
 
         // score system:
-
         Typeface plain = Typeface.createFromAsset(getContext().getAssets(), "fonts/myFont.ttf");
         Paint paint = new Paint();
         paint.setTextSize(numberHorizontalPixels/30);
@@ -342,9 +320,6 @@ class PacmanGame extends SurfaceView implements Runnable {
         mCanvas.drawText("Score: "+ score.getScore(), 50, (numberHorizontalPixels/40)*3, paint);
         mCanvas.drawText("Speed: "+ modeSelected, 50, (numberHorizontalPixels/40)*4, paint);
 
-
-//        long drawUseTime = (System.nanoTime() - drawStartTime) / 1000000;
-//        System.out.println("drawUseTime: " + drawUseTime);
     }
     /*
     implement onTouchEvent to handle user input
@@ -356,9 +331,6 @@ class PacmanGame extends SurfaceView implements Runnable {
             case MotionEvent.ACTION_DOWN:
                 //update UserInput only, update other game objects somewhere else
                 userInput.updateUserInput(motionEvent.getX(), motionEvent.getY());
-                if (mPlaying == false){
-                    resume();
-                }
                 break;
             case MotionEvent.ACTION_UP:
                 userInput.updateUserInput(Float.MAX_VALUE, Float.MAX_VALUE);
@@ -367,16 +339,17 @@ class PacmanGame extends SurfaceView implements Runnable {
         return true;
     }
 
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent keyEvent) {
-        System.out.println("----------I pressed key------------");
-        switch(keyCode) {
-            case 37: // left arrow
-                System.out.println("----------I pressed left------------");
-                break;
-        }
-        return true;
-    }
+    // this has to be in Activity ....
+//    @Override
+//    public boolean onKeyUp(int keyCode, KeyEvent keyEvent) {
+//        System.out.println("----------I pressed key------------");
+//        switch(keyCode) {
+//            case 37: // left arrow
+//                System.out.println("----------I pressed left------------");
+//                break;
+//        }
+//        return true;
+//    }
 
     //Constructor
     public PacmanGame(Context context, int x, int y) {
@@ -401,6 +374,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         mFPS = -1;
 
         gameMode = new GameMode(1, mScreen.x);
+        /* implement front page view (something like welcome to breakfast's Pac-Man game) */
         switch (gameMode.getDisplayMode()){
             case 0:
                 modeSelected = "Easy";
@@ -427,32 +401,29 @@ class PacmanGame extends SurfaceView implements Runnable {
         pelletList = new PelletList(context, arcades.getArcades(), new TwoTuple(mScreen.x, mScreen.y), collision);
         score = new PointSystem();
         // Initialize the pacman and ghost
-//        pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize(), arcades.getArcadeContainingPacman(), gameMode.getPacmanSpeed());
-//        ghosts = new GhostList(context, mScreen, arcades.getArcadeContainingPacman(), gameMode.getGhostsSpeed(), collision, GhostName);
-//        cake = new Cake(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(), arcadeAnalyzer, gameMode.getGhostsSpeed(), collision);
 
-        // trying to use Builder design pattern to limit the parameters we need to put in constructor, maybe it's overused.
-        RunnerBuilder builder = new RunnerBuilder(context, mScreen, arcades.getArcadeContainingPacman(), collision);
+        System.out.println("gameMode.getPacmanSpeed(): " + gameMode.getPacmanSpeed());
+        TwoTuple pacmanInitPos = new TwoTuple(arcades.getArcadeContainingPacman().pacmanPosition);
+        pacman = new Pacman(context, mScreen, pacmanInitPos, arcades.getOptimalPacmanSize(),
+                arcades.getArcadeContainingPacman(), gameMode.getPacmanSpeed(), collision);
+//        pacman = new Pacman(context, mScreen, arcades.getArcadeContainingPacman(), pacmanInitPos,
+//                arcadeAnalyzer, gameMode.getPacmanSpeed(), collision);
 
-        builder.setSpeed(gameMode.getPacmanSpeed());
-        pacman =  builder.createPacman(arcadeAnalyzer);
+        String [] GhostName = {"Yellow", "Red", "Blue", "Pink"};
+        ghosts = new GhostList(context, mScreen, arcades.getArcadeContainingPacman(), arcadeAnalyzer,
+                gameMode.getGhostsSpeed(), collision, pacman, GhostName);
 
-        builder.setSpeed(gameMode.getGhostsSpeed());
-        builder.setPacman(pacman);
-        ghosts = builder.createGhosts(); // build ghosts with out analyzer, which means will use the earlier algorithm
-
-        builder.setSpeed(gameMode.getGhostsSpeed());
-        cake = builder.createCake(); // build cake with out analyzer, which means will use the earlier algorithm
-
+        /* cake = new Cake(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(),
+                arcadeAnalyzer, gameMode.getGhostsSpeed(), collision); */
 //
-//      collisionDetector = new CollisionDetector();
+//        collisionDetector = new CollisionDetector();
 
         //userInput handler
         userInput = new UserInput();
 
         //init Nav Buttons
         navigationButtons = new NavigationButtons(context, mScreen.x, mScreen.y);
-        menu = new Menu(context, mScreen.x, mScreen.y);
+
         //init with system env variable
         //consoleReader = new ConsoleReader(System.console());
     }

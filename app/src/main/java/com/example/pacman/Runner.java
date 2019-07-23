@@ -57,7 +57,7 @@ public class Runner implements GameObject, CollisionObserver {
     private CollisionSubject collision;
     private boolean isDead;
 
-    boolean needToChangeDir =false;
+    boolean needToChangeDir = false;
 
     public boolean isDead() {
         return isDead;
