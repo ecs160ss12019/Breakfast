@@ -247,12 +247,12 @@ class PacmanGame extends SurfaceView implements Runnable {
         System.out.println("SCORE: " + score.getScore());
         //Here we update the score if Pacman have eaten cake + ghosts
 
-        Thread ghostsThread = new Thread(new Runnable(){
-            @Override
-            public void run() {
-                ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
-            }
-        });
+//        Thread ghostsThread = new Thread(new Runnable(){
+//            @Override
+//            public void run() {
+//                ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+//            }
+//        });
 //
 //        Thread cakeThread = new Thread(new Runnable() {
 //            @Override
@@ -262,12 +262,23 @@ class PacmanGame extends SurfaceView implements Runnable {
 //        });
 //
         pacManThread.start();
-        ghostsThread.start();
+        //ghostsThread.start();
 //        cakeThread.start();
 
 //        pacman.updateMovementStatus(direction, mFPS);
   //      ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
 //        cake.updateMovementStatus(-1, mFPS);
+
+        if(pacman.posInArcade.y < 0) {
+            System.out.println("Pacman is out of the left boundary!");
+            arcades.updateArcadeReference(true);
+            pacman.arcade = arcades.getArcadeContainingPacman();
+            pacman.resetPacman(true);
+        } else if (pacman.posInArcade.y >= arcades.getArcadeContainingPacman().getNumCol()) {
+            arcades.updateArcadeReference(false);
+            pacman.arcade = arcades.getArcadeContainingPacman();
+            pacman.resetPacman(false);
+        }
     }
 
     // This method is called by PacmanActivity
@@ -311,7 +322,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         arcades.draw(canvas);
         pelletList.draw(canvas);
         pacman.draw(canvas);
-        ghosts.draw(canvas);
+        //ghosts.draw(canvas);
 //        cake.draw(canvas);
         navigationButtons.draw(canvas);
 
@@ -322,7 +333,6 @@ class PacmanGame extends SurfaceView implements Runnable {
         paint.setTypeface(plain);
         mCanvas.drawText("Score: "+ score.getScore(), 50, (numberHorizontalPixels/40)*3, paint);
         mCanvas.drawText("Speed: "+ modeSelected, 50, (numberHorizontalPixels/40)*4, paint);
-
     }
     /*
     implement onTouchEvent to handle user input
@@ -391,8 +401,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         }
 
         //initialize the Arcade list
-        arcades = new ArcadeList(context, mScreen.x, mScreen.y,
-                R.raw.sample2);
+        arcades = new ArcadeList(context, mScreen.x, mScreen.y, R.raw.sample2);
 
         //TODO for testing purpose, now we focus on 1 arcade
         arcadeAnalyzer = new ArcadeAnalyzer(arcades.getArcadeContainingPacman());
@@ -414,14 +423,14 @@ class PacmanGame extends SurfaceView implements Runnable {
         builder.setSpeed(gameMode.getPacmanSpeed());
         pacman =  builder.createPacman(arcadeAnalyzer);
 
-        builder.setSpeed(gameMode.getGhostsSpeed());
-        builder.setPacman(pacman);
-        //ghosts = builder.createGhosts(); // build ghosts without analyzer, which means will use the earlier algorithm
-        ghosts = builder.createGhosts(arcadeAnalyzer); // build ghosts with analyzer, use the new algorithm
-
-        builder.setSpeed(gameMode.getGhostsSpeed());
-        //cake = builder.createCake(); // build cake without analyzer, which means will use the earlier algorithm
-        cake = builder.createCake(arcadeAnalyzer);
+//        builder.setSpeed(gameMode.getGhostsSpeed());
+//        builder.setPacman(pacman);
+//        //ghosts = builder.createGhosts(); // build ghosts without analyzer, which means will use the earlier algorithm
+//        ghosts = builder.createGhosts(arcadeAnalyzer); // build ghosts with analyzer, use the new algorithm
+//
+//        builder.setSpeed(gameMode.getGhostsSpeed());
+//        //cake = builder.createCake(); // build cake without analyzer, which means will use the earlier algorithm
+//        cake = builder.createCake(arcadeAnalyzer);
 //
 //      collisionDetector = new CollisionDetector();
 

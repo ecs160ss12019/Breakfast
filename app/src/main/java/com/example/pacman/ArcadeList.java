@@ -98,9 +98,9 @@ public class ArcadeList {
         this.screenHeight = screenHeight;
 
         this.onDisplayArcadeID = new ArrayList<>();
-        this.onDisplayArcadeID.add(0);
+        this.onDisplayArcadeID.add(0); // TODO: add 1 and 2
 
-        this.containsPacman = 0;
+        this.containsPacman = 1; // we have three arcades, the second (middle) one contains Pacman
 
         /*
         Now we extract Arcades from the JSON file,
@@ -123,5 +123,23 @@ public class ArcadeList {
         for (Arcade arcade : arcades) {
             arcade.deployParameter(screenWidth, screenHeight, "");
         }
+    }
+
+    public void updateArcadeReference(boolean moveToLeft) {
+        if(moveToLeft && this.containsPacman > 0) {
+            this.containsPacman -= 1; // move to the left arcade
+            for (Arcade arcade : arcades) {
+                arcade.xReference += arcade.getNumCol()*arcade.getBlockWidth();
+            }
+        }
+        else if (!moveToLeft && containsPacman < this.arcades.size()-1) {
+            this.containsPacman += 1; // move to the right arcade
+            for (Arcade arcade : arcades) {
+                arcade.xReference -= arcade.getNumCol()*arcade.getBlockWidth();
+            }
+        }
+        else {return;} // out of bound
+
+
     }
 }

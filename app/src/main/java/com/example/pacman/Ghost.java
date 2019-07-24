@@ -122,72 +122,72 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
 //        canvas.drawBitmap(ghostView, this.position.x-bitmapWidth/2, this.position.y-bitmapHeight/2, null);
 //    }
 
-    public void updateLocation(long fps) {
-        /*
-        We cannot update is the fps is -1,
-        otherwise there will be a overflow
-        in speed/fps.
-         */
-        if (fps == -1 || fps == 0) {
-            return;
-        }
-
-//        /***************************************/
-//        //New Method
-        int mathematicalMove = mathematicalMoveDistance(fps);
-
-        if (nextDirection != currDirection && nextDirection != -1) {
-            //try new direction
-            boolean allowsTurn = arcadeAnalyzer.allowsToGo(posInArcade, nextDirection);
-
-            if (allowsTurn) {
-                //Turn and go
-                posInArcade = movedTo(mathematicalMove, nextDirection);
-
-                currDirection = nextDirection;
-                needToChangeDir = false;
-                return;
-           }
-        }
-
-        //Either not able to turn or not desired to turn
-        boolean allowsMove = arcadeAnalyzer.allowsToGo(posInArcade, currDirection);
-        if (allowsMove) {
-            //move and go
-            posInArcade = movedTo(mathematicalMove, currDirection);
-            return;
-        }
-
-        needToChangeDir = true;
+//    public void updateLocation(long fps) {
+//        /*
+//        We cannot update is the fps is -1,
+//        otherwise there will be a overflow
+//        in speed/fps.
+//         */
+//        if (fps == -1 || fps == 0) {
+//            return;
+//        }
 //
-//        //else no move, stay there
-    }
+////        /***************************************/
+////        //New Method
+//        int mathematicalMove = mathematicalMoveDistance(fps);
+//
+//        if (nextDirection != currDirection && nextDirection != -1) {
+//            //try new direction
+//            boolean allowsTurn = arcadeAnalyzer.allowsToGo(posInArcade, nextDirection);
+//
+//            if (allowsTurn) {
+//                //Turn and go
+//                posInArcade = movedTo(mathematicalMove, nextDirection);
+//
+//                currDirection = nextDirection;
+//                needToChangeDir = false;
+//                return;
+//           }
+//        }
+//
+//        //Either not able to turn or not desired to turn
+//        boolean allowsMove = arcadeAnalyzer.allowsToGo(posInArcade, currDirection);
+//        if (allowsMove) {
+//            //move and go
+//            posInArcade = movedTo(mathematicalMove, currDirection);
+//            return;
+//        }
+//
+//        needToChangeDir = true;
+////
+////        //else no move, stay there
+//    }
 
-    //mathematical movement distance
-    private int mathematicalMoveDistance(long fps) {
-        return (int) (speed / fps);
-    }
-
-    //move as far as possible
-    private TwoTuple movedTo(int mathematicalMove, int movingDirection) {
-        int movedDistance = 0;
-        TwoTuple currPos = posInArcade;
-
-//        System.out.println("Starting to move from: " + posInArcade.first() + " " + posInArcade.second());
-        boolean allowsMove = arcadeAnalyzer.allowsToGo(currPos, movingDirection);
-        // System.out.println("mathematicalMove: " + mathematicalMove);
-        while (movedDistance <= mathematicalMove && allowsMove) {
-            movedDistance += arcadeAnalyzer.blockDimension;
-            currPos = TwoTuple.moveTo(currPos, movingDirection);
-
-//            System.out.println("moved distance: " + movedDistance);
-//            System.out.println("Moved to: " + currPos.first() + " " + currPos.second());
-        }
-
-//        System.out.println("!!!!!");
-//        System.out.println("Finished moving to: " + currPos.first() + " " + currPos.second());
-        return currPos;
-    }
+//    //mathematical movement distance
+//    private int mathematicalMoveDistance(long fps) {
+//        return (int) (speed / fps);
+//    }
+//
+//    //move as far as possible
+//    private TwoTuple movedTo(int mathematicalMove, int movingDirection) {
+//        int movedDistance = 0;
+//        TwoTuple currPos = posInArcade;
+//
+////        System.out.println("Starting to move from: " + posInArcade.first() + " " + posInArcade.second());
+//        boolean allowsMove = arcadeAnalyzer.allowsToGo(currPos, movingDirection);
+//        // System.out.println("mathematicalMove: " + mathematicalMove);
+//        while (movedDistance <= mathematicalMove && allowsMove) {
+//            movedDistance += arcadeAnalyzer.blockDimension;
+//            currPos = TwoTuple.moveTo(currPos, movingDirection);
+//
+////            System.out.println("moved distance: " + movedDistance);
+////            System.out.println("Moved to: " + currPos.first() + " " + currPos.second());
+//        }
+//
+////        System.out.println("!!!!!");
+////        System.out.println("Finished moving to: " + currPos.first() + " " + currPos.second());
+//        return currPos;
+//    }
 
     // ghost kill pacman
     @Override
@@ -211,49 +211,49 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
     public void GhostBehavior(long fps){
         switch (this.GhostName){
             case "Red":
-                int HorizontalGap = pacman.getCurrentX()-this.posInScreen.x;
-                int VerticleGap = pacman.getCurrentY()-this.posInScreen.y;
+                int HorizontalGap = pacman.posInScreen.x - this.posInScreen.x;
+                int VerticleGap = pacman.posInScreen.y - this.posInScreen.y;
                 if(Math.abs(HorizontalGap) > Math.abs(VerticleGap)){
                     if(HorizontalGap < 0 ){
                         nextDirection = LEFT;
-                        updateLocation(fps);
+                        updateLocationByBlockFirst(fps);
                         if(needToChangeDir){
                             if(VerticleGap < 0){
                                 nextDirection = DOWN;
-                                updateLocation(fps);
+                                updateLocationByBlockFirst(fps);
                                 if(needToChangeDir) {
                                     nextDirection = UP;
-                                    updateLocation(fps);
+                                    updateLocationByBlockFirst(fps);
                                 }
                             }
                             else{
                                 nextDirection = UP;
-                                updateLocation(fps);
+                                updateLocationByBlockFirst(fps);
                                 if(needToChangeDir){
                                     nextDirection = DOWN;
-                                    updateLocation(fps);
+                                    updateLocationByBlockFirst(fps);
                                 }
                             }
                         }
                     }
                     else{
                         nextDirection = RIGHT;
-                        updateLocation(fps);
+                        updateLocationByBlockFirst(fps);
                         if(needToChangeDir){
                             if(VerticleGap < 0){
                                 nextDirection = DOWN;
-                                updateLocation(fps);
+                                updateLocationByBlockFirst(fps);
                                 if(needToChangeDir) {
                                     nextDirection = UP;
-                                    updateLocation(fps);
+                                    updateLocationByBlockFirst(fps);
                                 }
                             }
                             else{
                                 nextDirection = UP;
-                                updateLocation(fps);
+                                updateLocationByBlockFirst(fps);
                                 if(needToChangeDir){
                                     nextDirection = DOWN;
-                                    updateLocation(fps);
+                                    updateLocationByBlockFirst(fps);
                                 }
                             }
                         }
@@ -262,44 +262,44 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
                 else{
                     if(VerticleGap < 0){
                         nextDirection = DOWN;
-                        updateLocation(fps);
+                        updateLocationByBlockFirst(fps);
                         if(needToChangeDir){
                             if(HorizontalGap < 0){
                                 nextDirection = LEFT;
-                                updateLocation(fps);
+                                updateLocationByBlockFirst(fps);
                                 if(needToChangeDir){
                                     nextDirection = RIGHT;
-                                    updateLocation(fps);
+                                    updateLocationByBlockFirst(fps);
                                 }
                             }
                             else{
                                 nextDirection = RIGHT;
-                                updateLocation(fps);
+                                updateLocationByBlockFirst(fps);
                                 if(needToChangeDir){
                                     nextDirection = LEFT;
-                                    updateLocation(fps);
+                                    updateLocationByBlockFirst(fps);
                                 }
                             }
                         }
                     }
                     else{
                         nextDirection = UP;
-                        updateLocation(fps);
+                        updateLocationByBlockFirst(fps);
                         if(needToChangeDir){
                             if(HorizontalGap < 0){
                                 nextDirection = LEFT;
-                                updateLocation(fps);
+                                updateLocationByBlockFirst(fps);
                                 if(needToChangeDir){
                                     nextDirection = RIGHT;
-                                    updateLocation(fps);
+                                    updateLocationByBlockFirst(fps);
                                 }
                             }
                             else{
                                 nextDirection = RIGHT;
-                                updateLocation(fps);
+                                updateLocationByBlockFirst(fps);
                                 if(needToChangeDir){
                                     nextDirection = LEFT;
-                                    updateLocation(fps);
+                                    updateLocationByBlockFirst(fps);
                                 }
                             }
                         }
@@ -310,49 +310,49 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
             case "Pink":
                 //int HorizontalGap1 = pacman.getNextposX()-this.x;
                 //int VerticleGap1 = pacman.getNextposY()-this.y;
-                int HorizontalGap1 = pacman.getCurrentX()-this.posInScreen.x;
-                int VerticleGap1 = pacman.getCurrentY()-this.posInScreen.y;
+                int HorizontalGap1 = pacman.posInScreen.x-this.posInScreen.x;
+                int VerticleGap1 = pacman.posInScreen.y-this.posInScreen.y;
                 if(Math.abs(HorizontalGap1) > Math.abs(VerticleGap1)){
                     if(HorizontalGap1 < 0 ){
                         nextDirection = LEFT;
-                        updateLocation(fps);
+                        updateLocationByBlockFirst(fps);
                         if(needToChangeDir){
                             if(VerticleGap1 < 0){
                                 nextDirection = DOWN;
-                                updateLocation(fps);
+                                updateLocationByBlockFirst(fps);
                                 if(needToChangeDir) {
                                     nextDirection = UP;
-                                    updateLocation(fps);
+                                    updateLocationByBlockFirst(fps);
                                 }
                             }
                             else{
                                 nextDirection = UP;
-                                updateLocation(fps);
+                                updateLocationByBlockFirst(fps);
                                 if(needToChangeDir){
                                     nextDirection = DOWN;
-                                    updateLocation(fps);
+                                    updateLocationByBlockFirst(fps);
                                 }
                             }
                         }
                     }
                     else{
                         nextDirection = RIGHT;
-                        updateLocation(fps);
+                        updateLocationByBlockFirst(fps);
                         if(needToChangeDir){
                             if(VerticleGap1 < 0){
                                 nextDirection = DOWN;
-                                updateLocation(fps);
+                                updateLocationByBlockFirst(fps);
                                 if(needToChangeDir) {
                                     nextDirection = UP;
-                                    updateLocation(fps);
+                                    updateLocationByBlockFirst(fps);
                                 }
                             }
                             else{
                                 nextDirection = UP;
-                                updateLocation(fps);
+                                updateLocationByBlockFirst(fps);
                                 if(needToChangeDir){
                                     nextDirection = DOWN;
-                                    updateLocation(fps);
+                                    updateLocationByBlockFirst(fps);
                                 }
                             }
                         }
@@ -361,44 +361,44 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
                 else{
                     if(VerticleGap1 < 0){
                         nextDirection = DOWN;
-                        updateLocation(fps);
+                        updateLocationByBlockFirst(fps);
                         if(needToChangeDir){
                             if(HorizontalGap1 < 0){
                                 nextDirection = LEFT;
-                                updateLocation(fps);
+                                updateLocationByBlockFirst(fps);
                                 if(needToChangeDir){
                                     nextDirection = RIGHT;
-                                    updateLocation(fps);
+                                    updateLocationByBlockFirst(fps);
                                 }
                             }
                             else{
                                 nextDirection = RIGHT;
-                                updateLocation(fps);
+                                updateLocationByBlockFirst(fps);
                                 if(needToChangeDir){
                                     nextDirection = LEFT;
-                                    updateLocation(fps);
+                                    updateLocationByBlockFirst(fps);
                                 }
                             }
                         }
                     }
                     else{
                         nextDirection = UP;
-                        updateLocation(fps);
+                        updateLocationByBlockFirst(fps);
                         if(needToChangeDir){
                             if(HorizontalGap1 < 0){
                                 nextDirection = LEFT;
-                                updateLocation(fps);
+                                updateLocationByBlockFirst(fps);
                                 if(needToChangeDir){
                                     nextDirection = RIGHT;
-                                    updateLocation(fps);
+                                    updateLocationByBlockFirst(fps);
                                 }
                             }
                             else{
                                 nextDirection = RIGHT;
-                                updateLocation(fps);
+                                updateLocationByBlockFirst(fps);
                                 if(needToChangeDir){
                                     nextDirection = LEFT;
-                                    updateLocation(fps);
+                                    updateLocationByBlockFirst(fps);
                                 }
                             }
                         }
@@ -429,7 +429,7 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
                         nextDirection = RIGHT;
                         break;
                 }
-                updateLocation(fps);
+                updateLocationByBlockFirst(fps);
                 break;
 
             case "Yellow":
@@ -455,7 +455,7 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
                         nextDirection = RIGHT;
                         break;
                 }
-                updateLocation(fps);
+                updateLocationByBlockFirst(fps);
                 break;
         }
 

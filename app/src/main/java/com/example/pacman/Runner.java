@@ -433,7 +433,7 @@ public class Runner implements GameObject, CollisionObserver {
         if(this instanceof Ghost || this instanceof Cake) needToChangeDir = true;
     }
 
-    // second is Arcade based
+    // second is Arcade block based
     public void updateLocationByBlockFirst(long fps) {
         if (fps == -1 || fps == 0) {
             return;
@@ -468,20 +468,66 @@ public class Runner implements GameObject, CollisionObserver {
             if(this instanceof Ghost || this instanceof Cake) needToChangeDir = true; // not allow to turn, try a new direction
         }
 
+        System.out.println(this.getClass().toString() + " speed: " +  speed);
+        System.out.println(this.getClass().toString() + " mathematicalMove: " +  mathematicalMove);
         movedTo(mathematicalMove, currDirection);
+        //Either not able to turn or not desired to turn
+//        boolean allowsMove = arcadeAnalyzer.allowsToGo(posInArcade, currDirection);
+//        if (allowsMove) {
+//            //System.out.println("Allows to move");
+//            //move and go
+//            movedTo(mathematicalMove, currDirection);
+//            //posInArcade = TwoTuple.moveTo(posInArcade, currDirection);
+//            //posInScreen = arcade.mapScreen(posInArcade);
+//            return;
+//        }
+
+        //else no move, always pin to that center
+        //System.out.println("can not move");
+        //posInScreen = arcade.mapScreen(posInArcade);
+//        if (essentialCheck(mathematicalMove)) {
+//            posInArcade = TwoTuple.moveTo(posInArcade, nextDirection);
+//            posInScreen = arcade.mapScreen(posInArcade);
+//            pixelGap = 0;
+//            currDirection = nextDirection;
+//            return;
+//        } else {
+//            movedTo(mathematicalMove, currDirection);
+//            return;
+//        }
     }
 
     private int mathematicalMoveDistance(long fps) {
-        return (int)(75/fps);
+        return (int)(speed/fps);
     }
+
+    //    //move as far as possible
+//    private TwoTuple movedTo(int mathematicalMove, int movingDirection) {
+//        int movedDistance = 0;
+//        TwoTuple currPos = posInArcade;
+//
+////        System.out.println("Starting to move from: " + posInArcade.first() + " " + posInArcade.second());
+//        boolean allowsMove = arcadeAnalyzer.allowsToGo(currPos, movingDirection);
+//        while (movedDistance <= mathematicalMove && allowsMove) {
+//            movedDistance += arcadeAnalyzer.blockDimension;
+//            currPos = TwoTuple.moveTo(currPos, movingDirection);
+//
+////            System.out.println("moved distance: " + movedDistance);
+////            System.out.println("Moved to: " + currPos.first() + " " + currPos.second());
+//        }
+//
+////        System.out.println("!!!!!");
+////        System.out.println("Finished moving to: " + currPos.first() + " " + currPos.second());
+//        return currPos;
+//    }
 
     //move as far as possible
     private void movedTo(int mathematicalMove, int movingDirection) {
         int gap = mathematicalMove + pixelGap;
-//        System.out.println("Math: " + mathematicalMove + ", PG: " + pixelGap);
-//        System.out.println("Gap: " + gap + ", Block: " + gap / blockDimension);
-//        System.out.println("CurrArcadePos: " + posInArcade.x + " " + posInArcade.y);
-//        System.out.println("Starting to move from: " + posInArcade.first() + " " + posInArcade.second());
+        System.out.println("Math: " + mathematicalMove + ", PG: " + pixelGap);
+        System.out.println("Gap: " + gap + ", Block: " + gap / blockDimension);
+        System.out.println("CurrArcadePos: " + posInArcade.x + " " + posInArcade.y);
+        System.out.println("Starting to move from: " + posInArcade.first() + " " + posInArcade.second());
         boolean allowsMove = arcadeAnalyzer.allowsToGo(posInArcade, movingDirection);
 //        while (movedDistance <= mathematicalMove && allowsMove) {
 //            movedDistance += arcadeAnalyzer.blockDimension;
@@ -539,6 +585,8 @@ public class Runner implements GameObject, CollisionObserver {
                 return;
             }
 
+            System.out.println("gap: " + gap);
+
             //Now next block on this direction must be valid
             if (gap < 0) {
 //                System.out.println("Case 1");
@@ -572,8 +620,8 @@ public class Runner implements GameObject, CollisionObserver {
                 posInScreen = arcade.mapScreen(posInArcade);
                 posInScreen = TwoTuple.addPixelGap(posInScreen, currDirection, pixelGap);
 
-//                System.out.println("Case 1 done: " + posInArcade.x + " " + posInArcade.y);
-//                System.out.println("Update screen Pos: " + posInScreen.x + " " + posInScreen.y);
+                // System.out.println("Case 1 done: " + posInArcade.x + " " + posInArcade.y);
+                // System.out.println("Update screen Pos: " + posInScreen.x + " " + posInScreen.y);
                 return;
             }
 
@@ -623,7 +671,7 @@ public class Runner implements GameObject, CollisionObserver {
             gap -= blockDimension;
             posInArcade = TwoTuple.moveTo(posInArcade, movingDirection);
             allowsMove = arcadeAnalyzer.allowsToGo(posInArcade, movingDirection);
-            //System.out.println("Looped Once: " + posInArcade.x + " " + posInArcade.y);
+            // System.out.println("Looped Once: " + posInArcade.x + " " + posInArcade.y);
         }
     }
 
@@ -678,6 +726,4 @@ public class Runner implements GameObject, CollisionObserver {
     public void update(ArrayList<TwoTuple> route) {
 
     }
-
-
 }

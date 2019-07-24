@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /*
 this class is the arcade that the pacman
@@ -48,6 +47,7 @@ list should look like.
  */
 public class Arcade{
     private Context context;
+    private  int id;
 
     //the matrix of building blocks
     private ArrayList<ArrayList<ArcadeBlock>> blocks = new ArrayList<>();
@@ -137,7 +137,7 @@ public class Arcade{
     public boolean pathValid(TwoTuple tuple){
         return inRange(tuple) &&
                 (getBlock(tuple).getType() == 16 ||
-                        getBlock(tuple).getType() == 17);
+                        getBlock(tuple).getType() == 17 || getBlock(tuple).getType() == 18);
     }
 
     //get a block
@@ -332,7 +332,7 @@ public class Arcade{
                 int Y = yReference + blockHeight * i - blockHeight / 2;
 
                 int type = blocks.get(i).get(j).getType();
-                if (type == 16 || type == 17 || type == 18) {
+                if (type == 16 || type == 17 || type == 18 || type == 19) {
                     //Blocks with these type num are transparent
                     continue;
                 }
@@ -381,8 +381,12 @@ public class Arcade{
          */
         double matrixWidthInPixel = numCol * blockWidth;
         double matrixHeightInPixel = numRow * blockHeight;
-        xReference = (int) (screenWidth - matrixWidthInPixel) / 2 + blockWidth / 2;
+
+        xReference = (int) (screenWidth - matrixWidthInPixel) / 2 + blockWidth / 2; // middle arcade
         yReference = (int) (screenHeight - matrixHeightInPixel) / 2 + blockHeight / 2;
+
+        if (id==0) xReference -= matrixWidthInPixel; // left arcade
+        if (id==2) xReference += matrixWidthInPixel; // right arcade
 
         /*
         System.out.println("#########################");
@@ -401,7 +405,8 @@ public class Arcade{
         #----[--|--]----#
          */
 
-        pacmanPosition_pix = new TwoTuple(xReference + pacmanPosition.x * blockWidth, yReference + pacmanPosition.y * blockHeight);
+        // there is only one Pacman in the middle arcade
+        if(id==1) pacmanPosition_pix = new TwoTuple(xReference + pacmanPosition.x * blockWidth, yReference + pacmanPosition.y * blockHeight);
         ghostPosition_pix = new TwoTuple(xReference + ghostPosition.x * blockWidth, yReference + ghostPosition.y * blockHeight);
         cakePosition_pix = new TwoTuple(xReference + cakePosition.x * blockWidth, yReference + cakePosition.y * blockHeight);
 
@@ -439,12 +444,12 @@ public class Arcade{
     }
 
     public Arcade(Context context, ArrayList<ArrayList<Integer>> matrix,
-                  int numRow, int numCol,
+                  int id, int numRow, int numCol,
                   int imgFileRow, int imgFileCol,
                   TwoTuple pacmanPosition, TwoTuple ghostPosition, TwoTuple cakePosition,
                   boolean inUse) {
         this.context = context;
-
+        this.id = id;
         //initialize block num
         this.numRow = numRow;
         this.numCol = numCol;
