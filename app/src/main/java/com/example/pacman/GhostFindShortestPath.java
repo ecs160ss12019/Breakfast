@@ -9,7 +9,7 @@ public class GhostFindShortestPath {
     public GhostFindShortestPath(){
         //get the valid direction by calling "FindTheValidDirrection"
         //check each direction's Distance to the pacman
-
+        //
     }
 
 
