@@ -1,6 +1,11 @@
 package com.example.pacman;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Rect;
+
+import java.util.ArrayList;
 
 /*
 This is the interface that every game object
@@ -8,10 +13,11 @@ must implement
  */
 public interface GameObject {
     //call override to draw method and draw itself on the screen
-    public void draw(Canvas canvas);
+    void draw(Canvas canvas);
 
-    //get current position
-    public int getPositionX();
+    //to check collision, provide the bounding rect
+    Rect getBoundingRect(Info info);
 
-    public int getPositionY();
+    //check collision
+    boolean collision(Rect pacmanPathRect);
 }

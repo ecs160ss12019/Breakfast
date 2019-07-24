@@ -98,17 +98,22 @@ public class NavigationButtons {
         int numImgCol = 2;
 
         //resize
-        int optimalWidth = screenHeight / 4;
+        int optimalWidth = screenHeight / 8;
         int optimalHeight = optimalWidth;
         arrowsImg = Bitmap.createScaledBitmap(arrowsImg, optimalWidth, optimalHeight, true);
         pressedArrowsImg = Bitmap.createScaledBitmap(pressedArrowsImg, optimalWidth, optimalHeight, true);
 
         //cut
-        BitmapDivider divider = new BitmapDivider(arrowsImg);
-        this.buttons = divider.split(numImgRow, numImgCol);
+//        BitmapDivider divider = new BitmapDivider(arrowsImg);
+//        this.buttons = divider.split(numImgRow, numImgCol);
+//
+//        divider = new BitmapDivider(pressedArrowsImg);
+//        this.pressedButtons = divider.split(numImgRow, numImgCol);
 
-        divider = new BitmapDivider(pressedArrowsImg);
-        this.pressedButtons = divider.split(numImgRow, numImgCol);
+        this.buttons = BitmapDivider.splitAndResize(arrowsImg, new TwoTuple(numImgRow, numImgCol), new
+                TwoTuple(optimalWidth, optimalHeight));
+        this.pressedButtons = BitmapDivider.splitAndResize(pressedArrowsImg, new TwoTuple(numImgRow, numImgCol), new
+                TwoTuple(optimalWidth, optimalHeight));
 
         //get width, height
         this.buttonWidth = buttons.get(0).getWidth();

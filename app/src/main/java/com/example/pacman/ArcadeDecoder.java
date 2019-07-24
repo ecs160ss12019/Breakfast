@@ -108,7 +108,6 @@ public class ArcadeDecoder {
         things we need to extract
          */
         ArrayList<ArrayList<Integer>> matrix = new ArrayList<ArrayList<Integer>>();
-        int id = 0;
         int numRow = 0;
         int numCol = 0;
         int imgFileRow = 0;
@@ -131,9 +130,7 @@ public class ArcadeDecoder {
         while (reader.hasNext()) {
             String name = reader.nextName();
             //check and assign
-            if(name.equals("id")) {
-                id = reader.nextInt();
-            } else if(name.equals("numRow")) {
+            if(name.equals("numRow")) {
                 numRow = reader.nextInt();
             } else if(name.equals("numCol")) {
                 numCol = reader.nextInt();
@@ -170,7 +167,7 @@ public class ArcadeDecoder {
         cakePosition = new TwoTuple(cakeX, cakeY);
 
 
-        return new Arcade(context, matrix, id, numRow, numCol,
+        return new Arcade(context, matrix, numRow, numCol,
                 imgFileRow, imgFileCol, pacmanPosition, ghostPosition, cakePosition, inUse);
     }
 

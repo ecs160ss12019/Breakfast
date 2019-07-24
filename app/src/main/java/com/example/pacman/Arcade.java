@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /*
 this class is the arcade that the pacman
@@ -47,7 +48,6 @@ list should look like.
  */
 public class Arcade{
     private Context context;
-    private  int id;
 
     //the matrix of building blocks
     private ArrayList<ArrayList<ArcadeBlock>> blocks = new ArrayList<>();
@@ -137,7 +137,7 @@ public class Arcade{
     public boolean pathValid(TwoTuple tuple){
         return inRange(tuple) &&
                 (getBlock(tuple).getType() == 16 ||
-                        getBlock(tuple).getType() == 17 || getBlock(tuple).getType() == 18);
+                        getBlock(tuple).getType() == 17);
     }
 
     //get a block
@@ -332,7 +332,7 @@ public class Arcade{
                 int Y = yReference + blockHeight * i - blockHeight / 2;
 
                 int type = blocks.get(i).get(j).getType();
-                if (type == 16 || type == 17 || type == 18 || type == 19) {
+                if (type == 16 || type == 17 || type == 18) {
                     //Blocks with these type num are transparent
                     continue;
                 }
@@ -381,12 +381,8 @@ public class Arcade{
          */
         double matrixWidthInPixel = numCol * blockWidth;
         double matrixHeightInPixel = numRow * blockHeight;
-
-        xReference = (int) (screenWidth - matrixWidthInPixel) / 2 + blockWidth / 2; // middle arcade
+        xReference = (int) (screenWidth - matrixWidthInPixel) / 2 + blockWidth / 2;
         yReference = (int) (screenHeight - matrixHeightInPixel) / 2 + blockHeight / 2;
-
-        if (id==0) xReference -= matrixWidthInPixel; // left arcade
-        if (id==2) xReference += matrixWidthInPixel; // right arcade
 
         /*
         System.out.println("#########################");
@@ -405,8 +401,7 @@ public class Arcade{
         #----[--|--]----#
          */
 
-        // there is only one Pacman in the middle arcade
-        if(id==1) pacmanPosition_pix = new TwoTuple(xReference + pacmanPosition.x * blockWidth, yReference + pacmanPosition.y * blockHeight);
+        pacmanPosition_pix = new TwoTuple(xReference + pacmanPosition.x * blockWidth, yReference + pacmanPosition.y * blockHeight);
         ghostPosition_pix = new TwoTuple(xReference + ghostPosition.x * blockWidth, yReference + ghostPosition.y * blockHeight);
         cakePosition_pix = new TwoTuple(xReference + cakePosition.x * blockWidth, yReference + cakePosition.y * blockHeight);
 
@@ -433,23 +428,27 @@ public class Arcade{
                 blockHeight, true);
         */
 
-        BitmapDivider divider = new BitmapDivider(blockCollectionView);
-        blockViewList = divider.split(imgFileRow,imgFileCol);
+//        BitmapDivider divider = new BitmapDivider(blockCollectionView);
+//        blockViewList = divider.split(imgFileRow,imgFileCol);
+//
+//        for (int i = 0; i < blockViewList.size(); i++) {
+//            Bitmap temp = Bitmap.createScaledBitmap(blockViewList.get(i), blockHeight,
+//                    blockHeight, true);
+//            blockViewList.set(i, temp);
+//        }
 
-        for (int i = 0; i < blockViewList.size(); i++) {
-            Bitmap temp = Bitmap.createScaledBitmap(blockViewList.get(i), blockHeight,
-                    blockHeight, true);
-            blockViewList.set(i, temp);
-        }
+        blockViewList = BitmapDivider.splitAndResize(blockCollectionView,
+                new TwoTuple(imgFileRow, imgFileCol),
+                new TwoTuple(blockHeight, blockHeight));
     }
 
     public Arcade(Context context, ArrayList<ArrayList<Integer>> matrix,
-                  int id, int numRow, int numCol,
+                  int numRow, int numCol,
                   int imgFileRow, int imgFileCol,
                   TwoTuple pacmanPosition, TwoTuple ghostPosition, TwoTuple cakePosition,
                   boolean inUse) {
         this.context = context;
-        this.id = id;
+
         //initialize block num
         this.numRow = numRow;
         this.numCol = numCol;

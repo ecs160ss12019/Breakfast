@@ -61,19 +61,19 @@ public class GameMode {
     public void easyMode(){
         // This code means the Pacman and ghosts can cover the width
         // of the screen in 9 seconds
-        pacmanSpeed = screenX/14;
-        ghostsSpeed = screenX/14;
+        pacmanSpeed = screenX/15;
+        ghostsSpeed = screenX/15;
     }
     public void normalMode(){
         // This code means the Pacman and ghosts can cover the width
         // of the screen in 9 seconds
-        pacmanSpeed = screenX/10;
-        ghostsSpeed = screenX/10;
+        pacmanSpeed = screenX/40;
+        ghostsSpeed = screenX/40;
     }
     public void hardMode(){
         // This code means the Pacman and ghosts can cover the width
         // of the screen in 9 seconds
-        pacmanSpeed = screenX/5;
-        ghostsSpeed = screenX/5;
+        pacmanSpeed = screenX/50;
+        ghostsSpeed = screenX/50;
     }
 }
