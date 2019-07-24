@@ -1,6 +1,9 @@
 package com.example.pacman;
 
+import android.util.Pair;
+
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 public class ArcadeAnalyzer implements Runnable{
     private Arcade arcade;
@@ -40,12 +43,12 @@ public class ArcadeAnalyzer implements Runnable{
                 ArrayList<Integer> allowedDirections = new ArrayList<>(4);
                 TwoTuple thisBlock = new TwoTuple(i, j);
                 //Analyze Left
-                if (arcade.getBlock(thisBlock).getType() == 18 || arcade.pathValid(thisBlock.toLeft())) {
+                if (arcade.pathValid(thisBlock.toLeft())) {
                     allowedDirections.add(LEFT);
                 }
 
                 //Analyze Right
-                if (arcade.getBlock(thisBlock).getType() == 18 || arcade.pathValid(thisBlock.toRight())) {
+                if (arcade.pathValid(thisBlock.toRight())) {
                     allowedDirections.add(RIGHT);
                 }
 
