@@ -18,7 +18,7 @@ public class GhostBehavior {
     final int RIGHT = 1;
     final int UP = 2;
     final int DOWN = 3;
-    private int[] Direction = {LEFT, RIGHT, UP, DOWN};
+    private int[] Direction1 = {LEFT, RIGHT, UP, DOWN};
 
 
     public GhostBehavior(TwoTuple PacmanPos, TwoTuple GhostPos, int PacmanDir, ArcadeAnalyzer AracadeAnalyzer) {
@@ -225,4 +225,6 @@ public class GhostBehavior {
         }
         return Direction;
     }
+
+
 }
