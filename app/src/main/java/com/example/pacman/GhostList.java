@@ -50,7 +50,6 @@ public class GhostList {
         }
     }
 
-    //public GhostList(Context context, int sx, int sy, Arcade arcade, float speed, String name)
     public GhostList(Context context, TwoTuple screen, float speed, CollisionSubject collision,  Pacman pacman,  Arcade arcade) {
         this(context, screen);
 
@@ -86,19 +85,18 @@ public class GhostList {
         for (int i = 0; i < ghosts.size(); i++) {
             final int index = i;
 
-//            Thread ghostThread = new Thread(new Runnable(){
-//                @Override
-//                public void run() {
-//                    //ghosts.get(index).GhostBehavior(mFPS,arcadeContainingPacman);
-//                    ghosts.get(index).GhostBehavior(mFPS);
-//                }
-//            });
-//            ghostThread.start();
+            Thread ghostThread = new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    //ghosts.get(index).GhostBehavior(mFPS,arcadeContainingPacman);
+                    ghosts.get(index).GhostBehavior(mFPS);
+                }
+            });
+            ghostThread.start();
 
-            ghosts.get(index).updateMovementStatus(-1, mFPS);
+//            ghosts.get(index).updateMovementStatus(-1, mFPS);
         }
     }
-
 
     public void draw(Canvas canvas) {
         for (Ghost ghost : ghosts) {

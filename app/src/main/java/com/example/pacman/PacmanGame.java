@@ -247,23 +247,23 @@ class PacmanGame extends SurfaceView implements Runnable {
         System.out.println("SCORE: " + score.getScore());
         //Here we update the score if Pacman have eaten cake + ghosts
 
-//        Thread ghostsThread = new Thread(new Runnable(){
-//            @Override
-//            public void run() {
-//                ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
-//            }
-//        });
-//
-//        Thread cakeThread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                cake.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
-//            }
-//        });
-//
+        Thread ghostsThread = new Thread(new Runnable(){
+            @Override
+            public void run() {
+                ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+            }
+        });
+
+        Thread cakeThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                cake.updateMovementStatus(-1, mFPS);
+            }
+        });
+
         pacManThread.start();
-        //ghostsThread.start();
-//        cakeThread.start();
+        ghostsThread.start();
+        cakeThread.start();
 
 //        pacman.updateMovementStatus(direction, mFPS);
   //      ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
@@ -322,8 +322,8 @@ class PacmanGame extends SurfaceView implements Runnable {
         arcades.draw(canvas);
         pelletList.draw(canvas);
         pacman.draw(canvas);
-        //ghosts.draw(canvas);
-//        cake.draw(canvas);
+        ghosts.draw(canvas);
+        cake.draw(canvas);
         navigationButtons.draw(canvas);
 
         // score system:
@@ -414,7 +414,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         score = new PointSystem();
         // Initialize the pacman and ghost
 //        pacman = new Pacman(context, mScreenX, mScreenY, arcades.getOptimalPacmanSize(), arcades.getArcadeContainingPacman(), gameMode.getPacmanSpeed());
-//        ghosts = new GhostList(context, mScreen, arcades.getArcadeContainingPacman(), gameMode.getGhostsSpeed(), collision, GhostName);
+//        ghosts = new GhostList(context, mScreen, arcades.getArcadeContainingPacman(), gameMode.getGhostsSpeed(), collision);
 //        cake = new Cake(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(), arcadeAnalyzer, gameMode.getGhostsSpeed(), collision);
 
         // trying to use Builder design pattern to limit the parameters we need to put in constructor, maybe it's overused.
@@ -423,14 +423,14 @@ class PacmanGame extends SurfaceView implements Runnable {
         builder.setSpeed(gameMode.getPacmanSpeed());
         pacman =  builder.createPacman(arcadeAnalyzer);
 
-//        builder.setSpeed(gameMode.getGhostsSpeed());
-//        builder.setPacman(pacman);
-//        //ghosts = builder.createGhosts(); // build ghosts without analyzer, which means will use the earlier algorithm
-//        ghosts = builder.createGhosts(arcadeAnalyzer); // build ghosts with analyzer, use the new algorithm
-//
-//        builder.setSpeed(gameMode.getGhostsSpeed());
-//        //cake = builder.createCake(); // build cake without analyzer, which means will use the earlier algorithm
-//        cake = builder.createCake(arcadeAnalyzer);
+        builder.setSpeed(gameMode.getGhostsSpeed());
+        builder.setPacman(pacman);
+        //ghosts = builder.createGhosts(); // build ghosts without analyzer, which means will use the earlier algorithm
+        ghosts = builder.createGhosts(arcadeAnalyzer); // build ghosts with analyzer, use the new algorithm
+
+        builder.setSpeed(gameMode.getGhostsSpeed());
+        //cake = builder.createCake(); // build cake without analyzer, which means will use the earlier algorithm
+        cake = builder.createCake(arcadeAnalyzer);
 //
 //      collisionDetector = new CollisionDetector();
 
