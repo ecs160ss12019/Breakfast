@@ -10,6 +10,9 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class PacmanGame extends SurfaceView implements Runnable {
     // Are we debugging?
     private final boolean DEBUGGING = true;
@@ -44,7 +47,7 @@ class PacmanGame extends SurfaceView implements Runnable {
 
     //Our pacman!
     private Pacman pacman;
-    private GhostList ghosts;
+    private List<GhostList> ghostLists;
     private Cake cake;
     //Our Pellets
     private PelletList pelletList;
@@ -250,7 +253,9 @@ class PacmanGame extends SurfaceView implements Runnable {
         Thread ghostsThread = new Thread(new Runnable(){
             @Override
             public void run() {
-                ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+                for(GhostList ghosts : ghostLists) {
+                    ghosts.updateMovementStatus(mFPS, arcades.getArcadeContainingPacman());
+                }
             }
         });
 
@@ -322,7 +327,9 @@ class PacmanGame extends SurfaceView implements Runnable {
         arcades.draw(canvas);
         pelletList.draw(canvas);
         pacman.draw(canvas);
-        ghosts.draw(canvas);
+        for(GhostList ghosts : ghostLists) {
+            ghosts.draw(canvas);
+        }
         cake.draw(canvas);
         navigationButtons.draw(canvas);
 
@@ -418,15 +425,23 @@ class PacmanGame extends SurfaceView implements Runnable {
 //        cake = new Cake(context, mScreen.x, mScreen.y, arcades.getArcadeContainingPacman(), arcadeAnalyzer, gameMode.getGhostsSpeed(), collision);
 
         // trying to use Builder design pattern to limit the parameters we need to put in constructor, maybe it's overused.
-        RunnerBuilder builder = new RunnerBuilder(context, mScreen, arcades.getArcadeContainingPacman(), collision);
+        RunnerBuilder builder = new RunnerBuilder(context, mScreen, collision);
 
+        builder.setArcade(arcades.getArcadeContainingPacman());
         builder.setSpeed(gameMode.getPacmanSpeed());
         pacman =  builder.createPacman(arcadeAnalyzer);
 
-        builder.setSpeed(gameMode.getGhostsSpeed());
-        builder.setPacman(pacman);
-        //ghosts = builder.createGhosts(); // build ghosts without analyzer, which means will use the earlier algorithm
-        ghosts = builder.createGhosts(arcadeAnalyzer); // build ghosts with analyzer, use the new algorithm
+        ghostLists = new ArrayList<GhostList>();
+        // for each arcade, we need 4 ghosts (one GhostList)
+        for (Arcade arcade : arcades.getArcades()) {
+            builder.setArcade(arcade);
+            builder.setSpeed(gameMode.getGhostsSpeed());
+            if(!arcade.pacmanPosition.equals(new TwoTuple(-1,-1))) builder.setPacman(pacman); // this arcade contains Pacman
+            else builder.setPacman(null);
+            //ghosts = builder.createGhosts(); // build ghosts without analyzer, which means will use the earlier algorithm
+            GhostList ghosts = builder.createGhosts(arcadeAnalyzer); // build ghosts with analyzer, use the new algorithm
+            ghostLists.add(ghosts);
+        }
 
         builder.setSpeed(gameMode.getGhostsSpeed());
         //cake = builder.createCake(); // build cake without analyzer, which means will use the earlier algorithm

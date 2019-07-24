@@ -30,7 +30,7 @@ public class GhostList {
 
     String [] names = {"Yellow", "Red", "Blue", "Pink"};
 
-    private GhostList(Context context, TwoTuple screen) {
+    private GhostList(Context context, TwoTuple screen, Pacman pacman) {
         this.context = context;
         mScreen = screen;
 
@@ -48,10 +48,11 @@ public class GhostList {
                     screen.y / 15, screen.y/15, true);
             ghostsViewList.add(bitmap);
         }
+        this.pacman = pacman;
     }
 
     public GhostList(Context context, TwoTuple screen, float speed, CollisionSubject collision,  Pacman pacman,  Arcade arcade) {
-        this(context, screen);
+        this(context, screen, pacman);
 
         this.arcade = arcade;
 
@@ -67,7 +68,7 @@ public class GhostList {
 
     //Constructor2
     public GhostList(Context context, TwoTuple screen, float speed, CollisionSubject collision, Pacman pacman, Arcade arcade, ArcadeAnalyzer arcadeAnalyzer) {
-        this(context, screen);
+        this(context, screen, pacman);
 
         this.arcade = arcade;
 
@@ -82,20 +83,25 @@ public class GhostList {
     }
 
     public void updateMovementStatus(final long mFPS, final Arcade arcadeContainingPacman) {
-        for (int i = 0; i < ghosts.size(); i++) {
-            final int index = i;
+        if(pacman != null) { // if this arcade contains pacman, the ghosts in this arcade will move with strategy
+            for (int i = 0; i < ghosts.size(); i++) {
+                final int index = i;
 
-            Thread ghostThread = new Thread(new Runnable(){
-                @Override
-                public void run() {
-                    //ghosts.get(index).GhostBehavior(mFPS,arcadeContainingPacman);
-                    ghosts.get(index).GhostBehavior(mFPS);
-                }
-            });
-            ghostThread.start();
-
-//            ghosts.get(index).updateMovementStatus(-1, mFPS);
+                Thread ghostThread = new Thread(new Runnable(){
+                    @Override
+                    public void run() {
+                        //ghosts.get(index).GhostBehavior(mFPS,arcadeContainingPacman);
+                        ghosts.get(index).GhostBehavior(mFPS);
+                    }
+                });
+                ghostThread.start();
+            }
+        } else { // otherwise, they will move randomly
+            for (Ghost ghost : ghosts) {
+                ghost.updateMovementStatus(-1, mFPS);
+            }
         }
+
     }
 
     public void draw(Canvas canvas) {

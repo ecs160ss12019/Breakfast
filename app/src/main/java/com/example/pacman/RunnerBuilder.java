@@ -13,10 +13,9 @@ public class RunnerBuilder {
     private Pacman pacman;
     private Arcade arcade;
 
-    public RunnerBuilder(Context context, TwoTuple screen, Arcade arcade, CollisionSubject collision) {
+    public RunnerBuilder(Context context, TwoTuple screen, CollisionSubject collision) {
         this.context = context;
         this.screen = screen;
-        this.arcade = arcade;
         this.collision = collision;
     }
 
@@ -25,8 +24,8 @@ public class RunnerBuilder {
         return this;
     }
 
-    public RunnerBuilder setView(Bitmap view) {
-        this.view = view;
+    public RunnerBuilder setArcade(Arcade arcade) {
+        this.arcade = arcade;
         return this;
     }
 

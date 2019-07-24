@@ -4,9 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 public class Ghost extends Runner implements GameObject, CollisionObserver {
 
     boolean alive;
@@ -75,6 +72,7 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
 
     @Override
     public void draw(Canvas canvas) {
+        System.out.println("ghost posInScreen: " + posInScreen.first() + " " + posInScreen.second());
         // TwoTuple screenPos = arcade.mapScreen(posInArcade);
         canvas.drawBitmap(ghostView, posInScreen.first() - bitmapWidth / 2,
                 posInScreen.second() - bitmapHeight / 2, null);
@@ -602,6 +600,7 @@ public class Ghost extends Runner implements GameObject, CollisionObserver {
     */
 
     public void GhostBehavior(long fps) {
+        if(pacman == null) return; // we don't need to setup ghost behavior when there is no Pacman in the current arcade .
         GhostBehavior GB = new GhostBehavior(pacman.posInArcade, this.posInArcade, pacman.currDirection, arcadeAnalyzer);
         switch (this.GhostName) {
             case "Red":
