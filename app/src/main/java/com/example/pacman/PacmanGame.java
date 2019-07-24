@@ -279,10 +279,12 @@ class PacmanGame extends SurfaceView implements Runnable {
             arcades.updateArcadeReference(true);
             pacman.arcade = arcades.getArcadeContainingPacman();
             pacman.resetPacman(true);
+            pelletList.setIndexOfArcadeContainPacman(arcades.getContainsPacman());
         } else if (pacman.posInArcade.y >= arcades.getArcadeContainingPacman().getNumCol()) {
             arcades.updateArcadeReference(false);
             pacman.arcade = arcades.getArcadeContainingPacman();
             pacman.resetPacman(false);
+            pelletList.setIndexOfArcadeContainPacman(arcades.getContainsPacman());
         }
     }
 

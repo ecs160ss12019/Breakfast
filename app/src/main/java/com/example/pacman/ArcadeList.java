@@ -18,6 +18,10 @@ public class ArcadeList {
      */
     private ArrayList<Integer> onDisplayArcadeID;
 
+    public int getContainsPacman() {
+        return containsPacman;
+    }
+
     //which arcade is the pacman in?
     private int containsPacman;
     private Context context;

@@ -17,7 +17,11 @@ public class PelletList implements CollisionObserver {
     private int pwrBitmapWidth;
     private int pwrBitmapHeight;
 
-    private int indexOfArcadeContainPacman = 1; // TODO: hard code to 1
+    public void setIndexOfArcadeContainPacman(int indexOfArcadeContainPacman) {
+        this.indexOfArcadeContainPacman = indexOfArcadeContainPacman;
+    }
+
+    private int indexOfArcadeContainPacman = 1;
     private CollisionSubject collision;
 
     /*
