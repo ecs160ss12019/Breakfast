@@ -144,9 +144,9 @@ class PacmanGame extends SurfaceView implements Runnable {
         }
 
         for (GameObjectCollection gameObjectCollection : gameObjectCollections) {
-            gameObjectCollection.update(direction, mFPS);
+            gameObjectCollection.update(direction, mFPS, score);
         }
-
+        System.out.println("Score: "+ score.getScore());
 
     }
 
@@ -257,6 +257,7 @@ class PacmanGame extends SurfaceView implements Runnable {
 
         //init Nav Buttons
         navigationButtons = new NavigationButtons(context, mScreen.x, mScreen.y);
+        score = new PointSystem();
         //records = new Records(context);
         //records.printRecord();
     }

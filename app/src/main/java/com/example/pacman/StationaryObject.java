@@ -17,7 +17,6 @@ public class StationaryObject implements GameObject{
     private int bitmapDimension;
     protected int currentBitmapIndex = 0;
 
-
     @Override
     public void draw(Canvas canvas) {
         canvas.drawBitmap(viewList.get(currentBitmapIndex),

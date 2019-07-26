@@ -23,6 +23,8 @@ public class GameObjectCollection {
     private ArrayList<GameObject> collisions;
 
     private boolean containsPacman;
+    private boolean power;
+
 
     public void draw(Canvas canvas) {
         arcade.draw(canvas);
@@ -36,7 +38,7 @@ public class GameObjectCollection {
         }
     }
 
-    public void update(int userInput, long fps) {
+    public void update(int userInput, long fps, PointSystem score) {
         //if there is pacman, update its nextDirection to userInput
         for (MovingObject movingObject : movingObjects) {
             if (movingObject instanceof Pacman) {
@@ -48,10 +50,9 @@ public class GameObjectCollection {
                 movingObject.setMotionInfo(changedDir);
             }
         }
-
         updateMotion(fps);
         updateCollision();
-        updateStatus();
+        updateStatus(score);
     }
 
     private void updateMotion(long fps) {
@@ -78,13 +79,29 @@ public class GameObjectCollection {
         }
     }
 
-    private void updateStatus() {
+    private void updateStatus(PointSystem score) {
         for (GameObject gameObject : collisions) {
             if (gameObject instanceof MovingObject) {
-                movingObjects.remove(gameObject);
+                if(power) {
+                    movingObjects.remove(gameObject);
+                    score.ghostEaten();
+                }else{
+                   // Pacman Dies?
+                }
             }
-
             if (gameObject instanceof StationaryObject) {
+                if(gameObject instanceof PowerPellet){
+                    if(((PowerPellet) gameObject).checkReward() == false){
+                        score.pwrpelletEaten();
+                        ((PowerPellet) gameObject).reward();
+                    }
+                    power = true;
+                }else {
+                    if(((NormalPellet) gameObject).checkReward() == false){
+                        score.pelletEaten();
+                        ((NormalPellet) gameObject).reward();
+                    }
+                }
                 stationaryObjects.remove(gameObject);
             }
         }
@@ -193,7 +210,6 @@ public class GameObjectCollection {
         movingObjects.add(cake);
 
 
-
         //Add Stationary objects to stationaryObjects list
         stationaryObjects = new ArrayList<>();
 
@@ -204,12 +220,12 @@ public class GameObjectCollection {
         final ArrayList<Bitmap> normalPelletViewList = BitmapDivider.splitAndResize(
                 bitmapDivider.loadBitmap(R.drawable.pellet),
                 new TwoTuple(1,1),
-                new TwoTuple(mScreen.y / 35, mScreen.y / 35));
+                new TwoTuple(mScreen.y / 45, mScreen.y / 45));
 
         final ArrayList<Bitmap> powerPelletViewList = BitmapDivider.splitAndResize(
                 bitmapDivider.loadBitmap(R.drawable.powerpellet),
                 new TwoTuple(1,1),
-                new TwoTuple(mScreen.y / 30, mScreen.y / 30));
+                new TwoTuple(mScreen.y / 22, mScreen.y / 22));
 
         ArrayList<ArrayList<Bitmap>> pelletViewLists= new ArrayList<>();
         pelletViewLists.add(normalPelletViewList);
@@ -219,22 +235,23 @@ public class GameObjectCollection {
         for (int i = 0; i < numRow; i++) {
             for (int j = 0; j < numCol; j++) {
                 int type = arcade.getBlock(new TwoTuple(i, j)).getType();
-                if (type == 16 && random.nextBoolean()) {
+                //Will need to update the location of pellets with json later
+                if (type == 16) {
                     TwoTuple posInArcade = new TwoTuple(i, j);
                     TwoTuple posInScreen = arcade.mapScreen(posInArcade);
                     StaticInfo pelletInfo = new StaticInfo(posInArcade, posInScreen);
                     int pelletType = random.nextInt(2);
                     StationaryObject nextPellet;
-                    if (pelletType == 0) {
+                    if (pelletType == 0){
                         nextPellet = new PowerPellet(pelletInfo, pelletViewLists.get(pelletType));
                     } else {
                         nextPellet = new NormalPellet(pelletInfo, pelletViewLists.get(pelletType));
                     }
-
                     stationaryObjects.add(nextPellet);
                 }
             }
         }
+        power = false;
 
         collisions = new ArrayList<>();
 

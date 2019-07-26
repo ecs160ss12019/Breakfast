@@ -15,4 +15,10 @@ public class Record {
         this.userName = userName;
         this.score = score;
     }
+    public String getRecordName(){
+        return userName;
+    }
+    public int getRecord(){
+        return score;
+    }
 }

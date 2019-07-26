@@ -2,10 +2,10 @@ package com.example.pacman;
 
 public class PointSystem {
     private int total;
-    private int pwrpoint = 5;
-    private int point = 1;
+    private int pwrpoint = 10;
+    private int point = 5;
     private boolean bonus;
-    private int ghost = 20;
+    private int ghost = 50;
 
     public PointSystem(){
         this.total = 0;
