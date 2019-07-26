@@ -223,7 +223,7 @@ class PacmanGame extends SurfaceView implements Runnable {
             case MotionEvent.ACTION_DOWN:
                 //update UserInput only, update other game objects somewhere else
                 userInput.updateUserInput(motionEvent.getX(), motionEvent.getY());
-                if (mPlaying == false){
+                if (!mPlaying){
                     resume();
                 }
                 break;
