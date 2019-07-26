@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -49,6 +50,9 @@ class PacmanGame extends SurfaceView implements Runnable {
     //Our Score system
     private PointSystem score;
     private Records records;
+
+    private int numberHorizontalPixels;
+    private String modeSelected;
 
     //Our Navigation Buttons!
     private NavigationButtons navigationButtons;
@@ -193,12 +197,20 @@ class PacmanGame extends SurfaceView implements Runnable {
         // Fill the screen with a solid color
         mCanvas.drawColor(Color.argb
                 (255, 255, 255, 255));
-        menu.draw(canvas);
+
+
+
+        // score system:
+        Typeface plain = Typeface.createFromAsset(getContext().getAssets(), "fonts/myFont.ttf");
+        Paint paint = new Paint();
+        paint.setTextSize(numberHorizontalPixels/30);
+        paint.setTypeface(plain);
+        mCanvas.drawText("Score: ", 50, (numberHorizontalPixels/40)*3, paint);
+        mCanvas.drawText("Speed: "+ modeSelected, 50, (numberHorizontalPixels/40)*4, paint);
 
         gameObjectCollections.get(0).draw(canvas);
-
         navigationButtons.draw(canvas);
-
+        menu.draw(canvas);
     }
 
     /*
@@ -241,6 +253,8 @@ class PacmanGame extends SurfaceView implements Runnable {
         // provided by Android
         super(context);
 
+        numberHorizontalPixels = x;
+
         // Initialize these two members/fields
         // With the values passed in as parameters
         mScreen = new TwoTuple(x, y);
@@ -254,7 +268,18 @@ class PacmanGame extends SurfaceView implements Runnable {
         //Init fps to -1 so that we will know if the canvas is not ready
         mFPS = -1;
 
-        gameMode = new GameMode(0, mScreen.x);
+        gameMode = new GameMode(1, mScreen.x);
+        switch (gameMode.getDisplayMode()){
+            case 0:
+                modeSelected = "Easy";
+                break;
+            case 1:
+                modeSelected = "Normal";
+                break;
+            case 2:
+                modeSelected = "Hard";
+                break;
+        }
 
         arcades = new ArcadeList(context, mScreen, R.raw.sample2);
 
