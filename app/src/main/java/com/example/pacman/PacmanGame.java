@@ -48,6 +48,7 @@ class PacmanGame extends SurfaceView implements Runnable {
 
     //Our Score system
     private PointSystem score;
+    private Records records;
 
     //Our Navigation Buttons!
     private NavigationButtons navigationButtons;
@@ -256,5 +257,7 @@ class PacmanGame extends SurfaceView implements Runnable {
 
         //init Nav Buttons
         navigationButtons = new NavigationButtons(context, mScreen.x, mScreen.y);
+        //records = new Records(context);
+        //records.printRecord();
     }
 }
