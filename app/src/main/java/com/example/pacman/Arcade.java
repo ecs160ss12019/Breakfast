@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /*
 this class is the arcade that the pacman
@@ -47,6 +46,9 @@ list should look like.
     }
  */
 public class Arcade{
+
+    static final int GAP_BETWEEN_ARCADES = 100;
+
     private Context context;
 
     //the matrix of building blocks
@@ -78,6 +80,7 @@ public class Arcade{
 
     //is this Arcade in use?
     boolean inUse;
+    int id; // id is used to determine the relative position of the arcade in arcade list when computing xReference.
 
     /*
     When we draw the Arcade, we want to make sure it is
@@ -136,8 +139,7 @@ public class Arcade{
 
     public boolean pathValid(TwoTuple tuple){
         return inRange(tuple) &&
-                (getBlock(tuple).getType() == 16 ||
-                        getBlock(tuple).getType() == 17);
+                (getBlock(tuple).getType() == 16 || getBlock(tuple).getType() == 17 || getBlock(tuple).getType() == 18);
     }
 
     //get a block
@@ -383,6 +385,7 @@ public class Arcade{
         double matrixHeightInPixel = numRow * blockHeight;
         xReference = (int) (screenWidth - matrixWidthInPixel) / 2 + blockWidth / 2;
         yReference = (int) (screenHeight - matrixHeightInPixel) / 2 + blockHeight / 2;
+        xReference += id * (GAP_BETWEEN_ARCADES + matrixWidthInPixel); // move the arcade to the position it suppose to be
 
         /*
         System.out.println("#########################");
@@ -442,11 +445,21 @@ public class Arcade{
                 new TwoTuple(blockHeight, blockHeight));
     }
 
+    public void moveToRight() { // move arcade x reference one matrix width to the right
+        id += 1;
+        xReference += GAP_BETWEEN_ARCADES + numCol * blockWidth;
+    }
+
+    public void moveToLeft() {// move arcade x reference one matrix width to the left
+        id -= 1;
+        xReference -= GAP_BETWEEN_ARCADES + numCol * blockWidth;
+    }
+
     public Arcade(Context context, ArrayList<ArrayList<Integer>> matrix,
                   int numRow, int numCol,
                   int imgFileRow, int imgFileCol,
                   TwoTuple pacmanPosition, TwoTuple ghostPosition, TwoTuple cakePosition,
-                  boolean inUse) {
+                  boolean inUse, int id) {
         this.context = context;
 
         //initialize block num
@@ -482,6 +495,7 @@ public class Arcade{
         this.cakePosition = cakePosition;
 
         this.inUse = inUse;
+        this.id = id;
     }
 
 }

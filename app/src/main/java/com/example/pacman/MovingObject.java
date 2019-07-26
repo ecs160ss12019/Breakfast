@@ -35,6 +35,7 @@ public class MovingObject implements GameObject{
 
     @Override
     public void draw(Canvas canvas) {
+        if(this instanceof Pacman) System.out.println("Pacman posInScreen: " + this.motionInfo.posInScreen.x + " " + this.motionInfo.posInScreen.y);
         canvas.drawBitmap(viewList.get(motionInfo.currDirection),
                 motionInfo.posInScreen.x - (bitmapDimension/2),
                 motionInfo.posInScreen.y - (bitmapDimension/2),

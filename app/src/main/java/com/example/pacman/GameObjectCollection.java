@@ -17,12 +17,14 @@ public class GameObjectCollection {
     private Arcade arcade;
     private MotionController motionController;
 
-    private MovingObject pacman;
+    private Pacman pacman;
     private ArrayList<MovingObject> movingObjects;
     private ArrayList<StationaryObject> stationaryObjects;
     private ArrayList<GameObject> collisions;
 
-    private boolean containsPacman;
+    // private int containsPacman; // containsPacman = 0 if it contains Pacman, change to int because we need to change the reference of Pacman based on this.
+
+    int moveToNextArcade = 0;
 
     public void draw(Canvas canvas) {
         arcade.draw(canvas);
@@ -34,6 +36,7 @@ public class GameObjectCollection {
         for (MovingObject movingObject : movingObjects) {
             movingObject.draw(canvas);
         }
+        if(pacman != null) System.out.println("arcade.id: " + arcade.id + " arcade.xReference: " + arcade.xReference);
     }
 
     public void update(int userInput, long fps) {
@@ -52,6 +55,8 @@ public class GameObjectCollection {
         updateMotion(fps);
         updateCollision();
         updateStatus();
+
+        checkIfPacmanRunOut();
     }
 
     private void updateMotion(long fps) {
@@ -61,7 +66,7 @@ public class GameObjectCollection {
     }
 
     private void updateCollision() {
-        if (!containsPacman) return;
+        if (pacman == null) return;
 
         Rect pacmanPathRect = pacman.getPathRect();
         for (MovingObject movingObject : movingObjects) {
@@ -90,6 +95,78 @@ public class GameObjectCollection {
         }
     }
 
+    public void checkIfPacmanRunOut() {
+        // check if Pacman is out of bound, which means it runs into the next arcade
+        // System.out.println("containsPacman: " + containsPacman);
+        if (pacman == null) return;
+        System.out.println("Pacman in arcade: " + pacman.motionInfo.posInArcade.second() + " " + pacman.motionInfo.posInArcade.first());
+        System.out.println("arcade.getNumCol(): " + arcade.getNumCol());
+        if(pacman.ranIntoNextArcade(arcade.getNumCol())) {
+            moveToNextArcade = 1; // we only need to set a flag for change arcade, let PacmanGame handle the rest. Because we can not update all the arcades in Collection
+            System.out.println("moveToNextArcade: " + moveToNextArcade);
+        } else if (pacman.ranIntoPrevArcade()) {
+            moveToNextArcade = -1;
+        }
+    }
+
+    public void moveToNextArcade(boolean next) {
+
+        if(next) {
+            arcade.moveToLeft();
+
+        } else {arcade.moveToRight();}
+        movePelletsTo(next);
+        System.out.println("arcade.id: " + arcade.id);
+        if(arcade.id == 0) { // if it was 1, which means next to the one contains Pacman; then it will be 0, which means the one contains Pacman.
+             // update the reference to Pacman. // delete Pacman reference from current collection, add to next (or prev)
+            addPacmanIntoCollection();
+            movePacmanTo(next);
+        } else {
+            removePacmanFromColletion();
+        }
+
+    }
+
+    private void movePacmanTo(boolean next) {
+        if(pacman == null) return;
+        if(next) pacman.moveToNextArcade();  // move Pacman to the first column
+        else pacman.moveToPrevArcade(arcade.getNumCol()); // move Pacman to the last column
+        System.out.println("pacman.motionInfo.posInArcade.second(): " + pacman.motionInfo.posInArcade.second());
+        pacman.motionInfo.posInScreen = arcade.mapScreen(pacman.motionInfo.posInArcade); // update the coordinate of Pacman
+        System.out.println("pacman.motionInfo.posInScreen.x: " + pacman.motionInfo.posInScreen.x);
+    }
+
+    private void movePelletsTo(boolean left) {
+        for(StationaryObject stationaryObject : stationaryObjects) {
+            if(left) {
+                //stationaryObject.staticInfo.posInArcade.y
+                stationaryObject.staticInfo.posInScreen.x -= Arcade.GAP_BETWEEN_ARCADES + arcade.getNumCol()*arcade.getBlockWidth();
+            } else {
+                //stationaryObject.staticInfo.posInArcade.y +=
+                stationaryObject.staticInfo.posInScreen.x += Arcade.GAP_BETWEEN_ARCADES + arcade.getNumCol()*arcade.getBlockWidth();
+            }
+
+        }
+    }
+
+    private void removePacmanFromColletion() {
+        for(MovingObject mo : movingObjects) {
+            if(mo instanceof Pacman) {
+                movingObjects.remove(mo);
+                break;
+            }
+        }
+        pacman = null;
+    }
+
+    private void addPacmanIntoCollection() {
+        pacman = Pacman.getInstance();
+        System.out.println("Pacman.getInstance() pacman.motionInfo.posInScreen.x: " + pacman.motionInfo.posInScreen.x);
+        if(movingObjects.contains(pacman)) return;
+        System.out.println("arcade.id: " + arcade.id);
+        movingObjects.add(pacman);
+    }
+
     //Constructor
     public GameObjectCollection(final Context context, final TwoTuple mScreen,
                                 final Arcade arcade, final GameMode gameMode) {
@@ -101,17 +178,21 @@ public class GameObjectCollection {
         //Add moving objects to movingObjects list
         movingObjects = new ArrayList<>();
 
-        //INIT Pacman
-        TwoTuple pacmanInitPos = new TwoTuple(arcade.pacmanPosition);
-        ArrayList<Bitmap> pacmanViewList = BitmapDivider.splitAndResize(
-                bitmapDivider.loadBitmap(R.drawable.pacman),
-                new TwoTuple(2,2),
-                new TwoTuple(mScreen.y / 15, mScreen.y / 15));
-        MotionInfo pacmanInitMotion = new MotionInfo(
-                pacmanInitPos,
-                arcade.mapScreen(pacmanInitPos),
-                0, RIGHT, -1, gameMode.getPacmanSpeed());
-        pacman = new Pacman(pacmanInitMotion, pacmanViewList);
+        //INIT Pacman // the arcade with Pacman will always set id to 0.
+        // containsPacman = arcade.id;
+
+        if(arcade.id == 0) {
+            TwoTuple pacmanInitPos = new TwoTuple(arcade.pacmanPosition);
+            ArrayList<Bitmap> pacmanViewList = BitmapDivider.splitAndResize(
+                    bitmapDivider.loadBitmap(R.drawable.pacman),
+                    new TwoTuple(2,2),
+                    new TwoTuple(mScreen.y / 15, mScreen.y / 15));
+            MotionInfo pacmanInitMotion = new MotionInfo(
+                    pacmanInitPos,
+                    arcade.mapScreen(pacmanInitPos),
+                    0, RIGHT, -1, gameMode.getPacmanSpeed());
+            pacman = Pacman.getInstance(pacmanInitMotion, pacmanViewList);
+        }
 
         //Init ghosts
         final ArrayList<Bitmap> ghostsViewList = BitmapDivider.splitAndResize(
@@ -185,7 +266,7 @@ public class GameObjectCollection {
         cakeViews.add(cakeViewList.get(0));
         MovingObject cake = new Cake(cakeInitMotion, cakeViews);
 
-        movingObjects.add(pacman);
+        if(arcade.id == 0) movingObjects.add(pacman); // the arcade with Pacman will always set id to 0.
         movingObjects.add(clayGhost);
         movingObjects.add(redGhost);
         movingObjects.add(greenGhost);
@@ -238,6 +319,6 @@ public class GameObjectCollection {
 
         collisions = new ArrayList<>();
 
-        this.containsPacman = true;
+        // this.containsPacman = true;
     }
 }
