@@ -205,7 +205,7 @@ public class GameObjectCollection {
         greenViews.add(ghostsViewList.get(2));
 
         //TODO change another behavior
-        MovingObject greenGhost = new Ghost(greenInitMotion, greenViews, new ChaseBehaviour());
+        MovingObject greenGhost = new Ghost(greenInitMotion, greenViews, new ChaseFrontBehaviour());
 
         //INIT PingGhost
         MotionInfo pinkInitMotion = new MotionInfo(
