@@ -272,19 +272,39 @@ public class GameObjectCollection {
             for (int j = 0; j < numCol; j++) {
                 int type = arcade.getBlock(new TwoTuple(i, j)).getType();
                 //Will need to update the location of pellets with json later
-                if (type == 16) {
-                    TwoTuple posInArcade = new TwoTuple(i, j);
-                    TwoTuple posInScreen = arcade.mapScreen(posInArcade);
-                    StaticInfo pelletInfo = new StaticInfo(posInArcade, posInScreen);
-                    int pelletType = random.nextInt(2);
-                    StationaryObject nextPellet;
-                    if (pelletType == 0){
-                        nextPellet = new PowerPellet(pelletInfo, pelletViewLists.get(pelletType));
-                    } else {
-                        nextPellet = new NormalPellet(pelletInfo, pelletViewLists.get(pelletType));
-                    }
+//                if (type == 16) {
+//                    TwoTuple posInArcade = new TwoTuple(i, j);
+//                    TwoTuple posInScreen = arcade.mapScreen(posInArcade);
+//                    StaticInfo pelletInfo = new StaticInfo(posInArcade, posInScreen);
+//                    int pelletType = random.nextInt(2);
+//
+//                    StationaryObject nextPellet;
+//                    if (pelletType == 0){
+//                        nextPellet = new PowerPellet(pelletInfo, pelletViewLists.get(pelletType));
+//                    } else {
+//                        nextPellet = new NormalPellet(pelletInfo, pelletViewLists.get(pelletType));
+//                    }
+//                    stationaryObjects.add(nextPellet);
+//                }
+
+                TwoTuple posInArcade = new TwoTuple(i, j);
+                TwoTuple posInScreen = arcade.mapScreen(posInArcade);
+                StaticInfo pelletInfo = new StaticInfo(posInArcade, posInScreen);
+                StationaryObject nextPellet;
+
+                //Normal pellet
+                if (type == 40) {
+                    nextPellet = new NormalPellet(pelletInfo, pelletViewLists.get(0));
                     stationaryObjects.add(nextPellet);
                 }
+
+                //Power pellet!!!
+                if (type == 42) {
+                    nextPellet = new PowerPellet(pelletInfo, pelletViewLists.get(1));
+                    stationaryObjects.add(nextPellet);
+                }
+
+
             }
         }
         atePowerPellet = false;
