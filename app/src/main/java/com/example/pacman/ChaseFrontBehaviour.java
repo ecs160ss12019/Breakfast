@@ -1,72 +1,26 @@
 package com.example.pacman;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 public class ChaseFrontBehaviour implements GhostBehaviour {
-    final int LEFT = 0;
-    final int RIGHT = 1;
-    final int UP = 2;
-    final int DOWN = 3;
-    private MotionInfo PacmanMotion;
-    private ArcadeAnalyzer arcadeAnalyzer;
-
     @Override
-    public int performBehaviour(MotionInfo ghostMotion, MotionInfo pacmanMotion, MotionInfo reference, ArcadeAnalyzer arcadeAnalyzer) {
-        this.PacmanMotion = pacmanMotion;
-        this.arcadeAnalyzer = arcadeAnalyzer;
-        TwoTuple ghostPosInArcade = ghostMotion.posInArcade;
-        TwoTuple pacmanPosInArcade = CutoffPoint();
+    public int performBehaviour(final MotionInfo ghostMotion, final MotionInfo pacmanMotion,
+                                final MotionInfo reference, final ArcadeAnalyzer arcadeAnalyzer) {
 
-        //check for necessity
-        if (arcadeAnalyzer.getAllowedDirections(ghostPosInArcade).size() >= 3) {
-
-            //this is a 3 or 4 ways cross
-            ArrayList<ComparableDirection> comparableDirections = new ArrayList<>();
-            ArrayList<Integer> allowedDirections = arcadeAnalyzer.getAllowedDirections(ghostPosInArcade);
-            for (Integer direction : allowedDirections) {
-                comparableDirections.add(new ComparableDirection(direction, ghostPosInArcade, pacmanPosInArcade));
-            }
-            Collections.sort(comparableDirections, new CompareDistance());
-
-            return comparableDirections.get(1).getDirection();
-        } else if (!arcadeAnalyzer.allowsToGo(ghostPosInArcade, ghostMotion.nextDirection)) {
-
-
-            //now this must be a turn with only 2 exits
-            ArrayList<Integer> allowedDirections = arcadeAnalyzer.getAllowedDirections(ghostPosInArcade);
-            switch (ghostMotion.currDirection) {
-                case LEFT:
-                case RIGHT:
-                    return allowedDirections.contains(UP) ? UP : DOWN;
-                case UP:
-                case DOWN:
-                    return allowedDirections.contains(LEFT) ? LEFT : RIGHT;
-            }
+        //TODO new class()
+        MotionInfo add4MotionInfo = new MotionInfo(pacmanMotion);
+        TwoTuple add4Pos = add4MotionInfo.posInArcade;
+        for(int i = 0; i < 4; ++i) {
+            add4Pos = TwoTuple.moveTo(add4Pos, pacmanMotion.currDirection);
         }
 
-        return ghostMotion.nextDirection;
+        add4MotionInfo.posInArcade = add4Pos;
+        ChaseBehaviour chaseBehaviour = new ChaseBehaviour();
+
+        return chaseBehaviour.performBehaviour(ghostMotion, add4MotionInfo, null, arcadeAnalyzer);
     }
 
     public ChaseFrontBehaviour() {
 
     }
 
-    public TwoTuple CutoffPoint(){
-        TwoTuple CutoffPoint = PacmanMotion.posInArcade;
-        if(arcadeAnalyzer.allowsToGo(PacmanMotion.posInArcade, PacmanMotion.currDirection)){
-            switch (PacmanMotion.currDirection){
-                case LEFT:
-                    CutoffPoint = CutoffPoint.toLeft();
-                case RIGHT:
-                    CutoffPoint = CutoffPoint.toRight();
-                case UP:
-                    CutoffPoint = CutoffPoint.toUp();
-                case DOWN:
-                    CutoffPoint = CutoffPoint.toDown();
-            }
-        }
-        return CutoffPoint;
-    }
 
 }
