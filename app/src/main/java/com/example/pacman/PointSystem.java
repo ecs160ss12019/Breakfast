@@ -6,6 +6,7 @@ public class PointSystem {
     private int point = 5;
     private boolean bonus;
     private int ghost = 50;
+    private int cake = 100;
 
     public PointSystem(){
         this.total = 0;
@@ -45,6 +46,7 @@ public class PointSystem {
     }
     public void cakeEaten(){
         this.bonus = true;
+        total = total + cake;
     }
     public int getScore(){
         return total;

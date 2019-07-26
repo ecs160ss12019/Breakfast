@@ -13,6 +13,7 @@ import java.util.Random;
 public class Ghost extends MovingObject {
     private DirectionQueue directionQueue;
 
+
     public void setNextDirection() {
         Random random = new Random();
         this.motionInfo.nextDirection = random.nextInt(4);

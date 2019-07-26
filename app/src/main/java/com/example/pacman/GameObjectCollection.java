@@ -82,12 +82,26 @@ public class GameObjectCollection {
     private void updateStatus(PointSystem score) {
         for (GameObject gameObject : collisions) {
             if (gameObject instanceof MovingObject) {
-                if(power) {
-                    movingObjects.remove(gameObject);
-                    score.ghostEaten();
-                }else{
-                   // Pacman Dies?
+                if(gameObject instanceof Ghost){
+                    if(power) {
+                        if(((MovingObject)gameObject).checkalive()){
+                            score.ghostEaten();
+                            ((Ghost)gameObject).eat();
+                        }
+
+
+                    }else{
+                        // Pacman Dies?
+                    }
                 }
+                else if(gameObject instanceof Cake){
+                    if(((MovingObject)gameObject).checkalive()){
+                        score.cakeEaten();
+                        ((Ghost)gameObject).eat();
+                    }
+
+                }
+                movingObjects.remove(gameObject);
             }
             if (gameObject instanceof StationaryObject) {
                 if(gameObject instanceof PowerPellet){
@@ -225,7 +239,7 @@ public class GameObjectCollection {
         final ArrayList<Bitmap> powerPelletViewList = BitmapDivider.splitAndResize(
                 bitmapDivider.loadBitmap(R.drawable.powerpellet),
                 new TwoTuple(1,1),
-                new TwoTuple(mScreen.y / 22, mScreen.y / 22));
+                new TwoTuple(mScreen.y / 23, mScreen.y / 23));
 
         ArrayList<ArrayList<Bitmap>> pelletViewLists= new ArrayList<>();
         pelletViewLists.add(normalPelletViewList);
@@ -241,6 +255,7 @@ public class GameObjectCollection {
                     TwoTuple posInScreen = arcade.mapScreen(posInArcade);
                     StaticInfo pelletInfo = new StaticInfo(posInArcade, posInScreen);
                     int pelletType = random.nextInt(2);
+
                     StationaryObject nextPellet;
                     if (pelletType == 0){
                         nextPellet = new PowerPellet(pelletInfo, pelletViewLists.get(pelletType));
