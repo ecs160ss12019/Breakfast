@@ -191,7 +191,7 @@ public class GameObjectCollection {
         redViews.add(ghostsViewList.get(1));
 
         //TODO change another behavior
-        MovingObject redGhost = new Ghost(redInitMotion, redViews, new ChaseBehaviour());
+        MovingObject redGhost = new Ghost(redInitMotion, redViews, new EscapeBehaviour());
 
         //INIT GreenGhost
         MotionInfo greenInitMotion = new MotionInfo(
