@@ -134,10 +134,13 @@ public class Arcade{
         return i >= 0 && i < numRow && j >= 0 && j < numCol;
     }
 
+    //TODO change it into a list!!!
     public boolean pathValid(TwoTuple tuple){
         return inRange(tuple) &&
                 (getBlock(tuple).getType() == 16 ||
-                        getBlock(tuple).getType() == 17);
+                        getBlock(tuple).getType() == 17 ||
+                        getBlock(tuple).getType() == 42 ||
+                        getBlock(tuple).getType() == 40);
     }
 
     //get a block
@@ -332,7 +335,9 @@ public class Arcade{
                 int Y = yReference + blockHeight * i - blockHeight / 2;
 
                 int type = blocks.get(i).get(j).getType();
-                if (type == 16 || type == 17 || type == 18) {
+
+                //TODO change it into a list!!!
+                if (type == 16 || type == 17 || type == 18 || type == 40 || type == 42) {
                     //Blocks with these type num are transparent
                     continue;
                 }
