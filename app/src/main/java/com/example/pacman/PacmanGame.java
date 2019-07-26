@@ -198,14 +198,12 @@ class PacmanGame extends SurfaceView implements Runnable {
         mCanvas.drawColor(Color.argb
                 (255, 255, 255, 255));
 
-
-
         // score system:
         Typeface plain = Typeface.createFromAsset(getContext().getAssets(), "fonts/myFont.ttf");
         Paint paint = new Paint();
         paint.setTextSize(numberHorizontalPixels/30);
         paint.setTypeface(plain);
-        mCanvas.drawText("Score: ", 50, (numberHorizontalPixels/40)*3, paint);
+        mCanvas.drawText("Score: "+ score.getScore(), 50, (numberHorizontalPixels/40)*3, paint);
         mCanvas.drawText("Speed: "+ modeSelected, 50, (numberHorizontalPixels/40)*4, paint);
 
         gameObjectCollections.get(0).draw(canvas);
@@ -229,7 +227,6 @@ class PacmanGame extends SurfaceView implements Runnable {
                 break;
             case MotionEvent.ACTION_UP:
                 userInput.updateUserInput(Float.MAX_VALUE, Float.MAX_VALUE);
-
                 break;
         }
         return true;
