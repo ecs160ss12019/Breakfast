@@ -8,8 +8,8 @@ public class GhostFindShortestPath {
 
     public GhostFindShortestPath(){
         //get the valid direction by calling "FindTheValidDirrection"
-        //check each direction's Distance to the pacman
-        //
+        //check each direction's Distance to the pacman by calling "FindDistancetoPacman"
+        //move to the direction that has the smallest distance to pacman
     }
 
 
