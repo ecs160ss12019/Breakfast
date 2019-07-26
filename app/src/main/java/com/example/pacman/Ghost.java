@@ -11,19 +11,12 @@ import java.util.Queue;
 import java.util.Random;
 
 public class Ghost extends MovingObject {
-    private DirectionQueue directionQueue;
-
-
-    public void setNextDirection() {
-        Random random = new Random();
-        this.motionInfo.nextDirection = random.nextInt(4);
-    }
+    public GhostBehaviour ghostBehaviour;
 
     //Constructor
-    public Ghost(final MotionInfo motionInfo, final ArrayList<Bitmap> viewList) {
+    public Ghost(final MotionInfo motionInfo, final ArrayList<Bitmap> viewList, GhostBehaviour ghostBehaviour) {
         super(motionInfo, viewList);
 
-        this.directionQueue = new DirectionQueue();
-        directionQueue.enqueue(this.motionInfo.nextDirection);
+        this.ghostBehaviour = ghostBehaviour;
     }
 }

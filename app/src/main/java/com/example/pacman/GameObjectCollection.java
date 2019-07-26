@@ -14,8 +14,9 @@ public class GameObjectCollection {
     final static int UP = 2;
     final static int DOWN = 3;
 
-    private Arcade arcade;
-    private MotionController motionController;
+    final private Arcade arcade;
+    final private ArcadeAnalyzer arcadeAnalyzer;
+    final private MotionController motionController;
 
     private MovingObject pacman;
     private ArrayList<MovingObject> movingObjects;
@@ -23,7 +24,7 @@ public class GameObjectCollection {
     private ArrayList<GameObject> collisions;
 
     private boolean containsPacman;
-    private boolean power;
+    private boolean atePowerPellet;
 
 
     public void draw(Canvas canvas) {
@@ -43,7 +44,18 @@ public class GameObjectCollection {
         for (MovingObject movingObject : movingObjects) {
             if (movingObject instanceof Pacman) {
                 ((Pacman) movingObject).setInputDirection(userInput);
-            } else {
+            }
+
+            if (movingObject instanceof Ghost) {
+                MotionInfo ghostInfo = movingObject.motionInfo;
+                MotionInfo pacmanInfo = pacman.motionInfo;
+                if (arcadeAnalyzer.isCross(ghostInfo.posInArcade)) {
+                    movingObject.motionInfo.nextDirection = ((Ghost) movingObject).ghostBehaviour.performBehaviour(ghostInfo,
+                            pacmanInfo, null, arcadeAnalyzer);
+                }
+            }
+
+            if (movingObject instanceof Cake) {
                 Random random = new Random();
                 MotionInfo changedDir = movingObject.getMotionInfo();
                 changedDir.nextDirection = random.nextInt(4);
@@ -62,6 +74,7 @@ public class GameObjectCollection {
     }
 
     private void updateCollision() {
+        //All collisions happen when the pacman is present!!!
         if (!containsPacman) return;
 
         Rect pacmanPathRect = pacman.getPathRect();
@@ -79,37 +92,37 @@ public class GameObjectCollection {
         }
     }
 
+    //All collisions happen when the pacman is present!!!
+    //we only cares about and update upon those ones !!!
     private void updateStatus(PointSystem score) {
         for (GameObject gameObject : collisions) {
             if (gameObject instanceof MovingObject) {
-                if(gameObject instanceof Ghost){
-                    if(power) {
-                        if(((MovingObject)gameObject).checkalive()){
-                            score.ghostEaten();
-                            ((Ghost)gameObject).eat();
-                        }
-
-
-                    }else{
-                        // Pacman Dies?
+                if (gameObject instanceof Ghost) {
+                    if (atePowerPellet) {
+                        //eats ghost
+                        movingObjects.remove(gameObject);
+                        score.ghostEaten();
+                    } else {
+                        //being eaten by ghost
+                        movingObjects.remove(pacman);
+                        containsPacman = false;
+                        atePowerPellet = false;
                     }
                 }
-                else if(gameObject instanceof Cake){
-                    if(((MovingObject)gameObject).checkalive()){
-                        score.cakeEaten();
-                        ((Ghost)gameObject).eat();
-                    }
 
+                if (gameObject instanceof Cake) {
+                    movingObjects.remove(gameObject);
+                    score.cakeEaten();
                 }
-                movingObjects.remove(gameObject);
             }
+
             if (gameObject instanceof StationaryObject) {
                 if(gameObject instanceof PowerPellet){
                     if(((PowerPellet) gameObject).checkReward() == false){
                         score.pwrpelletEaten();
                         ((PowerPellet) gameObject).reward();
                     }
-                    power = true;
+                    atePowerPellet = false;
                 }else {
                     if(((NormalPellet) gameObject).checkReward() == false){
                         score.pelletEaten();
@@ -125,6 +138,7 @@ public class GameObjectCollection {
     public GameObjectCollection(final Context context, final TwoTuple mScreen,
                                 final Arcade arcade, final GameMode gameMode) {
         this.arcade = arcade;
+        this.arcadeAnalyzer = new ArcadeAnalyzer(arcade);
         this.motionController = new MotionController(arcade);
 
         final BitmapDivider bitmapDivider = new BitmapDivider(context);
@@ -161,7 +175,9 @@ public class GameObjectCollection {
         clayViews.add(ghostsViewList.get(0));
         clayViews.add(ghostsViewList.get(0));
         clayViews.add(ghostsViewList.get(0));
-        MovingObject clayGhost = new Ghost(clayInitMotion, clayViews);
+
+        //TODO change another behavior
+        MovingObject clayGhost = new Ghost(clayInitMotion, clayViews, new ChaseBehaviour());
 
         //INIT RedGhost
         MotionInfo redInitMotion = new MotionInfo(
@@ -173,7 +189,9 @@ public class GameObjectCollection {
         redViews.add(ghostsViewList.get(1));
         redViews.add(ghostsViewList.get(1));
         redViews.add(ghostsViewList.get(1));
-        MovingObject redGhost = new Ghost(redInitMotion, redViews);
+
+        //TODO change another behavior
+        MovingObject redGhost = new Ghost(redInitMotion, redViews, new ChaseBehaviour());
 
         //INIT GreenGhost
         MotionInfo greenInitMotion = new MotionInfo(
@@ -185,7 +203,9 @@ public class GameObjectCollection {
         greenViews.add(ghostsViewList.get(2));
         greenViews.add(ghostsViewList.get(2));
         greenViews.add(ghostsViewList.get(2));
-        MovingObject greenGhost = new Ghost(greenInitMotion, greenViews);
+
+        //TODO change another behavior
+        MovingObject greenGhost = new Ghost(greenInitMotion, greenViews, new ChaseBehaviour());
 
         //INIT PingGhost
         MotionInfo pinkInitMotion = new MotionInfo(
@@ -197,7 +217,9 @@ public class GameObjectCollection {
         pinkViews.add(ghostsViewList.get(3));
         pinkViews.add(ghostsViewList.get(3));
         pinkViews.add(ghostsViewList.get(3));
-        MovingObject pinkGhost = new Ghost(pinkInitMotion, pinkViews);
+
+        //TODO change another behavior
+        MovingObject pinkGhost = new Ghost(pinkInitMotion, pinkViews, new ChaseBehaviour());
 
         //INIT Cake
         TwoTuple cakeInitPos = new TwoTuple(arcade.cakePosition);
@@ -239,7 +261,7 @@ public class GameObjectCollection {
         final ArrayList<Bitmap> powerPelletViewList = BitmapDivider.splitAndResize(
                 bitmapDivider.loadBitmap(R.drawable.powerpellet),
                 new TwoTuple(1,1),
-                new TwoTuple(mScreen.y / 23, mScreen.y / 23));
+                new TwoTuple(mScreen.y / 22, mScreen.y / 22));
 
         ArrayList<ArrayList<Bitmap>> pelletViewLists= new ArrayList<>();
         pelletViewLists.add(normalPelletViewList);
@@ -255,7 +277,6 @@ public class GameObjectCollection {
                     TwoTuple posInScreen = arcade.mapScreen(posInArcade);
                     StaticInfo pelletInfo = new StaticInfo(posInArcade, posInScreen);
                     int pelletType = random.nextInt(2);
-
                     StationaryObject nextPellet;
                     if (pelletType == 0){
                         nextPellet = new PowerPellet(pelletInfo, pelletViewLists.get(pelletType));
@@ -266,10 +287,10 @@ public class GameObjectCollection {
                 }
             }
         }
-        power = false;
+        atePowerPellet = false;
 
         collisions = new ArrayList<>();
 
-        this.containsPacman = true;
+        this.containsPacman = arcade.inUse;
     }
 }

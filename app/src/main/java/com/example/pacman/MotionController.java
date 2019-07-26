@@ -1,11 +1,12 @@
 package com.example.pacman;
 
+import java.util.ArrayList;
 import java.util.Observable;
 
 //There is 1 motionController per arcade
 public class MotionController extends Observable {
-    private ArcadeAnalyzer arcadeAnalyzer;
-    private Arcade arcade;
+    final private ArcadeAnalyzer arcadeAnalyzer;
+    final private Arcade arcade;
 
     public void updateMovingObject(MovingObject movingObject, long fps) {
         if (fps == 0 || fps == -1) {
@@ -39,6 +40,7 @@ public class MotionController extends Observable {
     private MotionInfo updateGhost(final MotionInfo motionInfo, final long fps) {
         MotionUpdater motionUpdater = new MotionUpdater(motionInfo, fps,
                 this.arcade, this.arcadeAnalyzer);
+
         return motionUpdater.updateMotion();
     }
 
@@ -55,6 +57,5 @@ public class MotionController extends Observable {
     public MotionController(Arcade arcade) {
         this.arcade = arcade;
         this.arcadeAnalyzer = new ArcadeAnalyzer(arcade);
-        this.arcadeAnalyzer.run();
     }
 }

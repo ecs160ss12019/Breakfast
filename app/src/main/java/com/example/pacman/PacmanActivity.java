@@ -12,6 +12,7 @@ import android.view.WindowManager;
 
 public class PacmanActivity extends Activity {
     private PacmanGame mPacmanGame;
+    private boolean useGameView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

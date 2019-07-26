@@ -1,11 +1,8 @@
 package com.example.pacman;
 
-import android.util.Pair;
-
 import java.util.ArrayList;
-import java.util.Hashtable;
 
-public class ArcadeAnalyzer implements Runnable{
+public class ArcadeAnalyzer{
     private Arcade arcade;
     private final int numRow;
     private final int numCol;
@@ -13,6 +10,7 @@ public class ArcadeAnalyzer implements Runnable{
 
     //Allowed direction of an Arcade Block
     private ArrayList<ArrayList<Integer>> analyzedArcade;
+    private ArrayList<Boolean> cross;
 
     final int LEFT = 0;
     final int RIGHT = 1;
@@ -21,6 +19,14 @@ public class ArcadeAnalyzer implements Runnable{
 
     private int mapArrayList(TwoTuple block) {
         return block.first() * numCol + block.second();
+    }
+
+    public boolean isCross(TwoTuple block) {
+        return cross.get(mapArrayList(block));
+    }
+
+    public ArrayList<Integer> getAllowedDirections(TwoTuple block) {
+        return analyzedArcade.get(mapArrayList(block));
     }
 
     public boolean allowsToGo(TwoTuple block, int direction) {
@@ -36,8 +42,7 @@ public class ArcadeAnalyzer implements Runnable{
                 analyzedArcade.get(mapArrayList(block)).contains(direction);
     }
 
-    @Override
-    public void run() {
+    private void run() {
         for (int i = 0; i < numRow; i++) {
             for (int j = 0; j < numCol; j++) {
                 ArrayList<Integer> allowedDirections = new ArrayList<>(4);
@@ -62,6 +67,15 @@ public class ArcadeAnalyzer implements Runnable{
                     allowedDirections.add(DOWN);
                 }
 
+                //Is this block a cross?
+                if ((allowedDirections.size() <= 2) &&
+                        ((allowedDirections.contains(LEFT) && allowedDirections.contains(RIGHT)) ||
+                                (allowedDirections.contains(UP) && allowedDirections.contains(DOWN)))) {
+                    cross.add(false);
+                } else {
+                    cross.add(true);
+                }
+
                 //Add to hashTable
                 analyzedArcade.add(allowedDirections);
             }
@@ -74,5 +88,7 @@ public class ArcadeAnalyzer implements Runnable{
         this.numCol = arcade.getNumCol();
         this.blockDimension = arcade.getBlockHeight();
         this.analyzedArcade = new ArrayList<>();
+        this.cross = new ArrayList<>();
+        this.run();
     }
 }
