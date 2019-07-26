@@ -155,7 +155,6 @@ class PacmanGame extends SurfaceView implements Runnable {
             gameObjectCollection.update(direction, mFPS, score);
         }
         System.out.println("Score: "+ score.getScore());
-
     }
 
     // This method is called by PacmanActivity
@@ -201,11 +200,10 @@ class PacmanGame extends SurfaceView implements Runnable {
         // score system:
         Typeface plain = Typeface.createFromAsset(getContext().getAssets(), "fonts/myFont.ttf");
         Paint paint = new Paint();
-        paint.setTextSize(numberHorizontalPixels/30);
+        paint.setTextSize(numberHorizontalPixels/52);
         paint.setTypeface(plain);
         mCanvas.drawText("Score: "+ score.getScore(), 50, (numberHorizontalPixels/40)*3, paint);
         mCanvas.drawText("Speed: "+ modeSelected, 50, (numberHorizontalPixels/40)*4, paint);
-
         gameObjectCollections.get(0).draw(canvas);
         navigationButtons.draw(canvas);
         menu.draw(canvas);
