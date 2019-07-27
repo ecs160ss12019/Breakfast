@@ -31,7 +31,19 @@ public class WelcomeActivity extends Activity {
     }
 
     public void playGame(){
+        easyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openActivitivy2();
+            }
+        });
         normalBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openActivitivy2();
+            }
+        });
+        hardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openActivitivy2();
