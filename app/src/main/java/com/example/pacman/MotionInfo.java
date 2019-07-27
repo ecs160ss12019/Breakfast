@@ -20,9 +20,6 @@ public class MotionInfo implements Info {
 
     public float speed;
 
-    public MotionInfo() {
-    }
-
     @Override
     public int posInScreen_X() {
         return this.posInScreen.x;
@@ -31,6 +28,18 @@ public class MotionInfo implements Info {
     @Override
     public int posInScreen_Y() {
         return this.posInScreen.y;
+    }
+
+    public MotionInfo() {
+    }
+
+    public MotionInfo(MotionInfo info) {
+        this.posInArcade = info.posInArcade;
+        this.posInScreen = info.posInScreen;
+        this.pixelGap = info.pixelGap;
+        this.currDirection = info.currDirection;
+        this.nextDirection = info.nextDirection;
+        this.speed = info.speed;
     }
 
     public MotionInfo(final TwoTuple posInArcade, final TwoTuple posInScreen,

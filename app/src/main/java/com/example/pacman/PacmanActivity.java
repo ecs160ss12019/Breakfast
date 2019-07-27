@@ -54,6 +54,8 @@ public class PacmanActivity extends Activity {
         mPacmanGame.pause();
     }
 
+
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // System.out.println("key pressed----------------" + event.getKeyCode());

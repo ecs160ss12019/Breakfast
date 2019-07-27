@@ -18,7 +18,9 @@ public class GameObjectCollection {
     final private ArcadeAnalyzer arcadeAnalyzer;
     final private MotionController motionController;
 
+
     private Pacman pacman;
+    private MovingObject clayGhost;
     private ArrayList<MovingObject> movingObjects;
     private ArrayList<StationaryObject> stationaryObjects;
     private ArrayList<GameObject> collisions;
@@ -49,13 +51,23 @@ public class GameObjectCollection {
                 ((Pacman) movingObject).setInputDirection(userInput);
             }
 
+
             if(pacman!=null) {
+//                if (movingObject instanceof Ghost) {
+//                    MotionInfo ghostInfo = movingObject.motionInfo;
+//                    MotionInfo pacmanInfo = pacman.motionInfo;
+//                    if (arcadeAnalyzer.isCross(ghostInfo.posInArcade)) {
+//                        movingObject.motionInfo.nextDirection = ((Ghost) movingObject).ghostBehaviour.performBehaviour(ghostInfo,
+//                                pacmanInfo, null, arcadeAnalyzer);
+//                    }
+
                 if (movingObject instanceof Ghost) {
                     MotionInfo ghostInfo = movingObject.motionInfo;
                     MotionInfo pacmanInfo = pacman.motionInfo;
                     if (arcadeAnalyzer.isCross(ghostInfo.posInArcade)) {
                         movingObject.motionInfo.nextDirection = ((Ghost) movingObject).ghostBehaviour.performBehaviour(ghostInfo,
-                                pacmanInfo, null, arcadeAnalyzer);
+                                pacmanInfo, clayGhost.motionInfo, arcadeAnalyzer);
+
                     }
                 }
             }
@@ -260,7 +272,7 @@ public class GameObjectCollection {
         clayViews.add(ghostsViewList.get(0));
 
         //TODO change another behavior
-        MovingObject clayGhost = new Ghost(clayInitMotion, clayViews, new ChaseBehaviour());
+        clayGhost = new Ghost(clayInitMotion, clayViews, new ChaseBehaviour());
 
         //INIT RedGhost
         MotionInfo redInitMotion = new MotionInfo(
@@ -274,7 +286,7 @@ public class GameObjectCollection {
         redViews.add(ghostsViewList.get(1));
 
         //TODO change another behavior
-        MovingObject redGhost = new Ghost(redInitMotion, redViews, new EscapeBehaviour());
+        MovingObject redGhost = new Ghost(redInitMotion, redViews, new ChaseFrontBehaviour());
 
         //INIT GreenGhost
         MotionInfo greenInitMotion = new MotionInfo(
@@ -288,7 +300,7 @@ public class GameObjectCollection {
         greenViews.add(ghostsViewList.get(2));
 
         //TODO change another behavior
-        MovingObject greenGhost = new Ghost(greenInitMotion, greenViews, new ChaseFrontBehaviour());
+        MovingObject greenGhost = new Ghost(greenInitMotion, greenViews, new PredictAndChaseBehaviour());
 
         //INIT PingGhost
         MotionInfo pinkInitMotion = new MotionInfo(
@@ -302,7 +314,7 @@ public class GameObjectCollection {
         pinkViews.add(ghostsViewList.get(3));
 
         //TODO change another behavior
-        MovingObject pinkGhost = new Ghost(pinkInitMotion, pinkViews, new ChaseBehaviour());
+        MovingObject pinkGhost = new Ghost(pinkInitMotion, pinkViews, new SearchAndChaseBehaviour());
 
         //INIT Cake
         TwoTuple cakeInitPos = new TwoTuple(arcade.cakePosition);
