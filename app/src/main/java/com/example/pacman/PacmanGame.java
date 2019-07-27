@@ -1,6 +1,7 @@
 package com.example.pacman;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -12,6 +13,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 class PacmanGame extends SurfaceView implements Runnable {
     // Are we debugging?
@@ -59,10 +61,8 @@ class PacmanGame extends SurfaceView implements Runnable {
 
     //Our GameObjectCollections
     private ArrayList<GameObjectCollection> gameObjectCollections;
-    private Pacman pacman;
 
     int arrowKey = -1;
-    int moveArcades = 0;
 
     // When we start the thread with:
     // mGameThread.start();
@@ -153,45 +153,8 @@ class PacmanGame extends SurfaceView implements Runnable {
         }
         for (GameObjectCollection gameObjectCollection : gameObjectCollections) {
             gameObjectCollection.update(direction, mFPS, score);
-
         }
         System.out.println("Score: "+ score.getScore());
-        checkIfNeedToChangeArcade();
-    }
-
-    private void checkIfNeedToChangeArcade() {
-        for (GameObjectCollection gameObjectCollection : gameObjectCollections) {
-            // System.out.println("gameObjectCollection.moveToNextArcade: " + gameObjectCollection.moveToNextArcade);
-            if(gameObjectCollection.moveToNextArcade == 1) {
-
-                //moveToNextArcade(true);
-                movePacmanToNextCollection(true);
-                gameObjectCollection.moveToNextArcade = 0;
-                break;
-            }
-            else if(gameObjectCollection.moveToNextArcade == -1) {
-                //moveToNextArcade(false);
-                movePacmanToNextCollection(false);
-                gameObjectCollection.moveToNextArcade = 0;
-                break;
-            }
-
-        }
-    }
-
-// moved into collection, because each collection has its own arcade
-//    private void moveToNextArcade(boolean next) {
-//        if(next) { // move to next arcade
-//            arcades.moveToLeft();
-//        } else { // move to prev arcade
-//            arcades.moveToRight();
-//        }
-//    }
-
-    private void movePacmanToNextCollection(boolean next) {
-        for (GameObjectCollection gameObjectCollection : gameObjectCollections) {
-            gameObjectCollection.moveToNextArcade(next);
-        }
     }
 
     // This method is called by PacmanActivity
@@ -234,10 +197,6 @@ class PacmanGame extends SurfaceView implements Runnable {
         mCanvas.drawColor(Color.argb
                 (255, 255, 255, 255));
 
-        for(GameObjectCollection gameObjectCollection : gameObjectCollections) {
-            gameObjectCollection.draw(canvas);
-        }
-
         // score system:
         Typeface plain = Typeface.createFromAsset(getContext().getAssets(), "fonts/myFont.ttf");
         Paint paint = new Paint();
@@ -245,7 +204,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         paint.setTypeface(plain);
         mCanvas.drawText("Score: "+ score.getScore(), 50, (numberHorizontalPixels/40)*3, paint);
         mCanvas.drawText("Speed: "+ modeSelected, 50, (numberHorizontalPixels/40)*4, paint);
-
+        gameObjectCollections.get(0).draw(canvas);
         navigationButtons.draw(canvas);
         menu.draw(canvas);
     }
@@ -320,15 +279,8 @@ class PacmanGame extends SurfaceView implements Runnable {
         arcades = new ArcadeList(context, mScreen, R.raw.sample2);
 
         gameObjectCollections = new ArrayList<>();
-        for(Arcade arcade : arcades.getArcades()) {
-            gameObjectCollections.add(new GameObjectCollection(context, mScreen,
-                arcade, gameMode));
-        }
-        // put a reference of Pacman here, so we can re-reference it to other collection later when we change arcade.
-        pacman = Pacman.getInstance();
-
-//        gameObjectCollections.add(new GameObjectCollection(context, mScreen,
-//                arcades.getArcadeContainingPacman(), gameMode));
+        gameObjectCollections.add(new GameObjectCollection(context, mScreen,
+                arcades.getArcadeContainingPacman(), gameMode));
 
         //userInput handler
         userInput = new UserInput();

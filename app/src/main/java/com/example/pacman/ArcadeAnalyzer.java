@@ -48,12 +48,12 @@ public class ArcadeAnalyzer{
                 ArrayList<Integer> allowedDirections = new ArrayList<>(4);
                 TwoTuple thisBlock = new TwoTuple(i, j);
                 //Analyze Left
-                if (arcade.pathValid(thisBlock.toLeft()) || arcade.getBlock(thisBlock).getType() == 18 ) { // add 18 so Pacman can run into the next arcade 
+                if (arcade.pathValid(thisBlock.toLeft())) {
                     allowedDirections.add(LEFT);
                 }
 
                 //Analyze Right
-                if (arcade.pathValid(thisBlock.toRight()) || arcade.getBlock(thisBlock).getType() == 18 ) {
+                if (arcade.pathValid(thisBlock.toRight())) {
                     allowedDirections.add(RIGHT);
                 }
 

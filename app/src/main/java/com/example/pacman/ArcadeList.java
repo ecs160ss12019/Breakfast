@@ -69,18 +69,6 @@ public class ArcadeList {
                 arcades.get(containsPacman).getBlockHeight());
     }
 
-    public void moveToRight() {
-        for (Arcade arcade : arcades) {
-            arcade.moveToRight();
-        }
-    }
-
-    public void moveToLeft() {
-        for (Arcade arcade : arcades) {
-            arcade.moveToLeft();
-        }
-    }
-
 
     /*
     Traverse through all Arcade,
