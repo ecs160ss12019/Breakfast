@@ -23,7 +23,7 @@ public class WelcomeActivity extends Activity {
         playGame();
     }
     void playGame(){
-        Button playButton = (Button) findViewById(R.id.playButton);
+        Button playButton = (Button) findViewById(R.id.normalBtn);
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

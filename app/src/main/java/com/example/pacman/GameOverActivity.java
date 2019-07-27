@@ -16,15 +16,15 @@ public class GameOverActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_gameover);
-        mainMenu();
+//        mainMenu();
     }
-    void mainMenu(){
-        Button mainButton = (Button) findViewById(R.id.playButton);
-        mainButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(GameOverActivity.this, MapSelectionActivity.class));
-            }
-        });
-    }
+//    void mainMenu(){
+//        Button mainButton = (Button) findViewById(R.id.playButton);
+//        mainButton.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(GameOverActivity.this, MapSelectionActivity.class));
+//            }
+//        });
+//    }
 }
