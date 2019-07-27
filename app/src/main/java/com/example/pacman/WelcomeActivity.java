@@ -22,15 +22,19 @@ public class WelcomeActivity extends Activity {
         setContentView(R.layout.activity_welcome);
         playGame();
     }
-    void playGame(){
+
+    public void playGame(){
         Button playButton = (Button) findViewById(R.id.normalBtn);
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(WelcomeActivity.this, MapSelectionActivity.class));
+                openActivitivy2();
             }
         });
+    }
 
+    public void openActivitivy2(){
+        startActivity(new Intent(WelcomeActivity.this, MapSelectionActivity.class));
     }
 
 }
