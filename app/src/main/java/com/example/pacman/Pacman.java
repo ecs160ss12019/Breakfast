@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 public class Pacman extends MovingObject {
 
+    public static int totalLives = 3;
+
     private static Pacman pacman;
     private static boolean initialized = false;
 
@@ -14,6 +16,7 @@ public class Pacman extends MovingObject {
         }
     }
 
+    // check if Pacman ran out of current arcade
     public boolean ranIntoPrevArcade() {
         return motionInfo.posInArcade.second() == -1;
     }
@@ -22,6 +25,7 @@ public class Pacman extends MovingObject {
         return motionInfo.posInArcade.second() == numCol;
     }
 
+    // move Pacman to the left or right entrance
     public void moveToNextArcade() {
         this.motionInfo.posInArcade.y = 0;
     }
@@ -35,6 +39,7 @@ public class Pacman extends MovingObject {
         super(motionInfo, viewList);
     }
 
+    // Singleton, because we only have one Pacman in entire game, also we can retrieve Pacman from any GameObjectCollection
     public static synchronized Pacman getInstance(final MotionInfo motionInfo, final ArrayList<Bitmap> viewList) {
         if(initialized) return pacman;
 //        TwoTuple pacmanInitPos = new TwoTuple(arcade.pacmanPosition);

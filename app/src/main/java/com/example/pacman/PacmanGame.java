@@ -161,7 +161,7 @@ class PacmanGame extends SurfaceView implements Runnable {
 
     private void checkIfNeedToChangeArcade() {
         for (GameObjectCollection gameObjectCollection : gameObjectCollections) {
-            System.out.println("gameObjectCollection.moveToNextArcade: " + gameObjectCollection.moveToNextArcade);
+            // System.out.println("gameObjectCollection.moveToNextArcade: " + gameObjectCollection.moveToNextArcade);
             if(gameObjectCollection.moveToNextArcade == 1) {
 
                 //moveToNextArcade(true);

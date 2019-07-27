@@ -40,8 +40,11 @@ public class GameObjectCollection {
 
         for (MovingObject movingObject : movingObjects) {
             movingObject.draw(canvas);
+            if(movingObject instanceof  Pacman) {
+                System.out.println("draw pacman.getMotionInfo().posInScreen: " + pacman.getMotionInfo().posInScreen.x + " " + pacman.getMotionInfo().posInScreen.y );
+            }
         }
-        if(pacman != null) System.out.println("arcade.id: " + arcade.id + " arcade.xReference: " + arcade.xReference);
+        // if(pacman != null) System.out.println("arcade.id: " + arcade.id + " arcade.xReference: " + arcade.xReference);
     }
 
     public void update(int userInput, long fps, PointSystem score) {
@@ -82,7 +85,6 @@ public class GameObjectCollection {
         updateMotion(fps);
         updateCollision();
         updateStatus(score);
-
         checkIfPacmanRunOut();
     }
 
@@ -95,6 +97,7 @@ public class GameObjectCollection {
     private void updateCollision() {
         if (pacman == null) return;
         //All collisions happen when the pacman is present!!!
+        collisions.clear(); // clear collisions from the prev cycle
 
         Rect pacmanPathRect = pacman.getPathRect();
         for (MovingObject movingObject : movingObjects) {
@@ -122,8 +125,10 @@ public class GameObjectCollection {
                         movingObjects.remove(gameObject);
                         score.ghostEaten();
                     } else {
+                        System.out.println("Pacman is eaten by ghost. ");
                         //being eaten by ghost
                         movingObjects.remove(pacman);
+                        pacman.eaten(); // set alive to false
                         containsPacman = false;
                         atePowerPellet = false;
                     }
@@ -151,17 +156,19 @@ public class GameObjectCollection {
                 stationaryObjects.remove(gameObject);
             }
         }
+
+        pacmanReborn();
     }
 
     public void checkIfPacmanRunOut() {
         // check if Pacman is out of bound, which means it runs into the next arcade
         // System.out.println("containsPacman: " + containsPacman);
         if (pacman == null) return;
-        System.out.println("Pacman in arcade: " + pacman.motionInfo.posInArcade.second() + " " + pacman.motionInfo.posInArcade.first());
-        System.out.println("arcade.getNumCol(): " + arcade.getNumCol());
+        //System.out.println("Pacman in arcade: " + pacman.motionInfo.posInArcade.second() + " " + pacman.motionInfo.posInArcade.first());
+        // System.out.println("arcade.getNumCol(): " + arcade.getNumCol());
         if(pacman.ranIntoNextArcade(arcade.getNumCol())) {
             moveToNextArcade = 1; // we only need to set a flag for change arcade, let PacmanGame handle the rest. Because we can not update all the arcades in Collection
-            System.out.println("moveToNextArcade: " + moveToNextArcade);
+            // System.out.println("moveToNextArcade: " + moveToNextArcade);
         } else if (pacman.ranIntoPrevArcade()) {
             moveToNextArcade = -1;
         }
@@ -174,7 +181,7 @@ public class GameObjectCollection {
 
         } else {arcade.moveToRight();}
         movePelletsTo(next);
-        System.out.println("arcade.id: " + arcade.id);
+        //System.out.println("arcade.id: " + arcade.id);
         if(arcade.id == 0) { // if it was 1, which means next to the one contains Pacman; then it will be 0, which means the one contains Pacman.
              // update the reference to Pacman. // delete Pacman reference from current collection, add to next (or prev)
             addPacmanIntoCollection();
@@ -189,9 +196,9 @@ public class GameObjectCollection {
         if(pacman == null) return;
         if(next) pacman.moveToNextArcade();  // move Pacman to the first column
         else pacman.moveToPrevArcade(arcade.getNumCol()); // move Pacman to the last column
-        System.out.println("pacman.motionInfo.posInArcade.second(): " + pacman.motionInfo.posInArcade.second());
+        // System.out.println("pacman.motionInfo.posInArcade.second(): " + pacman.motionInfo.posInArcade.second());
         pacman.motionInfo.posInScreen = arcade.mapScreen(pacman.motionInfo.posInArcade); // update the coordinate of Pacman
-        System.out.println("pacman.motionInfo.posInScreen.x: " + pacman.motionInfo.posInScreen.x);
+        // System.out.println("pacman.motionInfo.posInScreen.x: " + pacman.motionInfo.posInScreen.x);
     }
 
     private void movePelletsTo(boolean left) {
@@ -223,6 +230,36 @@ public class GameObjectCollection {
         if(movingObjects.contains(pacman)) return;
         System.out.println("arcade.id: " + arcade.id);
         movingObjects.add(pacman);
+    }
+
+    public void pacmanReborn() {
+        if(pacman == null) return;
+        if ( pacman.checkalive() == false ) {
+            System.out.println("pacmanReborn");
+            // reborn Pacman to the middle of current Arcade
+
+//            if(movingObjects.contains(pacman)) { // I don't know why pacman is still in movingObjects, we need to remove and reset. Because we forgot to set it to alive when init
+//                movingObjects.remove(pacman);
+//            }
+
+            MotionInfo prevMotion = pacman.getMotionInfo();
+            prevMotion.posInArcade = arcade.pacmanPosition;
+            prevMotion.posInScreen = arcade.getPacmanPosition_pix();
+            prevMotion.currDirection = TwoTuple.RIGHT;
+            prevMotion.nextDirection = -1;
+            pacman.setMotionInfo(prevMotion);
+            System.out.println("pacman position after reborn : " + pacman.getMotionInfo().posInScreen.x +" "+ pacman.getMotionInfo().posInScreen.y);
+            pacman.alive(); // reborn
+            System.out.println("movingObjects.contains(pacman): " + movingObjects.contains(pacman));
+
+            if(!movingObjects.contains(pacman)) {
+                movingObjects.add(pacman);
+                System.out.println("readd Pacman to current collection after reborn");
+
+            }
+            containsPacman = true;
+            Pacman.totalLives -=1;
+        }
     }
 
     //Constructor
