@@ -11,12 +11,14 @@ import java.util.Queue;
 import java.util.Random;
 
 public class Ghost extends MovingObject {
+    public int id;
     public GhostBehaviour ghostBehaviour;
 
     //Constructor
-    public Ghost(final MotionInfo motionInfo, final ArrayList<Bitmap> viewList, GhostBehaviour ghostBehaviour) {
+    public Ghost(final int id, final MotionInfo motionInfo, final ArrayList<Bitmap> viewList, GhostBehaviour ghostBehaviour) {
         super(motionInfo, viewList);
 
+        this.id = id;
         this.ghostBehaviour = ghostBehaviour;
     }
 }
