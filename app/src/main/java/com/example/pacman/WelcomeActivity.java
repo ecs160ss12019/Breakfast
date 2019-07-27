@@ -66,7 +66,7 @@ public class WelcomeActivity extends Activity {
         });
     }
 
-    public void openActivitivy2(){
+    public void openActivitivy2() {
 //        startActivity(new Intent(WelcomeActivity.this, MapSelectionActivity.class));
         checkMode();
         Intent intent = new Intent(this, MapSelectionActivity.class);

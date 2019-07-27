@@ -15,6 +15,7 @@ import android.widget.TextView;
 public class MapSelectionActivity extends Activity {
     private Intent intent;
     private int modeSelected;
+    public static final String EXTRA_NUMBER = "com.example.pacman.EXTRA_NUMBER2";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,19 +32,25 @@ public class MapSelectionActivity extends Activity {
         aniD.start();
         intent = getIntent();
         modeSelected = intent.getIntExtra(WelcomeActivity.EXTRA_NUMBER, -1);
-        System.out.println(modeSelected + "modeSelected ---------------------------------");
+
 
         gameOn();
     }
 
-    void gameOn(){
+    public void gameOn(){
         TextView gaming = findViewById(R.id.gaming);
         gaming.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MapSelectionActivity.this, PacmanActivity.class));
+                goToMap();
             }
         });
+    }
 
+    public void goToMap() {
+        intent = new Intent(this, PacmanActivity.class);
+        System.out.println(modeSelected + "modeSelected --------------");
+        intent.putExtra(EXTRA_NUMBER, modeSelected);
+        startActivity(intent);
     }
 }

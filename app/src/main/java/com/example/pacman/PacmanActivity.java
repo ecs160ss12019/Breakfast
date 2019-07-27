@@ -1,6 +1,7 @@
 package com.example.pacman;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import android.view.WindowManager;
 public class PacmanActivity extends Activity {
     private PacmanGame mPacmanGame;
     private boolean useGameView;
+    private Intent intent;
+    private int modeSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,10 @@ public class PacmanActivity extends Activity {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
+        intent = getIntent();
+        modeSelected = intent.getIntExtra(MapSelectionActivity.EXTRA_NUMBER, -1);
+        System.out.println("++++++++++++++ PacmanActivity mode selected " + modeSelected);
+
 
         //FIXME
         mPacmanGame = new PacmanGame(this, size.x, size.y);
