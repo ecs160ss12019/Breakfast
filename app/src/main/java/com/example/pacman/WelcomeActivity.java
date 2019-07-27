@@ -11,6 +11,10 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 public class WelcomeActivity extends Activity {
+    Button normalBtn;
+    Button easyBtn;
+    Button hardBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,12 +24,14 @@ public class WelcomeActivity extends Activity {
         //We don't want the title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_welcome);
+        normalBtn = (Button) findViewById(R.id.normalBtn);
+        easyBtn = (Button) findViewById(R.id.easyBtn);
+        hardBtn = (Button) findViewById(R.id.hardBtn);
         playGame();
     }
 
     public void playGame(){
-        Button playButton = (Button) findViewById(R.id.normalBtn);
-        playButton.setOnClickListener(new View.OnClickListener() {
+        normalBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openActivitivy2();
