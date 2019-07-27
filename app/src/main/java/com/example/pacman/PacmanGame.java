@@ -274,7 +274,7 @@ class PacmanGame extends SurfaceView implements Runnable {
     }
 
     //Constructor
-    public PacmanGame(Context context, int x, int y) {
+    public PacmanGame(Context context, int x, int y, int inputLevel) {
         // Super... calls the parent class
         // constructor of SurfaceView
         // provided by Android
@@ -298,7 +298,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         mPlaying = true;
         mPaused = false;
 
-        gameMode = new GameMode(1, mScreen.x);
+        gameMode = new GameMode(inputLevel, mScreen.x);
         switch (gameMode.getDisplayMode()){
             case 0:
                 modeSelected = "Easy";

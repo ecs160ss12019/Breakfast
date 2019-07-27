@@ -36,12 +36,10 @@ public class PacmanActivity extends Activity {
         modeSelected = intent.getIntExtra(MapSelectionActivity.EXTRA_NUMBER, -1);
         System.out.println("++++++++++++++ PacmanActivity mode selected " + modeSelected);
 
-
         //FIXME
-        mPacmanGame = new PacmanGame(this, size.x, size.y);
+        mPacmanGame = new PacmanGame(this, size.x, size.y, modeSelected);
         //mPacmanGame = new PacmanGame(this, 2028, 1080);
         setContentView(mPacmanGame);
-
         Log.d("Debugging", "In onCreate");
     }
 
