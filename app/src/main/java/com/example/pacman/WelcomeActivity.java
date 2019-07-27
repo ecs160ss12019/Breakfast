@@ -11,9 +11,13 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 public class WelcomeActivity extends Activity {
-    Button normalBtn;
-    Button easyBtn;
-    Button hardBtn;
+    private Button normalBtn;
+    private Button easyBtn;
+    private Button hardBtn;
+    private final int easy = 0;
+    private final int normal = 1;
+    private final int hard = 2;
+    private String modeSelected;
 
 
     @Override
@@ -34,18 +38,24 @@ public class WelcomeActivity extends Activity {
         easyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                modeSelected = hardBtn.getText().toString();
+                System.out.println(modeSelected + "--------------------------------------------");
                 openActivitivy2();
             }
         });
         normalBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                modeSelected = hardBtn.getText().toString();
+                System.out.println(modeSelected + "--------------------------------------------");
                 openActivitivy2();
             }
         });
         hardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                modeSelected = hardBtn.getText().toString();
+                System.out.println(modeSelected + "--------------------------------------------");
                 openActivitivy2();
             }
         });
