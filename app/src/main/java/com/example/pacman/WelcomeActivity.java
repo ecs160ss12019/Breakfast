@@ -17,7 +17,10 @@ public class WelcomeActivity extends Activity {
     private final int easy = 0;
     private final int normal = 1;
     private final int hard = 2;
-    private String modeSelected;
+    private String modeSelectedTmp;
+    private int modeSelected;
+    public static final String EXTRA_NUMBER = "com.example.pacman.EXTRA_NUMBER";
+
 
 
     @Override
@@ -31,6 +34,8 @@ public class WelcomeActivity extends Activity {
         normalBtn = (Button) findViewById(R.id.normalBtn);
         easyBtn = (Button) findViewById(R.id.easyBtn);
         hardBtn = (Button) findViewById(R.id.hardBtn);
+        modeSelected = -1;
+        modeSelectedTmp = "";
         playGame();
     }
 
@@ -38,24 +43,24 @@ public class WelcomeActivity extends Activity {
         easyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                modeSelected = hardBtn.getText().toString();
-                System.out.println(modeSelected + "--------------------------------------------");
+                modeSelectedTmp = easyBtn.getText().toString();
+                System.out.println(modeSelectedTmp + "--------------------------------------------");
                 openActivitivy2();
             }
         });
         normalBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                modeSelected = hardBtn.getText().toString();
-                System.out.println(modeSelected + "--------------------------------------------");
+                modeSelectedTmp = normalBtn.getText().toString();
+                System.out.println(modeSelectedTmp + "--------------------------------------------");
                 openActivitivy2();
             }
         });
         hardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                modeSelected = hardBtn.getText().toString();
-                System.out.println(modeSelected + "--------------------------------------------");
+                modeSelectedTmp = hardBtn.getText().toString();
+                System.out.println(modeSelectedTmp + "--------------------------------------------");
                 openActivitivy2();
             }
         });
@@ -63,9 +68,25 @@ public class WelcomeActivity extends Activity {
 
     public void openActivitivy2(){
 //        startActivity(new Intent(WelcomeActivity.this, MapSelectionActivity.class));
+        checkMode();
         Intent intent = new Intent(this, MapSelectionActivity.class);
+        intent.putExtra(EXTRA_NUMBER, modeSelected);
         startActivity(intent);
 
+    }
+
+    public void checkMode() {
+        switch (modeSelectedTmp){
+            case "Easy":
+                modeSelected = easy;
+                break;
+            case "Normal":
+                modeSelected = normal;
+                break;
+            case "Hard":
+                modeSelected = hard;
+                break;
+        }
     }
 
 }
