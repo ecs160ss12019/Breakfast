@@ -34,7 +34,10 @@ public class WelcomeActivity extends Activity {
     }
 
     public void openActivitivy2(){
-        startActivity(new Intent(WelcomeActivity.this, MapSelectionActivity.class));
+//        startActivity(new Intent(WelcomeActivity.this, MapSelectionActivity.class));
+        Intent intent = new Intent(this, MapSelectionActivity.class);
+        startActivity(intent);
+
     }
 
 }
