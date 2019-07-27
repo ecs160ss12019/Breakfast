@@ -5,5 +5,5 @@ package com.example.pacman;
     Type 1 - available slots for pellet
  */
 public interface PelletCell {
-    int reward();
+    void reward();
 }

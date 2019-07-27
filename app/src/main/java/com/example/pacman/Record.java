@@ -1,5 +1,9 @@
 package com.example.pacman;
-
+/*
+    This class keeps the records as an object,
+    where it will get updated once the game
+    is over
+ */
 public class Record {
     public String userName;
     public int score;
@@ -14,5 +18,11 @@ public class Record {
     public Record(final String userName, final int score) {
         this.userName = userName;
         this.score = score;
+    }
+    public String getRecordName(){
+        return userName;
+    }
+    public int getRecord(){
+        return score;
     }
 }

@@ -14,8 +14,9 @@ public class GameObjectCollection {
     final static int UP = 2;
     final static int DOWN = 3;
 
-    private Arcade arcade;
-    private MotionController motionController;
+    final private Arcade arcade;
+    final private ArcadeAnalyzer arcadeAnalyzer;
+    final private MotionController motionController;
 
     private Pacman pacman;
     private ArrayList<MovingObject> movingObjects;
@@ -25,6 +26,8 @@ public class GameObjectCollection {
     // private int containsPacman; // containsPacman = 0 if it contains Pacman, change to int because we need to change the reference of Pacman based on this.
 
     int moveToNextArcade = 0;
+    private boolean containsPacman;
+    private boolean atePowerPellet;
 
     public void draw(Canvas canvas) {
         arcade.draw(canvas);
@@ -39,22 +42,34 @@ public class GameObjectCollection {
         if(pacman != null) System.out.println("arcade.id: " + arcade.id + " arcade.xReference: " + arcade.xReference);
     }
 
-    public void update(int userInput, long fps) {
+    public void update(int userInput, long fps, PointSystem score) {
         //if there is pacman, update its nextDirection to userInput
         for (MovingObject movingObject : movingObjects) {
             if (movingObject instanceof Pacman) {
                 ((Pacman) movingObject).setInputDirection(userInput);
-            } else {
+            }
+
+            if(pacman!=null) {
+                if (movingObject instanceof Ghost) {
+                    MotionInfo ghostInfo = movingObject.motionInfo;
+                    MotionInfo pacmanInfo = pacman.motionInfo;
+                    if (arcadeAnalyzer.isCross(ghostInfo.posInArcade)) {
+                        movingObject.motionInfo.nextDirection = ((Ghost) movingObject).ghostBehaviour.performBehaviour(ghostInfo,
+                                pacmanInfo, null, arcadeAnalyzer);
+                    }
+                }
+            }
+
+            if (movingObject instanceof Cake) {
                 Random random = new Random();
                 MotionInfo changedDir = movingObject.getMotionInfo();
                 changedDir.nextDirection = random.nextInt(4);
                 movingObject.setMotionInfo(changedDir);
             }
         }
-
         updateMotion(fps);
         updateCollision();
-        updateStatus();
+        updateStatus(score);
 
         checkIfPacmanRunOut();
     }
@@ -67,6 +82,7 @@ public class GameObjectCollection {
 
     private void updateCollision() {
         if (pacman == null) return;
+        //All collisions happen when the pacman is present!!!
 
         Rect pacmanPathRect = pacman.getPathRect();
         for (MovingObject movingObject : movingObjects) {
@@ -83,13 +99,43 @@ public class GameObjectCollection {
         }
     }
 
-    private void updateStatus() {
+    //All collisions happen when the pacman is present!!!
+    //we only cares about and update upon those ones !!!
+    private void updateStatus(PointSystem score) {
         for (GameObject gameObject : collisions) {
             if (gameObject instanceof MovingObject) {
-                movingObjects.remove(gameObject);
+                if (gameObject instanceof Ghost) {
+                    if (atePowerPellet) {
+                        //eats ghost
+                        movingObjects.remove(gameObject);
+                        score.ghostEaten();
+                    } else {
+                        //being eaten by ghost
+                        movingObjects.remove(pacman);
+                        containsPacman = false;
+                        atePowerPellet = false;
+                    }
+                }
+
+                if (gameObject instanceof Cake) {
+                    movingObjects.remove(gameObject);
+                    score.cakeEaten();
+                }
             }
 
             if (gameObject instanceof StationaryObject) {
+                if(gameObject instanceof PowerPellet){
+                    if(((PowerPellet) gameObject).checkReward() == false){
+                        score.pwrpelletEaten();
+                        ((PowerPellet) gameObject).reward();
+                    }
+                    atePowerPellet = false;
+                }else {
+                    if(((NormalPellet) gameObject).checkReward() == false){
+                        score.pelletEaten();
+                        ((NormalPellet) gameObject).reward();
+                    }
+                }
                 stationaryObjects.remove(gameObject);
             }
         }
@@ -171,6 +217,7 @@ public class GameObjectCollection {
     public GameObjectCollection(final Context context, final TwoTuple mScreen,
                                 final Arcade arcade, final GameMode gameMode) {
         this.arcade = arcade;
+        this.arcadeAnalyzer = new ArcadeAnalyzer(arcade);
         this.motionController = new MotionController(arcade);
 
         final BitmapDivider bitmapDivider = new BitmapDivider(context);
@@ -211,7 +258,9 @@ public class GameObjectCollection {
         clayViews.add(ghostsViewList.get(0));
         clayViews.add(ghostsViewList.get(0));
         clayViews.add(ghostsViewList.get(0));
-        MovingObject clayGhost = new Ghost(clayInitMotion, clayViews);
+
+        //TODO change another behavior
+        MovingObject clayGhost = new Ghost(clayInitMotion, clayViews, new ChaseBehaviour());
 
         //INIT RedGhost
         MotionInfo redInitMotion = new MotionInfo(
@@ -223,7 +272,9 @@ public class GameObjectCollection {
         redViews.add(ghostsViewList.get(1));
         redViews.add(ghostsViewList.get(1));
         redViews.add(ghostsViewList.get(1));
-        MovingObject redGhost = new Ghost(redInitMotion, redViews);
+
+        //TODO change another behavior
+        MovingObject redGhost = new Ghost(redInitMotion, redViews, new EscapeBehaviour());
 
         //INIT GreenGhost
         MotionInfo greenInitMotion = new MotionInfo(
@@ -235,7 +286,9 @@ public class GameObjectCollection {
         greenViews.add(ghostsViewList.get(2));
         greenViews.add(ghostsViewList.get(2));
         greenViews.add(ghostsViewList.get(2));
-        MovingObject greenGhost = new Ghost(greenInitMotion, greenViews);
+
+        //TODO change another behavior
+        MovingObject greenGhost = new Ghost(greenInitMotion, greenViews, new ChaseFrontBehaviour());
 
         //INIT PingGhost
         MotionInfo pinkInitMotion = new MotionInfo(
@@ -247,7 +300,9 @@ public class GameObjectCollection {
         pinkViews.add(ghostsViewList.get(3));
         pinkViews.add(ghostsViewList.get(3));
         pinkViews.add(ghostsViewList.get(3));
-        MovingObject pinkGhost = new Ghost(pinkInitMotion, pinkViews);
+
+        //TODO change another behavior
+        MovingObject pinkGhost = new Ghost(pinkInitMotion, pinkViews, new ChaseBehaviour());
 
         //INIT Cake
         TwoTuple cakeInitPos = new TwoTuple(arcade.cakePosition);
@@ -274,7 +329,6 @@ public class GameObjectCollection {
         movingObjects.add(cake);
 
 
-
         //Add Stationary objects to stationaryObjects list
         stationaryObjects = new ArrayList<>();
 
@@ -285,12 +339,12 @@ public class GameObjectCollection {
         final ArrayList<Bitmap> normalPelletViewList = BitmapDivider.splitAndResize(
                 bitmapDivider.loadBitmap(R.drawable.pellet),
                 new TwoTuple(1,1),
-                new TwoTuple(mScreen.y / 35, mScreen.y / 35));
+                new TwoTuple(mScreen.y / 45, mScreen.y / 45));
 
         final ArrayList<Bitmap> powerPelletViewList = BitmapDivider.splitAndResize(
                 bitmapDivider.loadBitmap(R.drawable.powerpellet),
                 new TwoTuple(1,1),
-                new TwoTuple(mScreen.y / 30, mScreen.y / 30));
+                new TwoTuple(mScreen.y / 22, mScreen.y / 22));
 
         ArrayList<ArrayList<Bitmap>> pelletViewLists= new ArrayList<>();
         pelletViewLists.add(normalPelletViewList);
@@ -300,25 +354,46 @@ public class GameObjectCollection {
         for (int i = 0; i < numRow; i++) {
             for (int j = 0; j < numCol; j++) {
                 int type = arcade.getBlock(new TwoTuple(i, j)).getType();
-                if (type == 16 && random.nextBoolean()) {
-                    TwoTuple posInArcade = new TwoTuple(i, j);
-                    TwoTuple posInScreen = arcade.mapScreen(posInArcade);
-                    StaticInfo pelletInfo = new StaticInfo(posInArcade, posInScreen);
-                    int pelletType = random.nextInt(2);
-                    StationaryObject nextPellet;
-                    if (pelletType == 0) {
-                        nextPellet = new PowerPellet(pelletInfo, pelletViewLists.get(pelletType));
-                    } else {
-                        nextPellet = new NormalPellet(pelletInfo, pelletViewLists.get(pelletType));
-                    }
+                //Will need to update the location of pellets with json later
+//                if (type == 16) {
+//                    TwoTuple posInArcade = new TwoTuple(i, j);
+//                    TwoTuple posInScreen = arcade.mapScreen(posInArcade);
+//                    StaticInfo pelletInfo = new StaticInfo(posInArcade, posInScreen);
+//                    int pelletType = random.nextInt(2);
+//
+//                    StationaryObject nextPellet;
+//                    if (pelletType == 0){
+//                        nextPellet = new PowerPellet(pelletInfo, pelletViewLists.get(pelletType));
+//                    } else {
+//                        nextPellet = new NormalPellet(pelletInfo, pelletViewLists.get(pelletType));
+//                    }
+//                    stationaryObjects.add(nextPellet);
+//                }
 
+                TwoTuple posInArcade = new TwoTuple(i, j);
+                TwoTuple posInScreen = arcade.mapScreen(posInArcade);
+                StaticInfo pelletInfo = new StaticInfo(posInArcade, posInScreen);
+                StationaryObject nextPellet;
+
+                //Normal pellet
+                if (type == 40) {
+                    nextPellet = new NormalPellet(pelletInfo, pelletViewLists.get(0));
                     stationaryObjects.add(nextPellet);
                 }
+
+                //Power pellet!!!
+                if (type == 42) {
+                    nextPellet = new PowerPellet(pelletInfo, pelletViewLists.get(1));
+                    stationaryObjects.add(nextPellet);
+                }
+
+
             }
         }
+        atePowerPellet = false;
 
         collisions = new ArrayList<>();
 
-        // this.containsPacman = true;
+        this.containsPacman = arcade.inUse;
     }
 }

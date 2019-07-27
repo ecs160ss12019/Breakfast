@@ -61,5 +61,9 @@ Sprint 1 | Test with the player by tapping left, right, top, and bottom on the d
 Sprint 2 | Test if the Pac-man gets killed by all 4 ghosts by collision (they run into the same position on the map). | Test if the Pac-man can eat pellets and power pellets by collision. | Test if the Pac-man can eat the moving Cake | Test if the system generates new ghosts when they die | Letter grid
 Sprint 3 | Test if the next level is run after the Pac-man eats all the pellets. | Test if the ghosts can be killed by Pac-man when collision. | Test if Pac-man can eat Cake by collision and gain points;  | Test if the Pac-man gets extra points after eating Cake for few seconds. | Generate sound effects | More than one grid system (more than one map)
 
+## UML Class Diagrams
+GameObjectCollection Class<br/>
+https://github.com/ecs160ss12019/Breakfast/blob/master/GameObjectCollection%20UML.pdf
+
 
 

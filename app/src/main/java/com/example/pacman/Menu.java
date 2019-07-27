@@ -24,7 +24,7 @@ public class Menu {
     }
 
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(pauseImg, numberHorizontalPixels - (buttonWidth+20)*3,
+        canvas.drawBitmap(pauseImg, numberHorizontalPixels - buttonWidth * 3,
                 80, null);
     }
 

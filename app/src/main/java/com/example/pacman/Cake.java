@@ -95,6 +95,12 @@ public class Cake extends MovingObject implements GameObject {
 ////        System.out.println("Finished moving to: " + currPos.first() + " " + currPos.second());
 //        return currPos;
 //    }
+//    public void eat(){
+//        eaten = true;
+//    }
+//    public boolean checkalive(){
+//        return eaten;
+//    }
 
     public void setNextDirection() {
         Random random = new Random();

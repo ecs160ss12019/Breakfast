@@ -22,6 +22,15 @@ public class MovingObject implements GameObject{
     private int bitmapDimension;
     //protected int currentBitmapIndex;
 
+    public void eat(){
+        appear = false;
+    }
+    public boolean checkalive(){
+        return appear;
+    }
+    public void alive(){
+        appear = true;
+    }
 
     public MotionInfo getMotionInfo() {
         return motionInfo;

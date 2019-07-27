@@ -1,5 +1,6 @@
 package com.example.pacman;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class DirectionQueue {
@@ -20,5 +21,12 @@ public class DirectionQueue {
 
     public DirectionQueue() {
         nextDirectionsQueue = new LinkedList<>();
+    }
+
+    public DirectionQueue(ArrayList<ComparableDirection> list) {
+        nextDirectionsQueue = new LinkedList<>();
+        for (ComparableDirection direction : list) {
+            enqueue(direction.getDirection());
+        }
     }
 }
