@@ -13,6 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class MapSelectionActivity extends Activity {
+    private Intent intent;
+    private int modeSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,10 @@ public class MapSelectionActivity extends Activity {
         aniD.setEnterFadeDuration(1000);
         aniD.setExitFadeDuration(2500);
         aniD.start();
+        intent = getIntent();
+        modeSelected = intent.getIntExtra(WelcomeActivity.EXTRA_NUMBER, -1);
+        System.out.println(modeSelected + "modeSelected ---------------------------------");
+
         gameOn();
     }
 
