@@ -108,6 +108,33 @@ public class GameObjectCollection {
         updateCollision();
         updateStatus(score);
         updateTimer();
+
+        pacmanReborn();
+    }
+
+    public void pacmanReborn() {
+        if(pacman == null) return;
+        if ( containsPacman == false ) {
+            System.out.println("pacmanReborn");
+            // reborn Pacman to the middle of current Arcade
+            MotionInfo prevMotion = pacman.getMotionInfo();
+            prevMotion.posInArcade = arcade.pacmanPosition;
+            prevMotion.posInScreen = arcade.getPacmanPosition_pix();
+            prevMotion.currDirection = TwoTuple.RIGHT;
+            prevMotion.nextDirection = -1;
+            pacman.setMotionInfo(prevMotion);
+            System.out.println("pacman position after reborn : " + pacman.getMotionInfo().posInScreen.x +" "+ pacman.getMotionInfo().posInScreen.y);
+            pacman.alive(); // reborn
+            System.out.println("movingObjects.contains(pacman): " + movingObjects.contains(pacman));
+
+            if(!movingObjects.contains(pacman)) {
+                movingObjects.add(pacman);
+                System.out.println("readd Pacman to current collection after reborn");
+            }
+
+            containsPacman = true;
+            Pacman.totalLives -=1;
+        }
     }
 
     private void updateMotion(long fps) {
