@@ -1,6 +1,6 @@
 package com.example.pacman;
 
-public class PredictAndChaseBehaviour implements GhostBehaviour {
+public class GhostPredictAndChaseBehaviour implements GhostBehaviour {
     @Override
     public int performBehaviour(final MotionInfo ghostMotion, final MotionInfo pacmanMotion, final MotionInfo reference,
                                 final ArcadeAnalyzer arcadeAnalyzer) {
@@ -14,11 +14,11 @@ public class PredictAndChaseBehaviour implements GhostBehaviour {
         predictPos.x = predictPos.x + (predictPos.x - reference.posInArcade.x);
         predictPos.y = predictPos.y + (predictPos.y - reference.posInArcade.y);
         predictMotionInfo.posInArcade = predictPos;
-        ChaseBehaviour chaseBehaviour = new ChaseBehaviour();
+        GhostChaseBehaviour ghostChaseBehaviour = new GhostChaseBehaviour();
 
-        return chaseBehaviour.performBehaviour(ghostMotion, predictMotionInfo, null, arcadeAnalyzer);
+        return ghostChaseBehaviour.performBehaviour(ghostMotion, predictMotionInfo, null, arcadeAnalyzer);
     }
 
-    public PredictAndChaseBehaviour() {
+    public GhostPredictAndChaseBehaviour() {
     }
 }

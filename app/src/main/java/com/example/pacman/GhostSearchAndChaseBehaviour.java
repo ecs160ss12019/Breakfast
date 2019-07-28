@@ -2,7 +2,7 @@ package com.example.pacman;
 
 import java.util.Random;
 
-public class SearchAndChaseBehaviour implements GhostBehaviour{
+public class GhostSearchAndChaseBehaviour implements GhostBehaviour{
     @Override
     public int performBehaviour(MotionInfo ghostMotion, MotionInfo pacmanMotion, MotionInfo reference, ArcadeAnalyzer arcadeAnalyzer) {
         //TODO new class()
@@ -15,10 +15,10 @@ public class SearchAndChaseBehaviour implements GhostBehaviour{
         double yDiffSquared = (currPos.y - targetPos.y) * (currPos.y - targetPos.y);
         int Distance =  (int)(Math.sqrt(xDiffSquared + yDiffSquared));
 
-        ChaseBehaviour chaseBehaviour = new ChaseBehaviour();
+        GhostChaseBehaviour ghostChaseBehaviour = new GhostChaseBehaviour();
 
         if (Distance < 8) {
-            return chaseBehaviour.performBehaviour(currMotionInfo, targetMotionInfo, null, arcadeAnalyzer);
+            return ghostChaseBehaviour.performBehaviour(currMotionInfo, targetMotionInfo, null, arcadeAnalyzer);
         } else {
             Random random = new Random();
             int next = random.nextInt(5);
@@ -30,7 +30,7 @@ public class SearchAndChaseBehaviour implements GhostBehaviour{
         }
     }
 
-    public SearchAndChaseBehaviour() {
+    public GhostSearchAndChaseBehaviour() {
 
     }
 }

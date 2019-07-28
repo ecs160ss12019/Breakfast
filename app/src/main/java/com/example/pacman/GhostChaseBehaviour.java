@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class ChaseBehaviour implements GhostBehaviour {
+public class GhostChaseBehaviour implements GhostBehaviour {
     final int LEFT = 0;
     final int RIGHT = 1;
     final int UP = 2;
@@ -25,7 +25,6 @@ public class ChaseBehaviour implements GhostBehaviour {
             ArrayList<ComparableDirection> comparableDirections = new ArrayList<>();
             ArrayList<Integer> allowedDirections = new ArrayList<>(arcadeAnalyzer.getAllowedDirections(ghostPosInArcade));
 
-            System.out.println("Before removing: " + allowedDirections);
             //Allowed direction cannot be a immediate reversal
             int currDirection = ghostMotion.currDirection;
             switch (currDirection) {
@@ -42,8 +41,6 @@ public class ChaseBehaviour implements GhostBehaviour {
                     allowedDirections.removeAll(Arrays.asList(UP));
                     break;
             }
-
-            System.out.println("After removing: " + allowedDirections);
 
             for (Integer direction : allowedDirections) {
                 comparableDirections.add(new ComparableDirection(direction, ghostPosInArcade, pacmanPosInArcade));
@@ -71,7 +68,7 @@ public class ChaseBehaviour implements GhostBehaviour {
         return ghostMotion.nextDirection;
     }
 
-    public ChaseBehaviour(){
+    public GhostChaseBehaviour(){
 
     }
 

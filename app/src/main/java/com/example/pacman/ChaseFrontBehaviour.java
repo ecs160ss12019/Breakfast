@@ -13,9 +13,9 @@ public class ChaseFrontBehaviour implements GhostBehaviour {
         }
 
         add4MotionInfo.posInArcade = add4Pos;
-        ChaseBehaviour chaseBehaviour = new ChaseBehaviour();
+        GhostChaseBehaviour ghostChaseBehaviour = new GhostChaseBehaviour();
 
-        return chaseBehaviour.performBehaviour(ghostMotion, add4MotionInfo, null, arcadeAnalyzer);
+        return ghostChaseBehaviour.performBehaviour(ghostMotion, add4MotionInfo, null, arcadeAnalyzer);
     }
 
     public ChaseFrontBehaviour() {

@@ -135,12 +135,19 @@ public class Arcade{
     }
 
     //TODO change it into a list!!!
-    public boolean pathValid(TwoTuple tuple){
-        return inRange(tuple) &&
-                (getBlock(tuple).getType() == 16 ||
-                        getBlock(tuple).getType() == 17 ||
-                        getBlock(tuple).getType() == 42 ||
-                        getBlock(tuple).getType() == 40);
+    public boolean pathValid(TwoTuple tuple, boolean ghostHouseEnabled){
+        if (ghostHouseEnabled) {
+            return inRange(tuple) &&
+                    (getBlock(tuple).getType() == 16 ||
+                            getBlock(tuple).getType() == 17 ||
+                            getBlock(tuple).getType() == 42 ||
+                            getBlock(tuple).getType() == 40);
+        } else {
+            return inRange(tuple) &&
+                    (getBlock(tuple).getType() == 16 ||
+                            getBlock(tuple).getType() == 42 ||
+                            getBlock(tuple).getType() == 40);
+        }
     }
 
     //get a block

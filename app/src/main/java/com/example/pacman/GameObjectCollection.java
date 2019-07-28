@@ -34,15 +34,12 @@ public class GameObjectCollection {
     private ArrayList<GameObject> collisions;
 
     private boolean containsPacman;
-    private boolean ghostDead;
     private boolean ghostChasing;
     private boolean ghostScattering;
     private boolean ghostEscaping;
     private boolean PowerPelletEffective;
-    //TODO timer
-    //private Timer timer;
-    private TimerByFrame timerByFrame;
 
+    private GameObjectTimer powerPelletTimer;
 
     public void draw(Canvas canvas) {
         arcade.draw(canvas);
@@ -91,27 +88,27 @@ public class GameObjectCollection {
 
                 //updateGhostBehaviour((Ghost)movingObject);
 
-                int id = ((Ghost)movingObject).id;
-                MotionInfo target = new MotionInfo();
-                if (id == RedGhostId) {
-                    target.posInArcade = new TwoTuple(2,3);
-                }
-
-                if (id == PinkGhostId) {
-                    target.posInArcade = new TwoTuple(2,24);
-                }
-
-                if (id == BlueGhostId) {
-                    target.posInArcade = new TwoTuple(28,3);
-                }
-
-                if (id == YellowGhostId) {
-                    target.posInArcade = new TwoTuple(28,24);
-                }
+//                int id = ((Ghost)movingObject).id;
+//                MotionInfo target = new MotionInfo();
+//                if (id == RedGhostId) {
+//                    target.posInArcade = new TwoTuple(2,3);
+//                }
+//
+//                if (id == PinkGhostId) {
+//                    target.posInArcade = new TwoTuple(2,24);
+//                }
+//
+//                if (id == BlueGhostId) {
+//                    target.posInArcade = new TwoTuple(28,3);
+//                }
+//
+//                if (id == YellowGhostId) {
+//                    target.posInArcade = new TwoTuple(28,24);
+//                }
 
                 if (arcadeAnalyzer.isCross(ghostInfo.posInArcade)) {
                     movingObject.motionInfo.nextDirection = ((Ghost) movingObject).ghostBehaviour.performBehaviour(ghostInfo,
-                            target, redGhost.motionInfo, arcadeAnalyzer);
+                            pacmanInfo, redGhost.motionInfo, arcadeAnalyzer);
                 }
             }
 
@@ -132,10 +129,7 @@ public class GameObjectCollection {
     }
 
     public void pacmanReborn() {
-        if(pacman == null){
-
-            return;
-        }
+        if(pacman == null) return;
         if ( containsPacman == false ) {
             System.out.println("pacmanReborn");
             // reborn Pacman to the middle of current Arcade
@@ -151,7 +145,7 @@ public class GameObjectCollection {
 
             if(!movingObjects.contains(pacman)) {
                 movingObjects.add(pacman);
-                System.out.println("readd Pacman to current collection after reborn");
+                System.out.println("read Pacman to current collection after reborn");
             }
 
             containsPacman = true;
@@ -193,14 +187,8 @@ public class GameObjectCollection {
                 if (gameObject instanceof Ghost) {
                     if (PowerPelletEffective) {
                         //eats ghost
-                        if (((Ghost) gameObject).checkalive()) {
-                            ((Ghost) gameObject).eat();
-                            score.ghostEaten();
-                        }
                         movingObjects.remove(gameObject);
-
-                        movingObjects.remove(gameObject);
-                        //ghost.ghostBehaviour = new KilledBehaviour();
+                        //ghost.ghostBehaviour = new GhostKilledBehaviour();
                         //ghostChasing = false;
                         //ghostScattering = false;
                         //ghostEscaping = false;
@@ -215,10 +203,7 @@ public class GameObjectCollection {
 
                 if (gameObject instanceof Cake) {
                     movingObjects.remove(gameObject);
-                    if(((Cake) gameObject).checkalive()){
-                        ((Cake) gameObject).eat();
-                        score.ghostEaten();
-                    }
+                    score.cakeEaten();
                 }
             }
 
@@ -228,8 +213,8 @@ public class GameObjectCollection {
                         score.pwrpelletEaten();
                         ((PowerPellet) gameObject).reward();
                     }
-                    PowerPelletEffective = true;
-                    timerByFrame.setTimer(TimerByFrame.powerUp);
+
+                    powerPelletTimer = new GameObjectTimer(GameObjectTimer.powerUp);
                     PowerPelletEffective = true;
                 }else {
                     if(((NormalPellet) gameObject).checkReward() == false){
@@ -242,62 +227,11 @@ public class GameObjectCollection {
         }
     }
 
-    private void updateTimer() {
-        System.out.println("Timer: " + timerByFrame.timer);
-        this.timerByFrame.updateTimer();
-
-        if (!PowerPelletEffective) {
-            if (timerByFrame.timeUp && timerByFrame.countDownTime == TimerByFrame.chaseTime) {
-                System.out.println("Chasing time up, changed to scattering");
-                timerByFrame.setTimer(TimerByFrame.scatterTime);
-                this.ghostChasing = false;
-                this.ghostScattering = true;
-                this.ghostEscaping = false;
-                return;
-            }
-
-            if (timerByFrame.timeUp && timerByFrame.countDownTime == TimerByFrame.scatterTime) {
-                System.out.println("Scattering time up, changed to Chasing");
-                timerByFrame.setTimer(TimerByFrame.chaseTime);
-                this.ghostChasing = true;
-                this.ghostScattering = false;
-                this.ghostEscaping = false;
-                return;
-            }
-
-            if (timerByFrame.timeUp && timerByFrame.countDownTime == TimerByFrame.scatterTime) {
-                System.out.println("return time up, changed to Chasing");
-                timerByFrame.setTimer(TimerByFrame.chaseTime);
-                this.ghostChasing = true;
-                this.ghostScattering = false;
-                this.ghostEscaping = false;
-                return;
-            }
-
-        } else {
-            if (timerByFrame.timeUp) {
-                PowerPelletEffective = false;
-                System.out.println("PP time up");
-                timerByFrame.setTimer(TimerByFrame.chaseTime);
-                this.ghostChasing = true;
-                this.ghostScattering = false;
-                this.ghostEscaping = false;
-                return;
-            } else {
-                System.out.println("eaten PP && time not up");
-                this.ghostChasing = false;
-                this.ghostScattering = false;
-                this.ghostEscaping = true;
-                return;
-            }
-        }
-    }
-
     private void updateGhostBehaviour (Ghost ghost){
-        if (ghost.ghostBehaviour instanceof ChaseBehaviour ||
+        if (ghost.ghostBehaviour instanceof GhostChaseBehaviour ||
                 ghost.ghostBehaviour instanceof ChaseFrontBehaviour ||
-                ghost.ghostBehaviour instanceof PredictAndChaseBehaviour ||
-                ghost.ghostBehaviour instanceof SearchAndChaseBehaviour) {
+                ghost.ghostBehaviour instanceof GhostPredictAndChaseBehaviour ||
+                ghost.ghostBehaviour instanceof GhostSearchAndChaseBehaviour) {
             if (ghostEscaping) {
                 ghost.ghostBehaviour = new EscapeBehaviour();
 
@@ -306,7 +240,7 @@ public class GameObjectCollection {
             }
 
             if (ghostScattering) {
-                ghost.ghostBehaviour = new GhostScatterBehaviour();
+                //ghost.ghostBehaviour = new GhostScatterBehaviour();
 
                 System.out.println("ghost " + ghost.id + ": from chase behaviour to scatter behaviour");
                 return;
@@ -316,7 +250,8 @@ public class GameObjectCollection {
             return;
         }
 
-        if (ghost.ghostBehaviour instanceof GhostScatterBehaviour) {
+        //FIXME
+        if (ghost.ghostBehaviour instanceof GhostScatterLeftTop) {
             if (ghostEscaping) {
                 ghost.ghostBehaviour = new EscapeBehaviour();
 
@@ -327,16 +262,16 @@ public class GameObjectCollection {
             if (ghostChasing) {
                 switch (ghost.id) {
                     case 0:
-                        ghost.ghostBehaviour = new ChaseBehaviour();
+                        ghost.ghostBehaviour = new GhostChaseBehaviour();
                         break;
                     case 1:
                         ghost.ghostBehaviour = new ChaseFrontBehaviour();
                         break;
                     case 2:
-                        ghost.ghostBehaviour = new PredictAndChaseBehaviour();
+                        ghost.ghostBehaviour = new GhostPredictAndChaseBehaviour();
                         break;
                     case 3:
-                        ghost.ghostBehaviour = new SearchAndChaseBehaviour();
+                        ghost.ghostBehaviour = new GhostSearchAndChaseBehaviour();
                         break;
                 }
 
@@ -352,16 +287,16 @@ public class GameObjectCollection {
             if (ghostChasing) {
                 switch (ghost.id) {
                     case 0:
-                        ghost.ghostBehaviour = new ChaseBehaviour();
+                        ghost.ghostBehaviour = new GhostChaseBehaviour();
                         break;
                     case 1:
                         ghost.ghostBehaviour = new ChaseFrontBehaviour();
                         break;
                     case 2:
-                        ghost.ghostBehaviour = new PredictAndChaseBehaviour();
+                        ghost.ghostBehaviour = new GhostPredictAndChaseBehaviour();
                         break;
                     case 3:
-                        ghost.ghostBehaviour = new SearchAndChaseBehaviour();
+                        ghost.ghostBehaviour = new GhostSearchAndChaseBehaviour();
                         break;
                 }
 
@@ -379,15 +314,15 @@ public class GameObjectCollection {
     public GameObjectCollection(final Context context, final TwoTuple mScreen,
                                 final Arcade arcade, final GameMode gameMode) {
         this.arcade = arcade;
-        this.arcadeAnalyzer = new ArcadeAnalyzer(arcade);
+        this.arcadeAnalyzer = new ArcadeAnalyzer(arcade, true);
         this.motionController = new MotionController(arcade);
 
         this.ghostChasing = true;
         this.ghostScattering = false;
         this.ghostEscaping = false;
-        this.ghostDead = false;
         this.PowerPelletEffective = false;
-        this.timerByFrame = new TimerByFrame(TimerByFrame.chaseTime);
+
+        this.powerPelletTimer = new GameObjectTimer();
 
         final BitmapDivider bitmapDivider = new BitmapDivider(context);
 
@@ -414,7 +349,8 @@ public class GameObjectCollection {
 
         //FIXME
         //final TwoTuple ghostInitPos = new TwoTuple(arcade.ghostPosition);
-        final TwoTuple ghostInitPos = new TwoTuple(5,3);
+        //final TwoTuple ghostInitPos = new TwoTuple(5,3);
+        final TwoTuple ghostInitPos = new TwoTuple(30,1);
 
         //INIT RedGhost
         MotionInfo redInitMotion = new MotionInfo(
@@ -422,13 +358,14 @@ public class GameObjectCollection {
                 arcade.mapScreen(ghostInitPos),
                 0, UP, UP, gameMode.getGhostsSpeed());
         ArrayList<Bitmap> redViews = new ArrayList<>();
-        redViews.add(ghostsViewList.get(0));
-        redViews.add(ghostsViewList.get(0));
-        redViews.add(ghostsViewList.get(0));
-        redViews.add(ghostsViewList.get(0));
+        redViews.add(ghostsViewList.get(1));
+        redViews.add(ghostsViewList.get(1));
+        redViews.add(ghostsViewList.get(1));
+        redViews.add(ghostsViewList.get(1));
 
         //TODO change another behavior
-        redGhost = new Ghost(0, redInitMotion, redViews, new ChaseBehaviour(), 10000);
+        //redGhost = new Ghost(0, redInitMotion, redViews, new GhostScatterLeftTop(), 10000);
+        redGhost = new Ghost(0, redInitMotion, redViews, new GhostKilledBehaviour(), 10000);
 
         //INIT PinkGhost
         MotionInfo pinkInitMotion = new MotionInfo(
@@ -436,13 +373,14 @@ public class GameObjectCollection {
                 arcade.mapScreen(ghostInitPos),
                 0, UP, UP, gameMode.getGhostsSpeed());
         ArrayList<Bitmap> pinkViews = new ArrayList<>();
-        pinkViews.add(ghostsViewList.get(1));
-        pinkViews.add(ghostsViewList.get(1));
-        pinkViews.add(ghostsViewList.get(1));
-        pinkViews.add(ghostsViewList.get(1));
+        pinkViews.add(ghostsViewList.get(3));
+        pinkViews.add(ghostsViewList.get(3));
+        pinkViews.add(ghostsViewList.get(3));
+        pinkViews.add(ghostsViewList.get(3));
 
         //TODO change another behavior
-        MovingObject pinkGhost = new Ghost(1, pinkInitMotion, pinkViews, new ChaseBehaviour(), 12000);
+        //MovingObject pinkGhost = new Ghost(1, pinkInitMotion, pinkViews, new GhostScatterRightTop(), 12000);
+        MovingObject pinkGhost = new Ghost(1, pinkInitMotion, pinkViews, new GhostKilledBehaviour(), 12000);
 
         //INIT BlueGhost
         MotionInfo blueInitMotion = new MotionInfo(
@@ -456,7 +394,8 @@ public class GameObjectCollection {
         blueViews.add(ghostsViewList.get(2));
 
         //TODO change another behavior
-        MovingObject blueGhost = new Ghost(2, blueInitMotion, blueViews, new ChaseBehaviour(), 14000);
+//        MovingObject blueGhost = new Ghost(2, blueInitMotion, blueViews, new GhostScatterLeftBottom(), 14000);
+        MovingObject blueGhost = new Ghost(2, blueInitMotion, blueViews, new GhostKilledBehaviour(), 14000);
 
         //INIT YellowGhost
         MotionInfo yellowInitMotion = new MotionInfo(
@@ -464,13 +403,14 @@ public class GameObjectCollection {
                 arcade.mapScreen(ghostInitPos),
                 0, UP, UP, gameMode.getGhostsSpeed());
         ArrayList<Bitmap> yellowViews = new ArrayList<>();
-        yellowViews.add(ghostsViewList.get(3));
-        yellowViews.add(ghostsViewList.get(3));
-        yellowViews.add(ghostsViewList.get(3));
-        yellowViews.add(ghostsViewList.get(3));
+        yellowViews.add(ghostsViewList.get(0));
+        yellowViews.add(ghostsViewList.get(0));
+        yellowViews.add(ghostsViewList.get(0));
+        yellowViews.add(ghostsViewList.get(0));
 
         //TODO change another behavior
-        MovingObject yellowGhost = new Ghost(3, yellowInitMotion, yellowViews, new ChaseBehaviour(), 16000);
+//        MovingObject yellowGhost = new Ghost(3, yellowInitMotion, yellowViews, new GhostScatterRightBottom(), 16000);
+        MovingObject yellowGhost = new Ghost(3, yellowInitMotion, yellowViews, new GhostKilledBehaviour(), 16000);
 
         //INIT Cake
         TwoTuple cakeInitPos = new TwoTuple(arcade.cakePosition);
