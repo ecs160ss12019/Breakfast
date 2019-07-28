@@ -132,7 +132,10 @@ public class GameObjectCollection {
     }
 
     public void pacmanReborn() {
-        if(pacman == null) return;
+        if(pacman == null){
+
+            return;
+        }
         if ( containsPacman == false ) {
             System.out.println("pacmanReborn");
             // reborn Pacman to the middle of current Arcade
@@ -225,8 +228,7 @@ public class GameObjectCollection {
                         score.pwrpelletEaten();
                         ((PowerPellet) gameObject).reward();
                     }
-                    atePowerPellet = true;
-
+                    PowerPelletEffective = true;
                     timerByFrame.setTimer(TimerByFrame.powerUp);
                     PowerPelletEffective = true;
                 }else {

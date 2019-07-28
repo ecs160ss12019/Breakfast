@@ -9,22 +9,87 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 public class GameOverActivity extends Activity {
+
+    private Button normalBtn;
+    private Button easyBtn;
+    private Button hardBtn;
+    private final int easy = 0;
+    private final int normal = 1;
+    private final int hard = 2;
+    private String modeSelectedTmp;
+    private int modeSelected;
+    public static final String EXTRA_NUMBER = "com.example.pacman.EXTRA_NUMBER";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Set the game in full screen mode
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //We don't want the title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_gameover);
-//        mainMenu();
+        normalBtn = (Button) findViewById(R.id.normalBtn);
+        easyBtn = (Button) findViewById(R.id.easyBtn);
+        hardBtn = (Button) findViewById(R.id.hardBtn);
+        modeSelected = -1;
+        modeSelectedTmp = "";
+        playGame();
     }
-//    void mainMenu(){
-//        Button mainButton = (Button) findViewById(R.id.playButton);
-//        mainButton.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View view) {
-//                startActivity(new Intent(GameOverActivity.this, MapSelectionActivity.class));
-//            }
-//        });
-//    }
+    public void playGame(){
+        easyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                modeSelectedTmp = easyBtn.getText().toString();
+                System.out.println(modeSelectedTmp + "--------------------------------------------");
+                mapSelect();
+            }
+        });
+        normalBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                modeSelectedTmp = normalBtn.getText().toString();
+                System.out.println(modeSelectedTmp + "--------------------------------------------");
+                mapSelect();
+            }
+        });
+        hardBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                modeSelectedTmp = hardBtn.getText().toString();
+                System.out.println(modeSelectedTmp + "--------------------------------------------");
+                mapSelect();
+            }
+        });
+    }
+
+    public void mapSelect() {
+        checkMode();
+        Intent intent = new Intent(this, MapSelectionActivity.class);
+        intent.putExtra(EXTRA_NUMBER, modeSelected);
+        startActivity(intent);
+
+    }
+    public void homeActivity() {
+        checkMode();
+        Intent intent = new Intent(this, WelcomeActivity.class);
+        intent.putExtra(EXTRA_NUMBER, modeSelected);
+        startActivity(intent);
+    }
+
+
+    public void checkMode() {
+        switch (modeSelectedTmp){
+            case "Easy":
+                modeSelected = easy;
+                break;
+            case "Normal":
+                modeSelected = normal;
+                break;
+            case "Hard":
+                modeSelected = hard;
+                break;
+        }
+    }
+
+
 }
