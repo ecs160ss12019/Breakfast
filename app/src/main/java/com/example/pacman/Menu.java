@@ -64,7 +64,5 @@ public class Menu {
         pauseImg = Bitmap.createScaledBitmap(pauseImg, optimalWidth, optimalHeight, true);
         buttonHeight = pauseImg.getHeight(); // 135
         buttonWidth = pauseImg.getWidth(); // 135
-
-
     }
 }

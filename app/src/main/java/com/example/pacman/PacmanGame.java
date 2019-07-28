@@ -185,13 +185,15 @@ class PacmanGame extends SurfaceView implements Runnable {
     // This method is called by PacmanActivity
     // when the player quits the game
     public void pause() {
-
         // Set mPlaying to false
         // Stopping the thread isn't
         // always instant
         try {
             // Stop the thread
+
+
             mGameThread.join();
+
         } catch (InterruptedException e) {
             Log.e("Error:", "joining thread");
         }
@@ -215,9 +217,9 @@ class PacmanGame extends SurfaceView implements Runnable {
      */
     @Override
     public void draw(Canvas canvas) {
+        long drawStartTime = System.nanoTime();
         super.draw(canvas);
 
-        // Fill the screen with a solid color
         mCanvas.drawColor(Color.argb
                 (255, 255, 255, 255));
 
