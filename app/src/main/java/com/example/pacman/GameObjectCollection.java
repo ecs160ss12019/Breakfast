@@ -34,6 +34,7 @@ public class GameObjectCollection {
     private ArrayList<GameObject> collisions;
 
     private boolean containsPacman;
+    private boolean ghostDead;
     private boolean ghostChasing;
     private boolean ghostScattering;
     private boolean ghostEscaping;
@@ -171,7 +172,12 @@ public class GameObjectCollection {
                 if (gameObject instanceof Ghost) {
                     if (PowerPelletEffective) {
                         //eats ghost
-                        movingObjects.remove(gameObject);
+                        //movingObjects.remove(gameObject);
+                        //ghost.ghostBehaviour = new KilledBehaviour();
+                        ghostChasing = false;
+                        ghostScattering = false;
+                        ghostEscaping = false;
+
                         score.ghostEaten();
                     } else {
                         //being eaten by ghost
@@ -228,6 +234,16 @@ public class GameObjectCollection {
                 this.ghostEscaping = false;
                 return;
             }
+
+            if (timerByFrame.timeUp && timerByFrame.countDownTime == TimerByFrame.scatterTime) {
+                System.out.println("return time up, changed to Chasing");
+                timerByFrame.setTimer(TimerByFrame.chaseTime);
+                this.ghostChasing = true;
+                this.ghostScattering = false;
+                this.ghostEscaping = false;
+                return;
+            }
+
         } else {
             if (timerByFrame.timeUp) {
                 PowerPelletEffective = false;
@@ -339,6 +355,7 @@ public class GameObjectCollection {
         this.ghostChasing = true;
         this.ghostScattering = false;
         this.ghostEscaping = false;
+        this.ghostDead = false;
         this.PowerPelletEffective = false;
         this.timerByFrame = new TimerByFrame(TimerByFrame.chaseTime);
 

@@ -406,10 +406,11 @@ public class Arcade{
         #----[--|--]----#
          */
 
-        // since pos in arcade use x for row, and y for col; we need to use arcade y to calculate screen x, vice versa.
+        // since pos in arcade use x for row, and y for col; we need to use arcade y to calculate screen x, vice versa。
         pacmanPosition_pix = new TwoTuple(xReference + pacmanPosition.y * blockWidth, yReference + pacmanPosition.x * blockHeight);
         ghostPosition_pix = new TwoTuple(xReference + ghostPosition.y * blockWidth, yReference + ghostPosition.x * blockHeight);
         cakePosition_pix = new TwoTuple(xReference + cakePosition.y * blockWidth, yReference + cakePosition.x * blockHeight);
+
 
         /*
         Now we get the img for each types of block.
