@@ -190,6 +190,12 @@ public class GameObjectCollection {
                 if (gameObject instanceof Ghost) {
                     if (PowerPelletEffective) {
                         //eats ghost
+                        if (((Ghost) gameObject).checkalive()) {
+                            ((Ghost) gameObject).eat();
+                            score.ghostEaten();
+                        }
+                        movingObjects.remove(gameObject);
+
                         movingObjects.remove(gameObject);
                         //ghost.ghostBehaviour = new KilledBehaviour();
                         //ghostChasing = false;
@@ -206,7 +212,10 @@ public class GameObjectCollection {
 
                 if (gameObject instanceof Cake) {
                     movingObjects.remove(gameObject);
-                    score.cakeEaten();
+                    if(((Cake) gameObject).checkalive()){
+                        ((Cake) gameObject).eat();
+                        score.ghostEaten();
+                    }
                 }
             }
 
@@ -216,6 +225,7 @@ public class GameObjectCollection {
                         score.pwrpelletEaten();
                         ((PowerPellet) gameObject).reward();
                     }
+                    atePowerPellet = true;
 
                     timerByFrame.setTimer(TimerByFrame.powerUp);
                     PowerPelletEffective = true;
