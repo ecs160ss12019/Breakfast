@@ -10,5 +10,8 @@ public class soundEffects {
 
     public soundEffects(Context context) {
         soundPool = new SoundPool(2, AudioManager.STREAM_MUSIC, 0);
+        welcomeMusic = soundPool.load(context, R.raw.welcome_music, 1);
     }
+
+
 }
