@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".WelcomeActivity"
 
-    android:background="@drawable/pacman_front_page">
+    android:background="@drawable/pacmanfrontpage">
 
     <Button
         android:id="@+id/hardBtn"
