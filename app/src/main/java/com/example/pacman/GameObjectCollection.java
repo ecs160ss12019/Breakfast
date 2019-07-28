@@ -172,11 +172,11 @@ public class GameObjectCollection {
                 if (gameObject instanceof Ghost) {
                     if (PowerPelletEffective) {
                         //eats ghost
-                        //movingObjects.remove(gameObject);
+                        movingObjects.remove(gameObject);
                         //ghost.ghostBehaviour = new KilledBehaviour();
-                        ghostChasing = false;
-                        ghostScattering = false;
-                        ghostEscaping = false;
+                        //ghostChasing = false;
+                        //ghostScattering = false;
+                        //ghostEscaping = false;
 
                         score.ghostEaten();
                     } else {
