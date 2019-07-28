@@ -27,7 +27,11 @@ public class MotionUpdater {
                 //Turn and go
                 if (essentialCheck(mathematicalMove)) {
                     posInScreen = arcade.mapScreen(posInArcade);
-                    pixelGap = 0;
+
+                    //TODO
+                    posInArcade = TwoTuple.moveTo(posInArcade, nextDirection);
+                    pixelGap = -blockDimension;
+                    //pixelGap = 0;
                     currDirection = nextDirection;
                     return;
                 }

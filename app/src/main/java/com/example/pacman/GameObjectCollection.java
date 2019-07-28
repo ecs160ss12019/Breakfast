@@ -89,11 +89,29 @@ public class GameObjectCollection {
                 MotionInfo ghostInfo = movingObject.motionInfo;
                 MotionInfo pacmanInfo = pacman.motionInfo;
 
-                updateGhostBehaviour((Ghost)movingObject);
+                //updateGhostBehaviour((Ghost)movingObject);
+
+                int id = ((Ghost)movingObject).id;
+                MotionInfo target = new MotionInfo();
+                if (id == RedGhostId) {
+                    target.posInArcade = new TwoTuple(2,3);
+                }
+
+                if (id == PinkGhostId) {
+                    target.posInArcade = new TwoTuple(2,24);
+                }
+
+                if (id == BlueGhostId) {
+                    target.posInArcade = new TwoTuple(28,3);
+                }
+
+                if (id == YellowGhostId) {
+                    target.posInArcade = new TwoTuple(28,24);
+                }
 
                 if (arcadeAnalyzer.isCross(ghostInfo.posInArcade)) {
                     movingObject.motionInfo.nextDirection = ((Ghost) movingObject).ghostBehaviour.performBehaviour(ghostInfo,
-                            pacmanInfo, redGhost.motionInfo, arcadeAnalyzer);
+                            target, redGhost.motionInfo, arcadeAnalyzer);
                 }
             }
 
@@ -108,7 +126,7 @@ public class GameObjectCollection {
         updateMotion(fps);
         updateCollision();
         updateStatus(score);
-        updateTimer();
+        //updateTimer();
 
         pacmanReborn();
     }
@@ -381,7 +399,10 @@ public class GameObjectCollection {
                 bitmapDivider.loadBitmap(R.drawable.ghosts),
                 new TwoTuple(2,2),
                 new TwoTuple(mScreen.y / 15, mScreen.y / 15));
-        final TwoTuple ghostInitPos = new TwoTuple(arcade.ghostPosition);
+
+        //FIXME
+        //final TwoTuple ghostInitPos = new TwoTuple(arcade.ghostPosition);
+        final TwoTuple ghostInitPos = new TwoTuple(5,3);
 
         //INIT RedGhost
         MotionInfo redInitMotion = new MotionInfo(
@@ -395,7 +416,7 @@ public class GameObjectCollection {
         redViews.add(ghostsViewList.get(0));
 
         //TODO change another behavior
-        redGhost = new Ghost(0, redInitMotion, redViews, new ChaseBehaviour());
+        redGhost = new Ghost(0, redInitMotion, redViews, new ChaseBehaviour(), 10000);
 
         //INIT PinkGhost
         MotionInfo pinkInitMotion = new MotionInfo(
@@ -409,7 +430,7 @@ public class GameObjectCollection {
         pinkViews.add(ghostsViewList.get(1));
 
         //TODO change another behavior
-        MovingObject pinkGhost = new Ghost(1, pinkInitMotion, pinkViews, new ChaseFrontBehaviour());
+        MovingObject pinkGhost = new Ghost(1, pinkInitMotion, pinkViews, new ChaseBehaviour(), 12000);
 
         //INIT BlueGhost
         MotionInfo blueInitMotion = new MotionInfo(
@@ -423,7 +444,7 @@ public class GameObjectCollection {
         blueViews.add(ghostsViewList.get(2));
 
         //TODO change another behavior
-        MovingObject blueGhost = new Ghost(2, blueInitMotion, blueViews, new PredictAndChaseBehaviour());
+        MovingObject blueGhost = new Ghost(2, blueInitMotion, blueViews, new ChaseBehaviour(), 14000);
 
         //INIT YellowGhost
         MotionInfo yellowInitMotion = new MotionInfo(
@@ -437,7 +458,7 @@ public class GameObjectCollection {
         yellowViews.add(ghostsViewList.get(3));
 
         //TODO change another behavior
-        MovingObject yellowGhost = new Ghost(3, yellowInitMotion, yellowViews, new SearchAndChaseBehaviour());
+        MovingObject yellowGhost = new Ghost(3, yellowInitMotion, yellowViews, new ChaseBehaviour(), 16000);
 
         //INIT Cake
         TwoTuple cakeInitPos = new TwoTuple(arcade.cakePosition);

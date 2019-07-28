@@ -77,7 +77,6 @@ class PacmanGame extends SurfaceView implements Runnable {
         // mPlaying must be true AND
         // the thread running for the main loop to execute
         while (mPlaying) {
-            System.out.println("mPlaying");
             /*
             while the game is not paused, update
              */
@@ -86,7 +85,6 @@ class PacmanGame extends SurfaceView implements Runnable {
             long frameStartTime = System.nanoTime();
 
             if(!mPaused) {
-                System.out.println("not mPaused");
                 /*
                 We want to prevent from updating any
                 motion related stuff if the fps is -1.
@@ -119,7 +117,6 @@ class PacmanGame extends SurfaceView implements Runnable {
                     }
                 }
             } else {
-                System.out.println("else running");
 
                 updateGame();
                 //this might not be null in the future
@@ -158,7 +155,6 @@ class PacmanGame extends SurfaceView implements Runnable {
                 // mBat and mBall next frame/loop
                 mFPS = MILLIS_IN_SECOND / timeThisFrame;
             }
-            System.out.println("fps: " + mFPS);
         }
     }
 
@@ -183,7 +179,6 @@ class PacmanGame extends SurfaceView implements Runnable {
             for (GameObjectCollection gameObjectCollection : gameObjectCollections) {
                 gameObjectCollection.update(direction, mFPS, score);
             }
-            System.out.println("Score: " + score.getScore());
         }
     }
 
@@ -236,10 +231,8 @@ class PacmanGame extends SurfaceView implements Runnable {
         gameObjectCollections.get(0).draw(canvas);
         navigationButtons.draw(canvas);
         if (!mPaused) {
-            System.out.println("display Pause ***************************************************");
             menu.drawPause(canvas);
         } else {
-            System.out.println("display PLAY ***************************************************");
             menu.drawPlay(canvas);
         }
     }

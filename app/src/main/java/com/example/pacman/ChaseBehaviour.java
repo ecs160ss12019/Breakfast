@@ -1,6 +1,8 @@
 package com.example.pacman;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class ChaseBehaviour implements GhostBehaviour {
@@ -21,7 +23,28 @@ public class ChaseBehaviour implements GhostBehaviour {
 
             //this is a 3 or 4 ways cross
             ArrayList<ComparableDirection> comparableDirections = new ArrayList<>();
-            ArrayList<Integer> allowedDirections = arcadeAnalyzer.getAllowedDirections(ghostPosInArcade);
+            ArrayList<Integer> allowedDirections = new ArrayList<>(arcadeAnalyzer.getAllowedDirections(ghostPosInArcade));
+
+            System.out.println("Before removing: " + allowedDirections);
+            //Allowed direction cannot be a immediate reversal
+            int currDirection = ghostMotion.currDirection;
+            switch (currDirection) {
+                case LEFT:
+                    allowedDirections.removeAll(Arrays.asList(RIGHT));
+                    break;
+                case RIGHT:
+                    allowedDirections.removeAll(Arrays.asList(LEFT));
+                    break;
+                case UP:
+                    allowedDirections.removeAll(Arrays.asList(DOWN));
+                    break;
+                case DOWN:
+                    allowedDirections.removeAll(Arrays.asList(UP));
+                    break;
+            }
+
+            System.out.println("After removing: " + allowedDirections);
+
             for (Integer direction : allowedDirections) {
                 comparableDirections.add(new ComparableDirection(direction, ghostPosInArcade, pacmanPosInArcade));
             }
