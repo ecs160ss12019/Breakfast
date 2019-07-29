@@ -13,6 +13,10 @@ id: 0 red   chase
 
 public class Ghost extends MovingObject {
     public int id;
+    private final ArrayList<Bitmap> normalViewList;
+    private final ArrayList<Bitmap> escapingViewList;
+    private final ArrayList<Bitmap> killedViewList;
+
     public GhostBehaviour ghostBehaviour;
     public GameObjectTimer gameObjectTimer;
     private static TwoTuple door = new TwoTuple(11,13);
@@ -153,10 +157,32 @@ public class Ghost extends MovingObject {
         }
     }
 
+    public void updateViewList() {
+        if (this.ghostBehaviour instanceof GhostKilledBehaviour ||
+                this.ghostBehaviour instanceof GhostEnterBehaviour) {
+            this.viewList = killedViewList;
+            return;
+        }
+
+        if (this.ghostBehaviour instanceof GhostEscapeBehaviour) {
+            this.viewList = escapingViewList;
+            return;
+        }
+
+        this.viewList = normalViewList;
+    }
+
     //Constructor
-    public Ghost(final int id, final MotionInfo motionInfo, final ArrayList<Bitmap> viewList,
+    public Ghost(final int id, final MotionInfo motionInfo,
+                 final ArrayList<Bitmap> normalViewList,
+                 final ArrayList<Bitmap> escapingViewList,
+                 final ArrayList<Bitmap> killedViewList,
                  GhostBehaviour ghostBehaviour, long countDownTime) {
-        super(motionInfo, viewList);
+        super(motionInfo, normalViewList);
+
+        this.normalViewList = normalViewList;
+        this.escapingViewList = escapingViewList;
+        this.killedViewList = killedViewList;
 
         this.id = id;
         this.ghostBehaviour = ghostBehaviour;

@@ -159,16 +159,13 @@ public class GameObjectCollection {
         for (GameObject gameObject : collisions) {
             if (gameObject instanceof MovingObject) {
                 if (gameObject instanceof Ghost) {
-                    if (PowerPelletEaten) {
-                        //eats ghost
-                        movingObjects.remove(gameObject);
-                        //ghost.ghostBehaviour = new KilledBehaviour();
-
-                        score.ghostEaten();
-                    } else {
+                    if (((Ghost) gameObject).ghostBehaviour instanceof GhostChaseBehaviourInterface ||
+                            ((Ghost) gameObject).ghostBehaviour instanceof GhostScatterBehaviourInterface) {
                         //being eaten by ghost
                         movingObjects.remove(pacman);
                         containsPacman = false;
+                    } else {
+                        score.ghostEaten();
                     }
                 }
 
@@ -208,6 +205,7 @@ public class GameObjectCollection {
                     System.out.println("Eaten!!!");
                 }
                 ((Ghost)movingObject).updateGhostBehavior(PowerPelletEaten, collision);
+                ((Ghost)movingObject).updateViewList();
                 System.out.println("Update: " + ((Ghost)movingObject).ghostBehaviour);
             }
         }
@@ -261,32 +259,37 @@ public class GameObjectCollection {
 
         //Init ghosts
         final ArrayList<Bitmap> ghostsViewList = BitmapDivider.splitAndResize(
-                bitmapDivider.loadBitmap(R.drawable.ghosts),
-                new TwoTuple(2,2),
+                bitmapDivider.loadBitmap(R.drawable.ghostcombined),
+                new TwoTuple(6,4),
                 new TwoTuple(mScreen.y / 15, mScreen.y / 15));
+        final ArrayList<Bitmap> ghostKilledList = new ArrayList<>(ghostsViewList.subList(16,19));
+        final ArrayList<Bitmap> ghostEscapeList = new ArrayList<>(ghostsViewList.subList(20,23));
 
-        //FIXME
-        //final TwoTuple ghostInitPos = new TwoTuple(arcade.ghostPosition);
+        //INIT RedGhost
+        final ArrayList<Bitmap> redGhostsViewList = new ArrayList<>(ghostsViewList.subList(0,3));
+
         final TwoTuple redGhostInitPos = new TwoTuple(11,14);
         final TwoTuple pinkGhostInitPos = new TwoTuple(15,11);
         final TwoTuple blueGhostInitPos = new TwoTuple(15,13);
         final TwoTuple yellowGhostInitPos = new TwoTuple(15,15);
 
-        //INIT RedGhost
         MotionInfo redInitMotion = new MotionInfo(
                 redGhostInitPos,
                 arcade.mapScreen(redGhostInitPos),
                 0, UP, -1, gameMode.getGhostsSpeed());
+
         ArrayList<Bitmap> redViews = new ArrayList<>();
         redViews.add(ghostsViewList.get(1));
         redViews.add(ghostsViewList.get(1));
         redViews.add(ghostsViewList.get(1));
         redViews.add(ghostsViewList.get(1));
 
-        //TODO change another behavior
-        redGhost = new Ghost(0, redInitMotion, redViews, new GhostStationaryBehaviour(), 1);
+        redGhost = new Ghost(0, redInitMotion, redGhostsViewList,
+                ghostEscapeList, ghostKilledList, new GhostStationaryBehaviour(), 1);
 
         //INIT PinkGhost
+        final ArrayList<Bitmap> pinkGhostsViewList = new ArrayList<>(ghostsViewList.subList(4,7));
+
         MotionInfo pinkInitMotion = new MotionInfo(
                 pinkGhostInitPos,
                 arcade.mapScreen(pinkGhostInitPos),
@@ -297,10 +300,11 @@ public class GameObjectCollection {
         pinkViews.add(ghostsViewList.get(3));
         pinkViews.add(ghostsViewList.get(3));
 
-        //TODO change another behavior
-        MovingObject pinkGhost = new Ghost(1, pinkInitMotion, pinkViews, new GhostStationaryBehaviour(), 2);
+        Ghost pinkGhost = new Ghost(0, pinkInitMotion, pinkGhostsViewList,
+                ghostEscapeList, ghostKilledList, new GhostStationaryBehaviour(), 1);
 
         //INIT BlueGhost
+        final ArrayList<Bitmap> blueGhostsViewList = new ArrayList<>(ghostsViewList.subList(8,11));
         MotionInfo blueInitMotion = new MotionInfo(
                 blueGhostInitPos,
                 arcade.mapScreen(blueGhostInitPos),
@@ -311,10 +315,11 @@ public class GameObjectCollection {
         blueViews.add(ghostsViewList.get(2));
         blueViews.add(ghostsViewList.get(2));
 
-        //TODO change another behavior
-        MovingObject blueGhost = new Ghost(2, blueInitMotion, blueViews, new GhostStationaryBehaviour(), 4);
+        Ghost blueGhost = new Ghost(0, blueInitMotion, blueGhostsViewList,
+                ghostEscapeList, ghostKilledList, new GhostStationaryBehaviour(), 1);
 
         //INIT YellowGhost
+        final ArrayList<Bitmap> yellowGhostsViewList = new ArrayList<>(ghostsViewList.subList(12,15));
         MotionInfo yellowInitMotion = new MotionInfo(
                 yellowGhostInitPos,
                 arcade.mapScreen(yellowGhostInitPos),
@@ -325,8 +330,8 @@ public class GameObjectCollection {
         yellowViews.add(ghostsViewList.get(0));
         yellowViews.add(ghostsViewList.get(0));
 
-        //TODO change another behavior
-        MovingObject yellowGhost = new Ghost(3, yellowInitMotion, yellowViews, new GhostStationaryBehaviour(), 6);
+        Ghost yellowGhost = new Ghost(0, yellowInitMotion, yellowGhostsViewList,
+                ghostEscapeList, ghostKilledList, new GhostStationaryBehaviour(), 1);
 
         //INIT Cake
         TwoTuple cakeInitPos = new TwoTuple(arcade.cakePosition);
