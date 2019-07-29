@@ -115,10 +115,17 @@ public class GameObjectCollection {
             }
 
             if (movingObject instanceof Cake) {
-                Random random = new Random();
                 MotionInfo changedDir = movingObject.getMotionInfo();
-                changedDir.nextDirection = random.nextInt(4);
-                movingObject.setMotionInfo(changedDir);
+                if (arcadeAnalyzer.isCross(changedDir.posInArcade)) {
+                    Random random = new Random();
+                    changedDir.nextDirection = random.nextInt(4);
+                    movingObject.setMotionInfo(changedDir);
+                }
+
+//                Random random = new Random();
+//                MotionInfo changedDir = movingObject.getMotionInfo();
+//                changedDir.nextDirection = random.nextInt(4);
+//                movingObject.setMotionInfo(changedDir);
             }
         }
 
