@@ -180,7 +180,6 @@ class PacmanGame extends SurfaceView implements Runnable {
             for (GameObjectCollection gameObjectCollection : gameObjectCollections) {
                 gameObjectCollection.update(direction, mFPS, score);
             }
-            pacmanLives = gameObjectCollections.get(0).pacmanLives;
         }
     }
 
