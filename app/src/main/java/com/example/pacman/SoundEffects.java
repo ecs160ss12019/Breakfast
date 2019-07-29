@@ -9,18 +9,18 @@ import android.os.Build;
 public class SoundEffects {
     private SoundPool soundPool;
     private int welcomeMusic;
+    private AudioAttributes audioAttributes;
 
     public SoundEffects(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+            audioAttributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_GAME)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                     .build();
             soundPool = new SoundPool.Builder()
-                    .setMaxStreams(6)
                     .setAudioAttributes(audioAttributes)
+                    .setMaxStreams(2)
                     .build();
-
         } else {
             soundPool = new SoundPool(2, AudioManager.STREAM_MUSIC, 0);
         }

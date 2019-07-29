@@ -21,7 +21,7 @@ public class WelcomeActivity extends Activity {
     private String modeSelectedTmp;
     private int modeSelected;
     public static final String EXTRA_NUMBER = "com.example.pacman.EXTRA_NUMBER";
-    public MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
