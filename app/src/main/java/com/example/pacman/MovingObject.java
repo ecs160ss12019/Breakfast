@@ -18,8 +18,8 @@ public class MovingObject implements GameObject{
     private boolean appear;
 
     //Bitmap
-    private ArrayList<Bitmap> viewList;
-    private int bitmapDimension;
+    protected ArrayList<Bitmap> viewList;
+    protected int bitmapDimension;
     //protected int currentBitmapIndex;
 
     public void eat(){

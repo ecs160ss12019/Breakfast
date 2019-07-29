@@ -1,6 +1,8 @@
 package com.example.pacman;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+
 import java.util.ArrayList;
 
 public class Pacman extends MovingObject {
@@ -10,6 +12,8 @@ public class Pacman extends MovingObject {
     private static Pacman pacman;
     private static boolean initialized = false;
 
+    private boolean openMouse = false;
+
     public void setInputDirection(int inputDirection) {
         if (inputDirection != -1) {
             this.motionInfo.nextDirection = inputDirection;
@@ -18,6 +22,22 @@ public class Pacman extends MovingObject {
 
     private void setBitmaps() {
 
+    }
+
+    @Override
+    public void draw(Canvas canvas) {
+        Bitmap currentView;
+        if(openMouse) {
+            currentView = viewList.get(motionInfo.currDirection+4);
+            openMouse = false;
+        } else {
+            currentView = viewList.get(motionInfo.currDirection);
+            openMouse = true;
+        }
+        canvas.drawBitmap(currentView,
+                motionInfo.posInScreen.x - (bitmapDimension/2),
+                motionInfo.posInScreen.y - (bitmapDimension/2),
+                null);
     }
 
     //Constructor
