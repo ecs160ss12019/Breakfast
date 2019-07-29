@@ -227,28 +227,11 @@ public class GameObjectCollection {
 
         //INIT Pacman
         TwoTuple pacmanInitPos = new TwoTuple(arcade.pacmanPosition);
-//        ArrayList<Bitmap> pacmanViewList = BitmapDivider.splitAndResize(
-//                bitmapDivider.loadBitmap(R.drawable.pacman),
-//                new TwoTuple(2,2),
-//                new TwoTuple(mScreen.y / 15, mScreen.y / 15));
 
-        ArrayList<Bitmap> pacmanViewList = new ArrayList<Bitmap>();
-        Bitmap pacmanLeft1 = Bitmap.createScaledBitmap(bitmapDivider.loadBitmap(R.drawable.pacman01), mScreen.y/15, mScreen.y/15, true);
-        pacmanViewList.add(pacmanLeft1);
-        Bitmap pacmanRight1 = Bitmap.createScaledBitmap(bitmapDivider.loadBitmap(R.drawable.pacman11), mScreen.y/15, mScreen.y/15, true);
-        pacmanViewList.add(pacmanRight1);
-        Bitmap pacmanUp1 = Bitmap.createScaledBitmap(bitmapDivider.loadBitmap(R.drawable.pacman21), mScreen.y/15, mScreen.y/15, true);
-        pacmanViewList.add(pacmanUp1);
-        Bitmap pacmanDown1 = Bitmap.createScaledBitmap(bitmapDivider.loadBitmap(R.drawable.pacman31), mScreen.y/15, mScreen.y/15, true);
-        pacmanViewList.add(pacmanDown1);
-        Bitmap pacmanLeft2 = Bitmap.createScaledBitmap(bitmapDivider.loadBitmap(R.drawable.pacman02), mScreen.y/15, mScreen.y/15, true);
-        pacmanViewList.add(pacmanLeft2);
-        Bitmap pacmanRight2 = Bitmap.createScaledBitmap(bitmapDivider.loadBitmap(R.drawable.pacman12), mScreen.y/15, mScreen.y/15, true);
-        pacmanViewList.add(pacmanRight2);
-        Bitmap pacmanUp2 = Bitmap.createScaledBitmap(bitmapDivider.loadBitmap(R.drawable.pacman22), mScreen.y/15, mScreen.y/15, true);
-        pacmanViewList.add(pacmanUp2);
-        Bitmap pacmanDown2 = Bitmap.createScaledBitmap(bitmapDivider.loadBitmap(R.drawable.pacman32), mScreen.y/15, mScreen.y/15, true);
-        pacmanViewList.add(pacmanDown2);
+        ArrayList<Bitmap> pacmanViewList = BitmapDivider.splitAndResize(
+                bitmapDivider.loadBitmap(R.drawable.pacmancombined),
+                new TwoTuple(6,4),
+                new TwoTuple(mScreen.y / 15, mScreen.y / 15));
 
         MotionInfo pacmanInitMotion = new MotionInfo(
                 pacmanInitPos,
