@@ -25,10 +25,10 @@ public class SoundEffects {
                     .build();
             soundPool = new SoundPool.Builder()
                     .setAudioAttributes(audioAttributes)
-                    .setMaxStreams(2)
+                    .setMaxStreams(1)
                     .build();
         } else {
-            soundPool = new SoundPool(2, AudioManager.STREAM_MUSIC, 0);
+            soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
         }
         pacman_chomp = soundPool.load(context, R.raw.edited_chomp, 1);
     }
