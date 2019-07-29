@@ -10,7 +10,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
+import android.content.Intent;
 import java.util.ArrayList;
 
 class PacmanGame extends SurfaceView implements Runnable {
@@ -25,6 +25,7 @@ class PacmanGame extends SurfaceView implements Runnable {
     //create SoundEffects class object
     private SoundEffects sound;
 
+    private Context context;
     // How many frames per second did we get?
     private long mFPS;
     // The number of milliseconds in a second
@@ -190,7 +191,18 @@ class PacmanGame extends SurfaceView implements Runnable {
             for (GameObjectCollection gameObjectCollection : gameObjectCollections) {
                 gameObjectCollection.update(direction, mFPS, score);
             }
+            if(Pacman.totalLives <= 0) {
+                mPlaying = false;
+                //stop();
+            }
         }
+    }
+    public void stop() {
+        pause();
+        // gameover, go to GameOverActivity
+        Intent intent = new Intent(context, GameOverActivity.class);
+        System.out.println("Start GameOverActivity");
+        context.startActivity(intent);
     }
 
     // This method is called by PacmanActivity
@@ -212,7 +224,7 @@ class PacmanGame extends SurfaceView implements Runnable {
     // This method is called by PacmanActivity
     // when the player starts the game
     public void resume() {
-        // mPaused = false;
+        mPaused = false;
         // Initialize the instance of Thread
         mGameThread = new Thread(this);
 
@@ -285,6 +297,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         // constructor of SurfaceView
         // provided by Android
         super(context);
+        this.context = context;
 
         numberHorizontalPixels = x;
         // initialize the sound class

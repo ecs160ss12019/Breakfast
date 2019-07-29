@@ -27,6 +27,7 @@ public class GameObjectCollection {
     final private ArcadeAnalyzer arcadeAnalyzer;
     final private MotionController motionController;
     final private GameMode gameMode;
+    private Context context;
     private SoundEffects sound;
 
     private MovingObject pacman;
@@ -205,8 +206,10 @@ public class GameObjectCollection {
     }
 
     private void updateCollision() {
+        if(pacman == null) return;
+
         //All collisions happen when the pacman is present!!!
-        if (!containsPacman) return;
+        if (!containsPacman && Pacman.totalLives <= 0) return;
 
         collisions = new ArrayList<>();
         Rect pacmanPathRect = pacman.getPathRect();
@@ -296,6 +299,7 @@ public class GameObjectCollection {
 
         this.PowerPelletEaten = false;
         this.gameMode = gameMode;
+        this.context = context;
 
         final BitmapDivider bitmapDivider = new BitmapDivider(context);
 

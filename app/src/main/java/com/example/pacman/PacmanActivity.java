@@ -16,7 +16,7 @@ public class PacmanActivity extends Activity {
     private boolean useGameView;
     private Intent intent;
     private int modeSelected;
-
+    Thread gameOverThread;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,21 +40,22 @@ public class PacmanActivity extends Activity {
         mPacmanGame = new PacmanGame(this, size.x, size.y, modeSelected);
         //mPacmanGame = new PacmanGame(this, 2028, 1080);
         setContentView(mPacmanGame);
+        Intent intent = new Intent(this, GameOverActivity.class);
         Log.d("Debugging", "In onCreate");
 
 
-//        gameOverThread = new Thread() {
-//            public void run() {
-//                while(true) {
-//                    // System.out.println("Check Game over");
-//                    if(Pacman.totalLives <= 0) {
-//                        gameOver();
-//                        break;
-//                    }
-//                }
-//            }
-//        };
-//        gameOverThread.start();
+        gameOverThread = new Thread() {
+            public void run() {
+                while(true) {
+                    // System.out.println("Check Game over");
+                    if(Pacman.totalLives <= 0) {
+                        gameOver();
+                        break;
+                    }
+                }
+            }
+        };
+        gameOverThread.start();
 
     }
 
@@ -74,16 +75,16 @@ public class PacmanActivity extends Activity {
         mPacmanGame.pause();
     }
 
-//    public void gameOver() {
-//        // System.out.println("gameOver is called");
-//        Intent intent = new Intent(this, GameOverActivity.class);
-//        startActivity(intent);
-//        try {
-//            gameOverThread.join();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public void gameOver() {
+        // System.out.println("gameOver is called");
+        Intent intent = new Intent(this, GameOverActivity.class);
+        startActivity(intent);
+        try {
+            gameOverThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
