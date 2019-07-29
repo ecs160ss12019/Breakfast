@@ -145,6 +145,53 @@ public class GameObjectCollection {
         }
     }
 
+    // initial ghost position
+
+    public MotionInfo InitialMotioninfo(int ID){
+        final TwoTuple redGhostInitPos = new TwoTuple(11,14);
+        final TwoTuple pinkGhostInitPos = new TwoTuple(15,11);
+        final TwoTuple blueGhostInitPos = new TwoTuple(15,13);
+        final TwoTuple yellowGhostInitPos = new TwoTuple(15,15);
+
+        MotionInfo Initialmotion = new MotionInfo();
+
+        switch (ID){
+            case 0:
+                MotionInfo redInitMotion = new MotionInfo(
+                        redGhostInitPos,
+                        arcade.mapScreen(redGhostInitPos),
+                        0, UP, -1, gameMode.getGhostsSpeed());
+                Initialmotion = redInitMotion;
+
+                break;
+            case 1:
+                MotionInfo pinkInitMotion = new MotionInfo(
+                        pinkGhostInitPos,
+                        arcade.mapScreen(pinkGhostInitPos),
+                        0, UP, -1, gameMode.getGhostsSpeed());
+                Initialmotion = pinkInitMotion;
+
+                break;
+            case 2:
+                MotionInfo blueInitMotion = new MotionInfo(
+                        blueGhostInitPos,
+                        arcade.mapScreen(blueGhostInitPos),
+                        0, UP, -1, gameMode.getGhostsSpeed());
+                Initialmotion = blueInitMotion;
+
+                break;
+
+            case 3:
+                MotionInfo yellowInitMotion = new MotionInfo(
+                        yellowGhostInitPos,
+                        arcade.mapScreen(yellowGhostInitPos),
+                        0, UP, -1, gameMode.getGhostsSpeed());
+                Initialmotion = yellowInitMotion;
+
+                break;
+        }
+        return Initialmotion;
+    }
 
 
     private void updateMotion(long fps) {
