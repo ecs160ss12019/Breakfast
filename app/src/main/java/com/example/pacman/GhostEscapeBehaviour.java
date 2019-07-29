@@ -16,8 +16,6 @@ public class GhostEscapeBehaviour implements GhostBehaviour {
 
         //check for necessity
         if (arcadeAnalyzer.getAllowedDirections(ghostPosInArcade).size() >= 3) {
-            int MaxIndex = arcadeAnalyzer.getAllowedDirections(ghostPosInArcade).size() - 1;
-
             //this is a 3 or 4 ways cross
             ArrayList<ComparableDirection> comparableDirections = new ArrayList<>();
             ArrayList<Integer> allowedDirections = arcadeAnalyzer.getAllowedDirections(ghostPosInArcade);
@@ -25,8 +23,9 @@ public class GhostEscapeBehaviour implements GhostBehaviour {
                 comparableDirections.add(new ComparableDirection(direction, ghostPosInArcade, pacmanPosInArcade));
             }
             Collections.sort(comparableDirections, new CompareDistance());
+            Collections.reverse(comparableDirections);
 
-            return comparableDirections.get(MaxIndex).getDirection();
+            return comparableDirections.get(0).getDirection();
         }
 
         else if (!arcadeAnalyzer.allowsToGo(ghostPosInArcade, ghostMotion.nextDirection)) {

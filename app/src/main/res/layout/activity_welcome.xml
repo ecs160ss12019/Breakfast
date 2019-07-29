@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".WelcomeActivity"
 
-    android:background="@drawable/pacmanfrontpage">
+    android:background="@drawable/pacman_front_page">
+
 
     <Button
         android:id="@+id/hardBtn"
@@ -15,20 +16,18 @@
         android:layout_height="42dp"
         android:layout_marginStart="288dp"
         android:layout_marginLeft="288dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="11dp"
         android:layout_marginEnd="269dp"
         android:layout_marginRight="269dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="30dp"
         android:background="@drawable/custom_button"
         android:text="Hard"
         android:textColor="#F44336"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.977" />
+        app:layout_constraintTop_toBottomOf="@+id/normalBtn" />
 
     <Button
         android:id="@+id/normalBtn"
@@ -36,20 +35,18 @@
         android:layout_height="42dp"
         android:layout_marginStart="288dp"
         android:layout_marginLeft="288dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="19dp"
         android:layout_marginEnd="269dp"
         android:layout_marginRight="269dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="18dp"
         android:background="@drawable/custom_button"
         android:text="Normal"
         android:textColor="#3F51B5"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/hardBtn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.798" />
+        app:layout_constraintTop_toBottomOf="@+id/easyBtn" />
 
     <Button
         android:id="@+id/easyBtn"
@@ -60,16 +57,33 @@
         android:layout_marginTop="218dp"
         android:layout_marginEnd="269dp"
         android:layout_marginRight="269dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="15dp"
         android:background="@drawable/custom_button"
         android:text="Easy"
         android:textColor="#009689"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/normalBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+        <!--tools:layout_editor_absoluteY="213dp" />-->
+
+    <!--<Button-->
+        <!--android:id="@+id/playButton"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginStart="154dp"-->
+        <!--android:layout_marginLeft="154dp"-->
+        <!--android:layout_marginTop="252dp"-->
+        <!--android:layout_marginEnd="135dp"-->
+        <!--android:layout_marginRight="135dp"-->
+        <!--android:text="click to go to the map selection page"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintHorizontal_bias="0.427"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent" />-->
+
 
 </android.support.constraint.ConstraintLayout>

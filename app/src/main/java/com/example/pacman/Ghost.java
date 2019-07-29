@@ -22,10 +22,13 @@ public class Ghost extends MovingObject {
 
     public void updateGhostBehavior(boolean powerPelletEaten, boolean collision) {
         final GhostBehaviour currBehaviour = this.ghostBehaviour;
-        final boolean isChasing = this.chaseBehaviourList.contains(currBehaviour);
-        final boolean isScatter = this.scatterBehaviourList.contains(currBehaviour);
-        final boolean timeUp = gameObjectTimer.timeUp;
+        final boolean isChasing = this.ghostBehaviour instanceof GhostChaseBehaviourInterface;
+        final boolean isScatter = this.ghostBehaviour instanceof GhostScatterBehaviourInterface;
+        final boolean timeUp = gameObjectTimer.isTimeUp();
+
         final TwoTuple currPos = this.motionInfo.posInArcade;
+        final boolean atDoor = currPos.x == door.x && currPos.y == door.y;
+        final boolean atReborn = currPos.x == RebornPos.x && currPos.y == RebornPos.y;
 
         if (currBehaviour instanceof GhostStationaryBehaviour && timeUp) {
 
@@ -33,7 +36,7 @@ public class Ghost extends MovingObject {
             return;
         }
 
-        if (currBehaviour instanceof GhostExitBehaviour && currPos == door) {
+        if (currBehaviour instanceof GhostExitBehaviour && atDoor) {
 
             switch (id) {
                 case 0:
@@ -56,6 +59,7 @@ public class Ghost extends MovingObject {
 
         if (isChasing && powerPelletEaten) {
             this.ghostBehaviour = new GhostEscapeBehaviour();
+            System.out.println("Changed to escape");
             this.gameObjectTimer = new GameObjectTimer(GameObjectTimer.powerUp);
             return;
         }
@@ -135,13 +139,13 @@ public class Ghost extends MovingObject {
             return;
         }
 
-        if(currBehaviour instanceof GhostKilledBehaviour && currPos == door){
+        if(currBehaviour instanceof GhostKilledBehaviour && atDoor){
             this.ghostBehaviour = new GhostEnterBehaviour();
 
             return;
         }
 
-        if(currBehaviour instanceof GhostEnterBehaviour && currPos == RebornPos){
+        if(currBehaviour instanceof GhostEnterBehaviour && atReborn){
 
             this.ghostBehaviour = new GhostExitBehaviour();
 

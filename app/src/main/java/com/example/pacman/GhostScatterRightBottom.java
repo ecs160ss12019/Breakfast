@@ -1,6 +1,6 @@
 package com.example.pacman;
 
-public class GhostScatterRightBottom implements GhostBehaviour {
+public class GhostScatterRightBottom implements GhostBehaviour, GhostScatterBehaviourInterface {
     @Override
     public int performBehaviour(MotionInfo ghostMotion, MotionInfo pacmanMotion, MotionInfo reference, ArcadeAnalyzer arcadeAnalyzer) {
         MotionInfo motionInfo = new MotionInfo();

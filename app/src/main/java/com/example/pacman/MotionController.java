@@ -1,5 +1,6 @@
 package com.example.pacman;
 
+import java.util.ArrayList;
 import java.util.Observable;
 
 //There is 1 motionController per arcade
@@ -7,7 +8,6 @@ public class MotionController extends Observable {
     final private ArcadeAnalyzer arcadeAnalyzerGhostHouseEnabled;
     final private ArcadeAnalyzer arcadeAnalyzerGhostHouseDisabled;
     final private Arcade arcade;
-    private SoundEffects sound;
 
     public void updateMovingObject(MovingObject movingObject, long fps) {
         if (fps == 0 || fps == -1) {
@@ -18,14 +18,9 @@ public class MotionController extends Observable {
         MotionInfo motionInfo = new MotionInfo();
         if (movingObject instanceof Pacman) {
             motionInfo = updatePacman(movingObject.getMotionInfo(), fps);
-            if (!TwoTuple.compare(motionInfo.posInScreen, movingObject.motionInfo.posInScreen)) {
-
-//                System.out.println("Pac-Man is moving ##############################################");
-//                System.out.println("+++++++++motionInfo.posInScreen "+ motionInfo.posInScreen);
-//                System.out.println("+++++++++movingObject.motionInfo.posInScreen "+ movingObject.motionInfo.posInScreen);
-            }
         }
         else if (movingObject instanceof Ghost) {
+            if (motionInfo.nextDirection == -1) return;
             motionInfo = updateGhost((Ghost)movingObject, movingObject.getMotionInfo(), fps);
         }
         else if (movingObject instanceof Cake) {
@@ -46,7 +41,8 @@ public class MotionController extends Observable {
 
     private MotionInfo updateGhost(final Ghost ghost, final MotionInfo motionInfo, final long fps) {
         MotionUpdater motionUpdater;
-        if (ghost.ghostBehaviour instanceof GhostKilledBehaviour) {
+        if (ghost.ghostBehaviour instanceof GhostEnterBehaviour ||
+                ghost.ghostBehaviour instanceof GhostExitBehaviour) {
             motionUpdater = new MotionUpdater(motionInfo, fps,
                     this.arcade, this.arcadeAnalyzerGhostHouseEnabled);
         } else {
