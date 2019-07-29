@@ -46,6 +46,10 @@ public class GameObjectCollection {
         for (MovingObject movingObject : movingObjects) {
             movingObject.draw(canvas);
         }
+
+        if(containsPacman == false) {
+            ((Pacman)pacman).drawDied(canvas);
+        }
     }
 
     public void update(int userInput, long fps, PointSystem score) {

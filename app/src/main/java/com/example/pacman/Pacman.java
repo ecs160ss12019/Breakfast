@@ -2,6 +2,7 @@ package com.example.pacman;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,24 @@ public class Pacman extends MovingObject {
                 motionInfo.posInScreen.x - (bitmapDimension/2),
                 motionInfo.posInScreen.y - (bitmapDimension/2),
                 null);
+    }
+
+    public void drawDied(Canvas canvas) {
+        System.out.println("Pacman is died");
+        for (Bitmap diedView : diedViewList) {
+            canvas.drawBitmap(diedView,
+                    motionInfo.posInScreen.x - (bitmapDimension/2),
+                    motionInfo.posInScreen.y - (bitmapDimension/2),
+                    null);
+            new android.os.Handler().postDelayed(
+                    new Runnable() {
+                        public void run() {
+                            Log.i("tag", "This'll run 300 milliseconds later");
+                        }
+                    },
+                    300);
+
+        }
     }
 
     //Constructor
