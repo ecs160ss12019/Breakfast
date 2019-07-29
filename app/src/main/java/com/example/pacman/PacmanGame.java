@@ -1,7 +1,6 @@
 package com.example.pacman;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -13,7 +12,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 class PacmanGame extends SurfaceView implements Runnable {
     // Are we debugging?
@@ -83,6 +81,8 @@ class PacmanGame extends SurfaceView implements Runnable {
             // What time is it now at the start of the loop?
             //long frameStartTime = System.currentTimeMillis();
             long frameStartTime = System.nanoTime();
+
+            System.out.println("Game is paused: " + mPaused);
 
             if(!mPaused) {
                 /*
@@ -168,6 +168,14 @@ class PacmanGame extends SurfaceView implements Runnable {
             mPaused = mPaused ? false : true;
         }
 
+        for(GameObjectCollection goc : gameObjectCollections) {
+            if(goc.needToPause) {
+                mPaused = true;
+                goc.needToPause = false;
+            }
+            break;
+        }
+
         if (!mPaused) {
             final int direction; // check if user pressed touch button on screen; if not, check if user entered arrow key on keyboard (for testing)
             if(navigationButtons.checkAndUpdate(userInput) != -1) direction = navigationButtons.checkAndUpdate(userInput);
@@ -201,7 +209,7 @@ class PacmanGame extends SurfaceView implements Runnable {
     // This method is called by PacmanActivity
     // when the player starts the game
     public void resume() {
-        mPaused = false;
+        // mPaused = false;
         // Initialize the instance of Thread
         mGameThread = new Thread(this);
 
@@ -291,7 +299,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         mFPS = -1;
 
         mPlaying = true;
-        mPaused = false;
+        mPaused = true;
 
         gameMode = new GameMode(inputLevel, mScreen.x);
         switch (gameMode.getDisplayMode()){

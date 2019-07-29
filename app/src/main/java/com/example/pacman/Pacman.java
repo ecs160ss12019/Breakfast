@@ -13,6 +13,7 @@ public class Pacman extends MovingObject {
     private static Pacman pacman;
     private static boolean initialized = false;
     private boolean openMouse = false;
+    private int diedViewIndex = 0;
     private List<Bitmap> normalViewList;
     private List<Bitmap> diedViewList;
 
@@ -40,11 +41,16 @@ public class Pacman extends MovingObject {
 
     public void drawDied(Canvas canvas) {
         System.out.println("Pacman is died");
-        for (Bitmap diedView : diedViewList) {
-            canvas.drawBitmap(diedView,
+        //for (Bitmap diedView : diedViewList) {
+        canvas.drawBitmap(diedViewList.get(diedViewIndex),
                     motionInfo.posInScreen.x - (bitmapDimension/2),
                     motionInfo.posInScreen.y - (bitmapDimension/2),
                     null);
+        if(diedViewIndex < diedViewList.size()-1) diedViewIndex +=1;
+        else {
+            diedViewIndex = 0;
+            this.alive();
+        }
 //            new android.os.Handler(Looper.getMainLooper()).postDelayed(
 //                    new Runnable() {
 //                        public void run() {
@@ -59,7 +65,7 @@ public class Pacman extends MovingObject {
 //                e.printStackTrace();
 //            }
 
-        }
+        //}
     }
 
     //Constructor

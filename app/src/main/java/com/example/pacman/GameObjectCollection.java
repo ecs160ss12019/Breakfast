@@ -36,6 +36,7 @@ public class GameObjectCollection {
 
     private boolean containsPacman;
     private boolean PowerPelletEaten;
+    boolean needToPause = false;
 
     public void draw(Canvas canvas) {
         arcade.draw(canvas);
@@ -50,7 +51,7 @@ public class GameObjectCollection {
 
         if(!containsPacman) {
             ((Pacman)pacman).drawDied(canvas);
-            pacmanReborn();
+            if(pacman.checkalive()) pacmanReborn();
         }
     }
 
@@ -133,6 +134,7 @@ public class GameObjectCollection {
 
             // initial ghost when pacman died
             initialGhost();
+            needToPause = true;
         }
     }
 
@@ -233,6 +235,7 @@ public class GameObjectCollection {
                         //being eaten by ghost
                         movingObjects.remove(pacman);
                         containsPacman = false;
+                        pacman.eat();
                     } else {
                         score.ghostEaten();
                     }
