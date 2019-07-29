@@ -58,6 +58,7 @@ public class GameObjectCollection {
     }
 
     public void update(int userInput, long fps, PointSystem score) {
+        sound.playSiren();
         for (MovingObject movingObject : movingObjects) {
             if (movingObject instanceof Pacman) {
                 ((Pacman) movingObject).setInputDirection(userInput);
@@ -237,23 +238,28 @@ public class GameObjectCollection {
                     if (((Ghost) gameObject).ghostBehaviour instanceof GhostChaseBehaviourInterface ||
                             ((Ghost) gameObject).ghostBehaviour instanceof GhostScatterBehaviourInterface) {
                         //being eaten by ghost
+
                         movingObjects.remove(pacman);
                         containsPacman = false;
                         pacman.eat();
+                        sound.playPacmanDeath();
                     } else {
                         score.ghostEaten();
+                        sound.playEatGhost();
                     }
                 }
 
                 if (gameObject instanceof Cake) {
                     movingObjects.remove(gameObject);
                     score.cakeEaten();
+                    sound.playEatPower();
                 }
             }
 
             if (gameObject instanceof StationaryObject) {
                 if(gameObject instanceof PowerPellet){
                     if(((PowerPellet) gameObject).checkReward() == false){
+                        sound.playEatPower();
                         score.pwrpelletEaten();
                         ((PowerPellet) gameObject).reward();
                     }
@@ -264,7 +270,6 @@ public class GameObjectCollection {
                         sound.playPacmanChomp();
                         score.pelletEaten();
                         ((NormalPellet) gameObject).reward();
-//                        sound.stopPacmanChomp();
                     }
                 }
                 stationaryObjects.remove(gameObject);
