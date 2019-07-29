@@ -33,7 +33,6 @@ public class MapSelectionActivity extends Activity {
         intent = getIntent();
         modeSelected = intent.getIntExtra(WelcomeActivity.EXTRA_NUMBER, -1);
 
-
         gameOn();
     }
 

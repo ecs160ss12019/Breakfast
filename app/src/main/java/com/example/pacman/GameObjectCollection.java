@@ -27,6 +27,7 @@ public class GameObjectCollection {
     final private ArcadeAnalyzer arcadeAnalyzer;
     final private MotionController motionController;
     final private GameMode gameMode;
+    private SoundEffects sound;
 
     private MovingObject pacman;
     private MovingObject redGhost;
@@ -257,8 +258,10 @@ public class GameObjectCollection {
                     PowerPelletEaten = true;
                 }else {
                     if(((NormalPellet) gameObject).checkReward() == false){
+                        sound.playPacmanChomp();
                         score.pelletEaten();
                         ((NormalPellet) gameObject).reward();
+//                        sound.stopPacmanChomp();
                     }
                 }
                 stationaryObjects.remove(gameObject);
@@ -285,10 +288,11 @@ public class GameObjectCollection {
 
     //Constructor
     public GameObjectCollection(final Context context, final TwoTuple mScreen,
-                                final Arcade arcade, final GameMode gameMode) {
+                                final Arcade arcade, final GameMode gameMode, SoundEffects sound) {
         this.arcade = arcade;
         this.arcadeAnalyzer = new ArcadeAnalyzer(arcade, true);
         this.motionController = new MotionController(arcade);
+        this.sound = sound;
 
         this.PowerPelletEaten = false;
         this.gameMode = gameMode;
