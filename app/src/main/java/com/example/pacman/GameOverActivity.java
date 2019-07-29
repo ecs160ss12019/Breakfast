@@ -10,9 +10,9 @@ import android.widget.Button;
 
 public class GameOverActivity extends Activity {
 
-    private Button normalBtn;
-    private Button easyBtn;
-    private Button hardBtn;
+    private Button replayBtn;
+    private Button mapBtn;
+    private Button homeBtn;
     private final int easy = 0;
     private final int normal = 1;
     private final int hard = 2;
@@ -28,38 +28,46 @@ public class GameOverActivity extends Activity {
         //We don't want the title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_gameover);
-        normalBtn = (Button) findViewById(R.id.normalBtn);
-        easyBtn = (Button) findViewById(R.id.easyBtn);
-        hardBtn = (Button) findViewById(R.id.hardBtn);
-        modeSelected = -1;
-        modeSelectedTmp = "";
+        replayBtn = (Button) findViewById(R.id.replayBtn);
+        mapBtn = (Button) findViewById(R.id.mapBtn);
+        homeBtn = (Button) findViewById(R.id.homeBtn);
+        //modeSelected = -1;
+        //modeSelectedTmp = "";
         playGame();
     }
     public void playGame(){
-        easyBtn.setOnClickListener(new View.OnClickListener() {
+        mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                modeSelectedTmp = easyBtn.getText().toString();
+                modeSelectedTmp = replayBtn.getText().toString();
+                System.out.println(modeSelectedTmp + "--------------------------------------------");
+                replay();
+            }
+        });
+        replayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                modeSelectedTmp = mapBtn.getText().toString();
                 System.out.println(modeSelectedTmp + "--------------------------------------------");
                 mapSelect();
             }
         });
-        normalBtn.setOnClickListener(new View.OnClickListener() {
+        homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                modeSelectedTmp = normalBtn.getText().toString();
+                modeSelectedTmp = homeBtn.getText().toString();
                 System.out.println(modeSelectedTmp + "--------------------------------------------");
-                mapSelect();
+                homeActivity();
             }
         });
-        hardBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                modeSelectedTmp = hardBtn.getText().toString();
-                System.out.println(modeSelectedTmp + "--------------------------------------------");
-                mapSelect();
-            }
-        });
+    }
+
+    public void replay() {
+        checkMode();
+        Intent intent = new Intent(this, MapSelectionActivity.class);
+        intent.putExtra(EXTRA_NUMBER, modeSelected);
+        startActivity(intent);
+
     }
 
     public void mapSelect() {
@@ -79,13 +87,13 @@ public class GameOverActivity extends Activity {
 
     public void checkMode() {
         switch (modeSelectedTmp){
-            case "Easy":
+            case "Replay":
                 modeSelected = easy;
                 break;
-            case "Normal":
+            case "Home":
                 modeSelected = normal;
                 break;
-            case "Hard":
+            case "Select Different Map":
                 modeSelected = hard;
                 break;
         }

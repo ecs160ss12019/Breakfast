@@ -61,6 +61,7 @@ class PacmanGame extends SurfaceView implements Runnable {
 
     //Our GameObjectCollections
     private ArrayList<GameObjectCollection> gameObjectCollections;
+    public int pacmanLives;
 
     int arrowKey = -1;
 
@@ -179,6 +180,7 @@ class PacmanGame extends SurfaceView implements Runnable {
             for (GameObjectCollection gameObjectCollection : gameObjectCollections) {
                 gameObjectCollection.update(direction, mFPS, score);
             }
+            pacmanLives = gameObjectCollections.get(0).pacmanLives;
         }
     }
 
@@ -230,6 +232,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         paint.setTypeface(plain);
         mCanvas.drawText("Score: "+ score.getScore(), 50, (numberHorizontalPixels/40)*3, paint);
         mCanvas.drawText("Speed: "+ modeSelected, 50, (numberHorizontalPixels/40)*4, paint);
+        mCanvas.drawText("Lives: "+ pacmanLives, 50, (numberHorizontalPixels/40)*5, paint);
         gameObjectCollections.get(0).draw(canvas);
         navigationButtons.draw(canvas);
         if (!mPaused) {
@@ -274,6 +277,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         // constructor of SurfaceView
         // provided by Android
         super(context);
+        pacmanLives = 3;
 
         numberHorizontalPixels = x;
 

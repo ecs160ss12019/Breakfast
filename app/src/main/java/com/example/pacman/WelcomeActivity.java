@@ -72,7 +72,6 @@ public class WelcomeActivity extends Activity {
         Intent intent = new Intent(this, MapSelectionActivity.class);
         intent.putExtra(EXTRA_NUMBER, modeSelected);
         startActivity(intent);
-
     }
 
     public void checkMode() {
