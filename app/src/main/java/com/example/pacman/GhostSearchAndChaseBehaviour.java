@@ -2,7 +2,7 @@ package com.example.pacman;
 
 import java.util.Random;
 
-public class GhostSearchAndChaseBehaviour implements GhostBehaviour{
+public class GhostSearchAndChaseBehaviour implements GhostBehaviour, GhostChaseBehaviourInterface{
     @Override
     public int performBehaviour(MotionInfo ghostMotion, MotionInfo pacmanMotion, MotionInfo reference, ArcadeAnalyzer arcadeAnalyzer) {
         //TODO new class()

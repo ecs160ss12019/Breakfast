@@ -3,6 +3,14 @@ package com.example.pacman;
 public class GhostExitBehaviour implements GhostBehaviour {
     @Override
     public int performBehaviour(MotionInfo ghostMotion, MotionInfo pacmanMotion, MotionInfo reference, ArcadeAnalyzer arcadeAnalyzer) {
-        return 0;
+        MotionInfo motionInfo = new MotionInfo();
+        motionInfo.posInArcade = new TwoTuple(11, 13);
+
+        GhostChaseBehaviour ghostChaseBehaviour = new GhostChaseBehaviour();
+        return ghostChaseBehaviour.performBehaviour(ghostMotion, motionInfo, null, arcadeAnalyzer);
+    }
+
+    public GhostExitBehaviour() {
+
     }
 }

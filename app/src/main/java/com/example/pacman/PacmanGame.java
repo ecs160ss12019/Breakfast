@@ -1,17 +1,19 @@
 package com.example.pacman;
 
 import android.content.Context;
-import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 class PacmanGame extends SurfaceView implements Runnable {
     // Are we debugging?
@@ -21,9 +23,6 @@ class PacmanGame extends SurfaceView implements Runnable {
     private SurfaceHolder mOurHolder;
     private Canvas mCanvas;
     private Paint mPaint;
-
-    //initialize sound class
-    private SoundEffects sound;
 
     // How many frames per second did we get?
     private long mFPS;
@@ -62,11 +61,8 @@ class PacmanGame extends SurfaceView implements Runnable {
 
     //Our GameObjectCollections
     private ArrayList<GameObjectCollection> gameObjectCollections;
-    public int pacmanLives;
 
     int arrowKey = -1;
-
-    private Context context;
 
     // When we start the thread with:
     // mGameThread.start();
@@ -183,39 +179,19 @@ class PacmanGame extends SurfaceView implements Runnable {
             for (GameObjectCollection gameObjectCollection : gameObjectCollections) {
                 gameObjectCollection.update(direction, mFPS, score);
             }
-
-            System.out.println("Score: " + score.getScore());
-
-            if(Pacman.totalLives <= 0) {
-                mPlaying = false;
-                //stop();
-            }
-
-            // pacmanLives = gameObjectCollections.get(0).pacmanLives;
-
         }
-    }
-
-    public void stop() {
-        pause();
-        // gameover, go to GameOverActivity
-        Intent intent = new Intent(context, GameOverActivity.class);
-        System.out.println("Start GameOverActivity");
-        context.startActivity(intent);
     }
 
     // This method is called by PacmanActivity
     // when the player quits the game
     public void pause() {
+
         // Set mPlaying to false
         // Stopping the thread isn't
         // always instant
         try {
             // Stop the thread
-
-
             mGameThread.join();
-
         } catch (InterruptedException e) {
             Log.e("Error:", "joining thread");
         }
@@ -239,9 +215,9 @@ class PacmanGame extends SurfaceView implements Runnable {
      */
     @Override
     public void draw(Canvas canvas) {
-        long drawStartTime = System.nanoTime();
         super.draw(canvas);
 
+        // Fill the screen with a solid color
         mCanvas.drawColor(Color.argb
                 (255, 255, 255, 255));
 
@@ -252,7 +228,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         paint.setTypeface(plain);
         mCanvas.drawText("Score: "+ score.getScore(), 50, (numberHorizontalPixels/40)*3, paint);
         mCanvas.drawText("Speed: "+ modeSelected, 50, (numberHorizontalPixels/40)*4, paint);
-        mCanvas.drawText("Lives: "+ pacmanLives, 50, (numberHorizontalPixels/40)*5, paint);
+
         mCanvas.drawText("Fps: "+ mFPS, 50, (numberHorizontalPixels/40)*6, paint);
         gameObjectCollections.get(0).draw(canvas);
         navigationButtons.draw(canvas);
@@ -281,16 +257,16 @@ class PacmanGame extends SurfaceView implements Runnable {
         return true;
     }
 
-//    @Override
-//    public boolean onKeyUp(int keyCode, KeyEvent keyEvent) {
-//        System.out.println("----------I pressed key------------");
-//        switch(keyCode) {
-//            case 37: // left arrow
-//                System.out.println("----------I pressed left------------");
-//                break;
-//        }
-//        return true;
-//    }
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent keyEvent) {
+        System.out.println("----------I pressed key------------");
+        switch(keyCode) {
+            case 37: // left arrow
+                System.out.println("----------I pressed left------------");
+                break;
+        }
+        return true;
+    }
 
     //Constructor
     public PacmanGame(Context context, int x, int y, int inputLevel) {
@@ -298,7 +274,6 @@ class PacmanGame extends SurfaceView implements Runnable {
         // constructor of SurfaceView
         // provided by Android
         super(context);
-        pacmanLives = 3;
 
         numberHorizontalPixels = x;
 
@@ -340,9 +315,6 @@ class PacmanGame extends SurfaceView implements Runnable {
         //userInput handler
         userInput = new UserInput();
 
-        // initialize the sound class
-        sound = new SoundEffects(getContext());
-
         // init the menu button
         menu = new Menu(context, mScreen.x, mScreen.y);
 
@@ -351,6 +323,5 @@ class PacmanGame extends SurfaceView implements Runnable {
         score = new PointSystem();
         //records = new Records(context);
         //records.printRecord();
-        this.context = context;
     }
 }

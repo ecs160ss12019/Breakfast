@@ -3,7 +3,6 @@ package com.example.pacman;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -21,7 +20,8 @@ public class WelcomeActivity extends Activity {
     private String modeSelectedTmp;
     private int modeSelected;
     public static final String EXTRA_NUMBER = "com.example.pacman.EXTRA_NUMBER";
-    private MediaPlayer mediaPlayer;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,18 +36,15 @@ public class WelcomeActivity extends Activity {
         hardBtn = (Button) findViewById(R.id.hardBtn);
         modeSelected = -1;
         modeSelectedTmp = "";
-        mediaPlayer = MediaPlayer.create(this, R.raw.welcome_music);
         playGame();
     }
 
     public void playGame(){
-        mediaPlayer.start();
         easyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 modeSelectedTmp = easyBtn.getText().toString();
                 System.out.println(modeSelectedTmp + "--------------------------------------------");
-                mediaPlayer.stop();
                 openActivitivy2();
             }
         });
@@ -56,7 +53,6 @@ public class WelcomeActivity extends Activity {
             public void onClick(View view) {
                 modeSelectedTmp = normalBtn.getText().toString();
                 System.out.println(modeSelectedTmp + "--------------------------------------------");
-                mediaPlayer.start();
                 openActivitivy2();
             }
         });
@@ -65,7 +61,6 @@ public class WelcomeActivity extends Activity {
             public void onClick(View view) {
                 modeSelectedTmp = hardBtn.getText().toString();
                 System.out.println(modeSelectedTmp + "--------------------------------------------");
-                mediaPlayer.start();
                 openActivitivy2();
             }
         });
@@ -77,6 +72,7 @@ public class WelcomeActivity extends Activity {
         Intent intent = new Intent(this, MapSelectionActivity.class);
         intent.putExtra(EXTRA_NUMBER, modeSelected);
         startActivity(intent);
+
     }
 
     public void checkMode() {

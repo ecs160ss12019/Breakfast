@@ -36,10 +36,6 @@ public class GameObjectCollection {
     private boolean containsPacman;
     private boolean PowerPelletEaten;
 
-    private Context context; // this context is originally from Pacman Activity, we can use this context to start another activity, like GameOverActivity
-
-    private GameObjectTimer powerPelletTimer;
-
     public void draw(Canvas canvas) {
         arcade.draw(canvas);
 
@@ -53,29 +49,6 @@ public class GameObjectCollection {
     }
 
     public void update(int userInput, long fps, PointSystem score) {
-        //if there is pacman, update its nextDirection to userInput
-//        for (MovingObject movingObject : movingObjects) {
-//            if (movingObject instanceof Pacman) {
-//                ((Pacman) movingObject).setInputDirection(userInput);
-//            }
-//
-//            if (movingObject instanceof Ghost) {
-//                MotionInfo ghostInfo = movingObject.motionInfo;
-//                MotionInfo pacmanInfo = pacman.motionInfo;
-//                if (arcadeAnalyzer.isCross(ghostInfo.posInArcade)) {
-//                    movingObject.motionInfo.nextDirection = ((Ghost) movingObject).ghostBehaviour.performBehaviour(ghostInfo,
-//                            pacmanInfo, redGhost.motionInfo, arcadeAnalyzer);
-//                }
-//            }
-//
-//            if (movingObject instanceof Cake) {
-//                Random random = new Random();
-//                MotionInfo changedDir = movingObject.getMotionInfo();
-//                changedDir.nextDirection = random.nextInt(4);
-//                movingObject.setMotionInfo(changedDir);
-//            }
-//        }
-
         for (MovingObject movingObject : movingObjects) {
             if (movingObject instanceof Pacman) {
                 ((Pacman) movingObject).setInputDirection(userInput);
@@ -105,6 +78,8 @@ public class GameObjectCollection {
 //                    target.posInArcade = new TwoTuple(28,24);
 //                }
 
+                System.out.println("Ghost timer: " + ((Ghost)movingObject).id + " " + ((Ghost)movingObject).gameObjectTimer.isTimeUp());
+
                 if (arcadeAnalyzer.isCross(ghostInfo.posInArcade)) {
                     movingObject.motionInfo.nextDirection = ((Ghost) movingObject).ghostBehaviour.performBehaviour(ghostInfo,
                             pacmanInfo, redGhost.motionInfo, arcadeAnalyzer);
@@ -112,34 +87,23 @@ public class GameObjectCollection {
             }
 
             if (movingObject instanceof Cake) {
+                Random random = new Random();
                 MotionInfo changedDir = movingObject.getMotionInfo();
-                if (arcadeAnalyzer.isCross(changedDir.posInArcade)) {
-                    Random random = new Random();
-                    changedDir.nextDirection = random.nextInt(4);
-                    movingObject.setMotionInfo(changedDir);
-                }
-
-//                Random random = new Random();
-//                MotionInfo changedDir = movingObject.getMotionInfo();
-//                changedDir.nextDirection = random.nextInt(4);
-//                movingObject.setMotionInfo(changedDir);
+                changedDir.nextDirection = random.nextInt(4);
+                movingObject.setMotionInfo(changedDir);
             }
         }
 
         updateMotion(fps);
         updateCollision();
         updateStatus(score);
-        updateGhost();
-
+        updateGhostBehaviour();
         pacmanReborn();
     }
 
     public void pacmanReborn() {
         if(pacman == null) return;
         if ( containsPacman == false ) {
-            if(Pacman.totalLives <= 0) {
-                return;
-            }
             System.out.println("pacmanReborn");
             // reborn Pacman to the middle of current Arcade
             MotionInfo prevMotion = pacman.getMotionInfo();
@@ -154,7 +118,7 @@ public class GameObjectCollection {
 
             if(!movingObjects.contains(pacman)) {
                 movingObjects.add(pacman);
-                System.out.println("read Pacman to current collection after reborn");
+                System.out.println("readd Pacman to current collection after reborn");
             }
 
             containsPacman = true;
@@ -169,10 +133,10 @@ public class GameObjectCollection {
     }
 
     private void updateCollision() {
-        collisions = new ArrayList<>();
         //All collisions happen when the pacman is present!!!
         if (!containsPacman) return;
 
+        collisions = new ArrayList<>();
         Rect pacmanPathRect = pacman.getPathRect();
         for (MovingObject movingObject : movingObjects) {
             if (!(movingObject instanceof Pacman) &&
@@ -197,11 +161,8 @@ public class GameObjectCollection {
                 if (gameObject instanceof Ghost) {
                     if (PowerPelletEaten) {
                         //eats ghost
-                        //movingObjects.remove(gameObject);
-                        //ghost.ghostBehaviour = new GhostKilledBehaviour();
-                        //ghostChasing = false;
-                        //ghostScattering = false;
-                        //ghostEscaping = false;
+                        movingObjects.remove(gameObject);
+                        //ghost.ghostBehaviour = new KilledBehaviour();
 
                         score.ghostEaten();
                     } else {
@@ -224,7 +185,6 @@ public class GameObjectCollection {
                         ((PowerPellet) gameObject).reward();
                     }
 
-                    powerPelletTimer = new GameObjectTimer(GameObjectTimer.powerUp);
                     PowerPelletEaten = true;
                 }else {
                     if(((NormalPellet) gameObject).checkReward() == false){
@@ -237,15 +197,21 @@ public class GameObjectCollection {
         }
     }
 
-    private void updateGhost() {
-        for(MovingObject movingObject : movingObjects) {
+    private void updateGhostBehaviour() {
+        for (MovingObject movingObject : movingObjects) {
             if (movingObject instanceof Ghost) {
-                boolean ghostCollision = collisions.contains(movingObject);
-                ((Ghost)movingObject).updateGhostBehavior(PowerPelletEaten, ghostCollision);
+                boolean collision = collisions.contains(movingObject);
+
+                System.out.println("Ghost " + ((Ghost)movingObject).id + " : " + ((Ghost)movingObject).ghostBehaviour);
+                System.out.println("Ghost pos " + movingObject.motionInfo.posInArcade.x + " " + movingObject.motionInfo.posInArcade.y);
+                if (PowerPelletEaten) {
+                    System.out.println("Eaten!!!");
+                }
+                ((Ghost)movingObject).updateGhostBehavior(PowerPelletEaten, collision);
+                System.out.println("Update: " + ((Ghost)movingObject).ghostBehaviour);
             }
         }
     }
-
 
     //Constructor
     public GameObjectCollection(final Context context, final TwoTuple mScreen,
@@ -255,8 +221,6 @@ public class GameObjectCollection {
         this.motionController = new MotionController(arcade);
 
         this.PowerPelletEaten = false;
-
-        this.powerPelletTimer = new GameObjectTimer();
 
         final BitmapDivider bitmapDivider = new BitmapDivider(context);
 
@@ -283,14 +247,16 @@ public class GameObjectCollection {
 
         //FIXME
         //final TwoTuple ghostInitPos = new TwoTuple(arcade.ghostPosition);
-        //final TwoTuple ghostInitPos = new TwoTuple(5,3);
-        final TwoTuple ghostInitPos = new TwoTuple(30,1);
+        final TwoTuple redGhostInitPos = new TwoTuple(11,14);
+        final TwoTuple pinkGhostInitPos = new TwoTuple(15,11);
+        final TwoTuple blueGhostInitPos = new TwoTuple(15,13);
+        final TwoTuple yellowGhostInitPos = new TwoTuple(15,15);
 
         //INIT RedGhost
         MotionInfo redInitMotion = new MotionInfo(
-                ghostInitPos,
-                arcade.mapScreen(ghostInitPos),
-                0, UP, UP, gameMode.getGhostsSpeed());
+                redGhostInitPos,
+                arcade.mapScreen(redGhostInitPos),
+                0, UP, -1, gameMode.getGhostsSpeed());
         ArrayList<Bitmap> redViews = new ArrayList<>();
         redViews.add(ghostsViewList.get(1));
         redViews.add(ghostsViewList.get(1));
@@ -298,14 +264,13 @@ public class GameObjectCollection {
         redViews.add(ghostsViewList.get(1));
 
         //TODO change another behavior
-        //redGhost = new Ghost(0, redInitMotion, redViews, new GhostScatterLeftTop(), 10000);
-        redGhost = new Ghost(0, redInitMotion, redViews, new GhostKilledBehaviour(), 10000);
+        redGhost = new Ghost(0, redInitMotion, redViews, new GhostStationaryBehaviour(), 1);
 
         //INIT PinkGhost
         MotionInfo pinkInitMotion = new MotionInfo(
-                ghostInitPos,
-                arcade.mapScreen(ghostInitPos),
-                0, UP, UP, gameMode.getGhostsSpeed());
+                pinkGhostInitPos,
+                arcade.mapScreen(pinkGhostInitPos),
+                0, UP, -1, gameMode.getGhostsSpeed());
         ArrayList<Bitmap> pinkViews = new ArrayList<>();
         pinkViews.add(ghostsViewList.get(3));
         pinkViews.add(ghostsViewList.get(3));
@@ -313,14 +278,13 @@ public class GameObjectCollection {
         pinkViews.add(ghostsViewList.get(3));
 
         //TODO change another behavior
-        //MovingObject pinkGhost = new Ghost(1, pinkInitMotion, pinkViews, new GhostScatterRightTop(), 12000);
-        MovingObject pinkGhost = new Ghost(1, pinkInitMotion, pinkViews, new GhostKilledBehaviour(), 12000);
+        MovingObject pinkGhost = new Ghost(1, pinkInitMotion, pinkViews, new GhostStationaryBehaviour(), 2);
 
         //INIT BlueGhost
         MotionInfo blueInitMotion = new MotionInfo(
-                ghostInitPos,
-                arcade.mapScreen(ghostInitPos),
-                0, UP, UP, gameMode.getGhostsSpeed());
+                blueGhostInitPos,
+                arcade.mapScreen(blueGhostInitPos),
+                0, UP, -1, gameMode.getGhostsSpeed());
         ArrayList<Bitmap> blueViews = new ArrayList<>();
         blueViews.add(ghostsViewList.get(2));
         blueViews.add(ghostsViewList.get(2));
@@ -328,14 +292,13 @@ public class GameObjectCollection {
         blueViews.add(ghostsViewList.get(2));
 
         //TODO change another behavior
-//        MovingObject blueGhost = new Ghost(2, blueInitMotion, blueViews, new GhostScatterLeftBottom(), 14000);
-        MovingObject blueGhost = new Ghost(2, blueInitMotion, blueViews, new GhostKilledBehaviour(), 14000);
+        MovingObject blueGhost = new Ghost(2, blueInitMotion, blueViews, new GhostStationaryBehaviour(), 4);
 
         //INIT YellowGhost
         MotionInfo yellowInitMotion = new MotionInfo(
-                ghostInitPos,
-                arcade.mapScreen(ghostInitPos),
-                0, UP, UP, gameMode.getGhostsSpeed());
+                yellowGhostInitPos,
+                arcade.mapScreen(yellowGhostInitPos),
+                0, UP, -1, gameMode.getGhostsSpeed());
         ArrayList<Bitmap> yellowViews = new ArrayList<>();
         yellowViews.add(ghostsViewList.get(0));
         yellowViews.add(ghostsViewList.get(0));
@@ -343,8 +306,7 @@ public class GameObjectCollection {
         yellowViews.add(ghostsViewList.get(0));
 
         //TODO change another behavior
-//        MovingObject yellowGhost = new Ghost(3, yellowInitMotion, yellowViews, new GhostScatterRightBottom(), 16000);
-        MovingObject yellowGhost = new Ghost(3, yellowInitMotion, yellowViews, new GhostKilledBehaviour(), 16000);
+        MovingObject yellowGhost = new Ghost(3, yellowInitMotion, yellowViews, new GhostStationaryBehaviour(), 6);
 
         //INIT Cake
         TwoTuple cakeInitPos = new TwoTuple(arcade.cakePosition);
@@ -436,6 +398,5 @@ public class GameObjectCollection {
         collisions = new ArrayList<>();
 
         this.containsPacman = arcade.inUse;
-        this.context = context;
     }
 }

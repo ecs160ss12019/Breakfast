@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class GhostChaseBehaviour implements GhostBehaviour {
+public class GhostChaseBehaviour implements GhostBehaviour, GhostChaseBehaviourInterface {
     final int LEFT = 0;
     final int RIGHT = 1;
     final int UP = 2;

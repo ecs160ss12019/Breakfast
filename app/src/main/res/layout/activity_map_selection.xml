@@ -9,6 +9,7 @@
     android:background="@drawable/gradient_list"
     tools:context=".MapSelectionActivity">
 
+
     <TextView
     android:id="@+id/gaming"
     android:layout_width="match_parent"
@@ -32,32 +33,52 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="250dp"
-                    android:layout_height="243dp"/>
+                    android:id="@+id/imageView5"
+                    android:layout_width="119dp"
+                    android:layout_height="110dp"
+                    android:src="@drawable/pellet" />
 
                 <ImageView
-                    android:id="@+id/map2"
-                    android:layout_width="250dp"
-                    android:layout_height="243dp"
-                    android:src="@drawable/map1" />
+                    android:id="@+id/imageView6"
+                    android:layout_width="119dp"
+                    android:layout_height="110dp"
+                    android:src="@drawable/pellet" />
 
                 <ImageView
-                    android:id="@+id/map3"
-                    android:layout_width="250dp"
-                    android:layout_height="243dp"
-                    android:src="@drawable/map2" />
+                    android:id="@+id/imageView7"
+                    android:layout_width="119dp"
+                    android:layout_height="110dp"
+                    android:src="@android:drawable/btn_star_big_on" />
 
                 <ImageView
-                    android:id="@+id/map4"
-                    android:layout_width="250dp"
-                    android:layout_height="243dp"
-                    android:src="@drawable/map1" />
+                    android:id="@+id/imageView8"
+                    android:layout_width="119dp"
+                    android:layout_height="110dp"
+                    android:src="@android:drawable/btn_star_big_on" />
 
                 <ImageView
-                    android:id="@+id/map5"
-                    android:layout_width="250dp"
-                    android:layout_height="243dp"
-                    android:src="@drawable/map2" />
+                    android:id="@+id/imageView9"
+                    android:layout_width="119dp"
+                    android:layout_height="110dp"
+                    android:src="@drawable/pellet" />
+
+                <ImageView
+                    android:id="@+id/imageView10"
+                    android:layout_width="119dp"
+                    android:layout_height="110dp"
+                    android:src="@android:drawable/btn_star_big_on" />
+
+                <ImageView
+                    android:id="@+id/imageView11"
+                    android:layout_width="119dp"
+                    android:layout_height="110dp"
+                    android:src="@drawable/pellet" />
+
+                <ImageView
+                    android:id="@+id/imageView12"
+                    android:layout_width="119dp"
+                    android:layout_height="110dp"
+                    android:src="@android:drawable/btn_star_big_on" />
             </LinearLayout>
         </HorizontalScrollView>
     </LinearLayout>

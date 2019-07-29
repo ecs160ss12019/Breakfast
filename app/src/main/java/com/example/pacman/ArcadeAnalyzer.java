@@ -7,7 +7,7 @@ public class ArcadeAnalyzer{
     private final int numRow;
     private final int numCol;
     public final int blockDimension;
-    public final boolean ghostHouseEnabled;
+    private final boolean ghostHouseEnabled;
 
     //Allowed direction of an Arcade Block
     private ArrayList<ArrayList<Integer>> analyzedArcade;
