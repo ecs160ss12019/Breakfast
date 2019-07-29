@@ -147,23 +147,17 @@ public class Ghost extends MovingObject {
 
             return;
         }
-
-
-
-
-
-
     }
 
     //Constructor
     public Ghost(final int id, final MotionInfo motionInfo, final ArrayList<Bitmap> viewList,
-                 GhostBehaviour ghostBehaviour, long CountDownTime) {
+                 GhostBehaviour ghostBehaviour, long countDownTime) {
         super(motionInfo, viewList);
 
         this.id = id;
         this.ghostBehaviour = ghostBehaviour;
 
-        this.gameObjectTimer = new GameObjectTimer(CountDownTime);
+        this.gameObjectTimer = new GameObjectTimer(countDownTime);
 
         this.chaseBehaviourList = new ArrayList<>();
         chaseBehaviourList.add(new GhostChaseBehaviour());

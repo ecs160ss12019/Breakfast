@@ -1,10 +1,8 @@
 package com.example.pacman;
 
-import android.app.Activity;
 import android.os.CountDownTimer;
-
-import java.util.Timer;
-import java.util.TimerTask;
+import android.os.Handler;
+import android.os.Looper;
 
 public class GameObjectTimer {
     final static int chaseTime = 20000;
@@ -14,21 +12,27 @@ public class GameObjectTimer {
     public boolean timeUp;
     private CountDownTimer countDownTimer;
 
-    public void setTimer(long countDownTime) {
+    public void setTimer(final long countDownTime) {
         this.timeUp = false;
 
-        this.countDownTimer.cancel();
-        this.countDownTimer = new CountDownTimer(countDownTime, 1000) {
+        if(this.countDownTimer != null) this.countDownTimer.cancel();
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
-            public void onTick(long l) {
+            public void run() {
+                countDownTimer = new CountDownTimer(countDownTime, 1000) {
+                    @Override
+                    public void onTick(long l) {
 
-            }
+                    }
 
-            @Override
-            public void onFinish() {
-                timeUp = true;
+                    @Override
+                    public void onFinish() {
+                        timeUp = true;
+                    }
+                }.start();
             }
-        }.start();
+        });
+
     }
 
     public void cancelTimer() {
