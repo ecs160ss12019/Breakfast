@@ -1,19 +1,17 @@
 package com.example.pacman;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 class PacmanGame extends SurfaceView implements Runnable {
     // Are we debugging?
@@ -64,6 +62,8 @@ class PacmanGame extends SurfaceView implements Runnable {
     public int pacmanLives;
 
     int arrowKey = -1;
+
+    private Context context;
 
     // When we start the thread with:
     // mGameThread.start();
@@ -180,7 +180,25 @@ class PacmanGame extends SurfaceView implements Runnable {
             for (GameObjectCollection gameObjectCollection : gameObjectCollections) {
                 gameObjectCollection.update(direction, mFPS, score);
             }
+
+            System.out.println("Score: " + score.getScore());
+
+            if(Pacman.totalLives <= 0) {
+                mPlaying = false;
+                //stop();
+            }
+
+            // pacmanLives = gameObjectCollections.get(0).pacmanLives;
+
         }
+    }
+
+    public void stop() {
+        pause();
+        // gameover, go to GameOverActivity
+        Intent intent = new Intent(context, GameOverActivity.class);
+        System.out.println("Start GameOverActivity");
+        context.startActivity(intent);
     }
 
     // This method is called by PacmanActivity
@@ -259,16 +277,16 @@ class PacmanGame extends SurfaceView implements Runnable {
         return true;
     }
 
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent keyEvent) {
-        System.out.println("----------I pressed key------------");
-        switch(keyCode) {
-            case 37: // left arrow
-                System.out.println("----------I pressed left------------");
-                break;
-        }
-        return true;
-    }
+//    @Override
+//    public boolean onKeyUp(int keyCode, KeyEvent keyEvent) {
+//        System.out.println("----------I pressed key------------");
+//        switch(keyCode) {
+//            case 37: // left arrow
+//                System.out.println("----------I pressed left------------");
+//                break;
+//        }
+//        return true;
+//    }
 
     //Constructor
     public PacmanGame(Context context, int x, int y, int inputLevel) {
@@ -326,5 +344,6 @@ class PacmanGame extends SurfaceView implements Runnable {
         score = new PointSystem();
         //records = new Records(context);
         //records.printRecord();
+        this.context = context;
     }
 }

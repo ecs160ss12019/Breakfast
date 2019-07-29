@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -17,6 +16,8 @@ public class PacmanActivity extends Activity {
     private boolean useGameView;
     private Intent intent;
     private int modeSelected;
+
+    Thread gameOverThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +46,18 @@ public class PacmanActivity extends Activity {
             gameOver();
         }
         Log.d("Debugging", "In onCreate");
-    }
-    public void gameOver() {
-        System.out.println("GAME OVER HERE!!!");
-        startActivity(intent);
+
+        gameOverThread = new Thread() {
+            public void run() {
+                while(true) {
+                    System.out.println("Check Game over");
+                    if(Pacman.totalLives <= 0) {
+                        gameOver();
+                    }
+                }
+            }
+        };
+        gameOverThread.start();
     }
 
     @Override
@@ -67,7 +76,23 @@ public class PacmanActivity extends Activity {
         mPacmanGame.pause();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // stop once Pacman is dead for 3 times, go to GameOverActivity
 
+    }
+
+    public void gameOver() {
+        System.out.println("gameOver is called");
+        Intent intent = new Intent(this, GameOverActivity.class);
+        startActivity(intent);
+        try {
+            gameOverThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

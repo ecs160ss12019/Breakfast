@@ -36,6 +36,8 @@ public class GameObjectCollection {
     private boolean containsPacman;
     private boolean PowerPelletEaten;
 
+    private Context context; // this context is originally from Pacman Activity, we can use this context to start another activity, like GameOverActivity
+
     private GameObjectTimer powerPelletTimer;
 
     public void draw(Canvas canvas) {
@@ -110,10 +112,17 @@ public class GameObjectCollection {
             }
 
             if (movingObject instanceof Cake) {
-                Random random = new Random();
                 MotionInfo changedDir = movingObject.getMotionInfo();
-                changedDir.nextDirection = random.nextInt(4);
-                movingObject.setMotionInfo(changedDir);
+                if (arcadeAnalyzer.isCross(changedDir.posInArcade)) {
+                    Random random = new Random();
+                    changedDir.nextDirection = random.nextInt(4);
+                    movingObject.setMotionInfo(changedDir);
+                }
+
+//                Random random = new Random();
+//                MotionInfo changedDir = movingObject.getMotionInfo();
+//                changedDir.nextDirection = random.nextInt(4);
+//                movingObject.setMotionInfo(changedDir);
             }
         }
 
@@ -128,6 +137,9 @@ public class GameObjectCollection {
     public void pacmanReborn() {
         if(pacman == null) return;
         if ( containsPacman == false ) {
+            if(Pacman.totalLives <= 0) {
+                return;
+            }
             System.out.println("pacmanReborn");
             // reborn Pacman to the middle of current Arcade
             MotionInfo prevMotion = pacman.getMotionInfo();
@@ -424,5 +436,6 @@ public class GameObjectCollection {
         collisions = new ArrayList<>();
 
         this.containsPacman = arcade.inUse;
+        this.context = context;
     }
 }
