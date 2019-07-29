@@ -132,6 +132,7 @@ public class GameObjectCollection {
             Pacman.totalLives -=1;
 
             // initial ghost when pacman died
+            initialGhost();
         }
     }
 
