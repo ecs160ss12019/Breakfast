@@ -16,6 +16,10 @@ public class Pacman extends MovingObject {
         }
     }
 
+    private void setBitmaps() {
+
+    }
+
     //Constructor
     public Pacman(final MotionInfo motionInfo, final ArrayList<Bitmap> viewList) {
         super(motionInfo, viewList);

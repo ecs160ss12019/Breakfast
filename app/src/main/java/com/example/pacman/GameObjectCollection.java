@@ -265,14 +265,34 @@ public class GameObjectCollection {
 
         //INIT Pacman
         TwoTuple pacmanInitPos = new TwoTuple(arcade.pacmanPosition);
-        ArrayList<Bitmap> pacmanViewList = BitmapDivider.splitAndResize(
-                bitmapDivider.loadBitmap(R.drawable.pacman),
-                new TwoTuple(2,2),
-                new TwoTuple(mScreen.y / 15, mScreen.y / 15));
+//        ArrayList<Bitmap> pacmanViewList = BitmapDivider.splitAndResize(
+//                bitmapDivider.loadBitmap(R.drawable.pacman),
+//                new TwoTuple(2,2),
+//                new TwoTuple(mScreen.y / 15, mScreen.y / 15));
+
+        ArrayList<Bitmap> pacmanViewList = new ArrayList<Bitmap>();
+        Bitmap pacmanRight1 = Bitmap.createScaledBitmap(bitmapDivider.loadBitmap(R.drawable.pacman01), mScreen.y/15, mScreen.y/15, true);
+        pacmanViewList.add(pacmanRight1);
+        Bitmap pacmanRight2 = Bitmap.createScaledBitmap(bitmapDivider.loadBitmap(R.drawable.pacman02), mScreen.y/15, mScreen.y/15, true);
+        pacmanViewList.add(pacmanRight2);
+        Bitmap pacmanDown1 = Bitmap.createScaledBitmap(bitmapDivider.loadBitmap(R.drawable.pacman11), mScreen.y/15, mScreen.y/15, true);
+        pacmanViewList.add(pacmanDown1);
+        Bitmap pacmanDown2 = Bitmap.createScaledBitmap(bitmapDivider.loadBitmap(R.drawable.pacman12), mScreen.y/15, mScreen.y/15, true);
+        pacmanViewList.add(pacmanDown2);
+        Bitmap pacmanLeft1 = Bitmap.createScaledBitmap(bitmapDivider.loadBitmap(R.drawable.pacman21), mScreen.y/15, mScreen.y/15, true);
+        pacmanViewList.add(pacmanLeft1);
+        Bitmap pacmanLeft2 = Bitmap.createScaledBitmap(bitmapDivider.loadBitmap(R.drawable.pacman22), mScreen.y/15, mScreen.y/15, true);
+        pacmanViewList.add(pacmanLeft2);
+        Bitmap pacmanUp1 = Bitmap.createScaledBitmap(bitmapDivider.loadBitmap(R.drawable.pacman31), mScreen.y/15, mScreen.y/15, true);
+        pacmanViewList.add(pacmanUp1);
+        Bitmap pacmanUp2 = Bitmap.createScaledBitmap(bitmapDivider.loadBitmap(R.drawable.pacman32), mScreen.y/15, mScreen.y/15, true);
+        pacmanViewList.add(pacmanUp2);
+
         MotionInfo pacmanInitMotion = new MotionInfo(
                 pacmanInitPos,
                 arcade.mapScreen(pacmanInitPos),
                 0, RIGHT, -1, gameMode.getPacmanSpeed());
+
         pacman = new Pacman(pacmanInitMotion, pacmanViewList);
 
         //Init ghosts
