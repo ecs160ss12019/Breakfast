@@ -42,6 +42,8 @@ public class GameObjectCollection {
     //private Timer timer;
     private TimerByFrame timerByFrame;
 
+    private Context context; // this context is originally from Pacman Activity, we can use this context to start another activity, like GameOverActivity
+
 
     public void draw(Canvas canvas) {
         arcade.draw(canvas);
@@ -115,6 +117,9 @@ public class GameObjectCollection {
     public void pacmanReborn() {
         if(pacman == null) return;
         if ( containsPacman == false ) {
+            if(Pacman.totalLives <= 0) {
+                return;
+            }
             System.out.println("pacmanReborn");
             // reborn Pacman to the middle of current Arcade
             MotionInfo prevMotion = pacman.getMotionInfo();
@@ -512,5 +517,6 @@ public class GameObjectCollection {
         collisions = new ArrayList<>();
 
         this.containsPacman = arcade.inUse;
+        this.context = context;
     }
 }

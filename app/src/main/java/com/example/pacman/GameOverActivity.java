@@ -1,16 +1,14 @@
 package com.example.pacman;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 
 public class GameOverActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("GameOverActivity onCreate");
         super.onCreate(savedInstanceState);
         //Set the game in full screen mode
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);

@@ -17,6 +17,8 @@ public class PacmanActivity extends Activity {
     private Intent intent;
     private int modeSelected;
 
+    Thread gameOverThread;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +43,18 @@ public class PacmanActivity extends Activity {
         //mPacmanGame = new PacmanGame(this, 2028, 1080);
         setContentView(mPacmanGame);
         Log.d("Debugging", "In onCreate");
+
+        gameOverThread = new Thread() {
+            public void run() {
+                while(true) {
+                    System.out.println("Check Game over");
+                    if(Pacman.totalLives <= 0) {
+                        gameOver();
+                    }
+                }
+            }
+        };
+        gameOverThread.start();
     }
 
     @Override
@@ -59,7 +73,23 @@ public class PacmanActivity extends Activity {
         mPacmanGame.pause();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // stop once Pacman is dead for 3 times, go to GameOverActivity
 
+    }
+
+    public void gameOver() {
+        System.out.println("gameOver is called");
+        Intent intent = new Intent(this, GameOverActivity.class);
+        startActivity(intent);
+        try {
+            gameOverThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
