@@ -21,7 +21,7 @@ public class WelcomeActivity extends Activity {
     private String modeSelectedTmp;
     private int modeSelected;
     public static final String EXTRA_NUMBER = "com.example.pacman.EXTRA_NUMBER";
-    private MediaPlayer mediaPlayer;
+    private SoundEffects sound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +36,12 @@ public class WelcomeActivity extends Activity {
         hardBtn = (Button) findViewById(R.id.hardBtn);
         modeSelected = -1;
         modeSelectedTmp = "";
-        mediaPlayer = MediaPlayer.create(this, R.raw.welcome_music);
+        sound = new SoundEffects(this);
         playGame();
     }
 
     public void playGame(){
-        mediaPlayer.start();
+        sound.playWelcome();
         easyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
