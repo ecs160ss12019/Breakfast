@@ -3,7 +3,7 @@ package com.example.pacman;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class EscapeBehaviour implements GhostBehaviour {
+public class GhostEscapeBehaviour implements GhostBehaviour {
     final int LEFT = 0;
     final int RIGHT = 1;
     final int UP = 2;
@@ -47,7 +47,7 @@ public class EscapeBehaviour implements GhostBehaviour {
         return ghostMotion.nextDirection;
     }
 
-    public EscapeBehaviour() {
+    public GhostEscapeBehaviour() {
 
     }
 
