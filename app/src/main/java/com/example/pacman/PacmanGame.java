@@ -1,3 +1,5 @@
+// Cited: https://github.com/PacktPublishing/Learning-Java-by-Building-Android-Games-Second-Edition/blob/master/Chapter10/java/PongGame.java
+
 package com.example.pacman;
 
 import android.content.Context;

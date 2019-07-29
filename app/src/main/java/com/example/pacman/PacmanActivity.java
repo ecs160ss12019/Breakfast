@@ -1,3 +1,6 @@
+// Cited: https://github.com/PacktPublishing/Learning-Java-by-Building-Android-Games-Second-Edition/blob/master/Chapter10/java/PongActivity.java
+// Used the same structure as Pong Game to separate game logic (PacmanGame) from android activity life cycle (PacmanActivity).
+
 package com.example.pacman;
 
 import android.app.Activity;
