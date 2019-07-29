@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Pacman extends MovingObject {
 
@@ -11,8 +12,9 @@ public class Pacman extends MovingObject {
 
     private static Pacman pacman;
     private static boolean initialized = false;
-
     private boolean openMouse = false;
+    private List<Bitmap> normalViewList;
+    private List<Bitmap> diedViewList;
 
     public void setInputDirection(int inputDirection) {
         if (inputDirection != -1) {
@@ -20,18 +22,14 @@ public class Pacman extends MovingObject {
         }
     }
 
-    private void setBitmaps() {
-
-    }
-
     @Override
     public void draw(Canvas canvas) {
         Bitmap currentView;
         if(openMouse) {
-            currentView = viewList.get(motionInfo.currDirection+4);
+            currentView = normalViewList.get(motionInfo.currDirection*2+1);
             openMouse = false;
         } else {
-            currentView = viewList.get(motionInfo.currDirection);
+            currentView = normalViewList.get(motionInfo.currDirection*2);
             openMouse = true;
         }
         canvas.drawBitmap(currentView,
@@ -43,6 +41,8 @@ public class Pacman extends MovingObject {
     //Constructor
     public Pacman(final MotionInfo motionInfo, final ArrayList<Bitmap> viewList) {
         super(motionInfo, viewList);
+        normalViewList = viewList.subList(0,8);
+        diedViewList = viewList.subList(8,22);
     }
 
     // Singleton, because we only have one Pacman in entire game, also we can retrieve Pacman from any GameObjectCollection
