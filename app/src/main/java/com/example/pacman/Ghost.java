@@ -34,7 +34,7 @@ public class Ghost extends MovingObject {
         final boolean atDoor = currPos.x == door.x && currPos.y == door.y;
         final boolean atReborn = currPos.x == RebornPos.x && currPos.y == RebornPos.y;
 
-        if (currBehaviour instanceof GhostStationaryBehaviour && timeUp) {
+        if (currBehaviour instanceof GhostStationaryBehaviour) {
 
             this.ghostBehaviour = new GhostExitBehaviour();
             return;
