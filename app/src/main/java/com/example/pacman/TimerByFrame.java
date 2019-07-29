@@ -4,6 +4,7 @@ public class TimerByFrame {
     final static int chaseTime = 200;
     final static int scatterTime = 80;
     final static int powerUp = 300;
+    final static int returnTime = 300;
 
     public int timer;
     public boolean timeUp;

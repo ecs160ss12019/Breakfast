@@ -1,11 +1,11 @@
 package com.example.pacman;
 
-import java.util.ArrayList;
 import java.util.Observable;
 
 //There is 1 motionController per arcade
 public class MotionController extends Observable {
-    final private ArcadeAnalyzer arcadeAnalyzer;
+    final private ArcadeAnalyzer arcadeAnalyzerGhostHouseEnabled;
+    final private ArcadeAnalyzer arcadeAnalyzerGhostHouseDisabled;
     final private Arcade arcade;
 
     public void updateMovingObject(MovingObject movingObject, long fps) {
@@ -19,7 +19,7 @@ public class MotionController extends Observable {
             motionInfo = updatePacman(movingObject.getMotionInfo(), fps);
         }
         else if (movingObject instanceof Ghost) {
-            motionInfo = updateGhost(movingObject.getMotionInfo(), fps);
+            motionInfo = updateGhost((Ghost)movingObject, movingObject.getMotionInfo(), fps);
         }
         else if (movingObject instanceof Cake) {
             motionInfo = updateCake(movingObject.getMotionInfo(), fps);
@@ -33,20 +33,26 @@ public class MotionController extends Observable {
 
     private MotionInfo updatePacman(final MotionInfo motionInfo, final long fps) {
         MotionUpdater motionUpdater = new MotionUpdater(motionInfo, fps,
-                this.arcade, this.arcadeAnalyzer);
+                this.arcade, this.arcadeAnalyzerGhostHouseDisabled);
         return motionUpdater.updateMotion();
     }
 
-    private MotionInfo updateGhost(final MotionInfo motionInfo, final long fps) {
-        MotionUpdater motionUpdater = new MotionUpdater(motionInfo, fps,
-                this.arcade, this.arcadeAnalyzer);
+    private MotionInfo updateGhost(final Ghost ghost, final MotionInfo motionInfo, final long fps) {
+        MotionUpdater motionUpdater;
+        if (ghost.ghostBehaviour instanceof GhostKilledBehaviour) {
+            motionUpdater = new MotionUpdater(motionInfo, fps,
+                    this.arcade, this.arcadeAnalyzerGhostHouseEnabled);
+        } else {
+            motionUpdater = new MotionUpdater(motionInfo, fps,
+                    this.arcade, this.arcadeAnalyzerGhostHouseDisabled);
+        }
 
         return motionUpdater.updateMotion();
     }
 
     private MotionInfo updateCake(final MotionInfo motionInfo, final long fps) {
         MotionUpdater motionUpdater = new MotionUpdater(motionInfo, fps,
-                this.arcade, this.arcadeAnalyzer);
+                this.arcade, this.arcadeAnalyzerGhostHouseDisabled);
         return motionUpdater.updateMotion();
     }
 
@@ -56,6 +62,7 @@ public class MotionController extends Observable {
     //Constructor
     public MotionController(Arcade arcade) {
         this.arcade = arcade;
-        this.arcadeAnalyzer = new ArcadeAnalyzer(arcade);
+        this.arcadeAnalyzerGhostHouseEnabled = new ArcadeAnalyzer(arcade, true);
+        this.arcadeAnalyzerGhostHouseDisabled = new ArcadeAnalyzer(arcade, false);
     }
 }

@@ -59,6 +59,7 @@ class PacmanGame extends SurfaceView implements Runnable {
 
     //Our GameObjectCollections
     private ArrayList<GameObjectCollection> gameObjectCollections;
+    public int pacmanLives;
 
     int arrowKey = -1;
 
@@ -77,7 +78,6 @@ class PacmanGame extends SurfaceView implements Runnable {
         // mPlaying must be true AND
         // the thread running for the main loop to execute
         while (mPlaying) {
-            System.out.println("mPlaying");
             /*
             while the game is not paused, update
              */
@@ -86,7 +86,6 @@ class PacmanGame extends SurfaceView implements Runnable {
             long frameStartTime = System.nanoTime();
 
             if(!mPaused) {
-                System.out.println("not mPaused");
                 /*
                 We want to prevent from updating any
                 motion related stuff if the fps is -1.
@@ -119,7 +118,6 @@ class PacmanGame extends SurfaceView implements Runnable {
                     }
                 }
             } else {
-                System.out.println("else running");
 
                 updateGame();
                 //this might not be null in the future
@@ -158,7 +156,6 @@ class PacmanGame extends SurfaceView implements Runnable {
                 // mBat and mBall next frame/loop
                 mFPS = MILLIS_IN_SECOND / timeThisFrame;
             }
-            System.out.println("fps: " + mFPS);
         }
     }
 
@@ -183,12 +180,16 @@ class PacmanGame extends SurfaceView implements Runnable {
             for (GameObjectCollection gameObjectCollection : gameObjectCollections) {
                 gameObjectCollection.update(direction, mFPS, score);
             }
+
             System.out.println("Score: " + score.getScore());
 
             if(Pacman.totalLives <= 0) {
                 mPlaying = false;
                 //stop();
             }
+
+            // pacmanLives = gameObjectCollections.get(0).pacmanLives;
+
         }
     }
 
@@ -203,13 +204,15 @@ class PacmanGame extends SurfaceView implements Runnable {
     // This method is called by PacmanActivity
     // when the player quits the game
     public void pause() {
-
         // Set mPlaying to false
         // Stopping the thread isn't
         // always instant
         try {
             // Stop the thread
+
+
             mGameThread.join();
+
         } catch (InterruptedException e) {
             Log.e("Error:", "joining thread");
         }
@@ -233,9 +236,9 @@ class PacmanGame extends SurfaceView implements Runnable {
      */
     @Override
     public void draw(Canvas canvas) {
+        long drawStartTime = System.nanoTime();
         super.draw(canvas);
 
-        // Fill the screen with a solid color
         mCanvas.drawColor(Color.argb
                 (255, 255, 255, 255));
 
@@ -246,13 +249,12 @@ class PacmanGame extends SurfaceView implements Runnable {
         paint.setTypeface(plain);
         mCanvas.drawText("Score: "+ score.getScore(), 50, (numberHorizontalPixels/40)*3, paint);
         mCanvas.drawText("Speed: "+ modeSelected, 50, (numberHorizontalPixels/40)*4, paint);
+        mCanvas.drawText("Lives: "+ pacmanLives, 50, (numberHorizontalPixels/40)*5, paint);
         gameObjectCollections.get(0).draw(canvas);
         navigationButtons.draw(canvas);
         if (!mPaused) {
-            System.out.println("display Pause ***************************************************");
             menu.drawPause(canvas);
         } else {
-            System.out.println("display PLAY ***************************************************");
             menu.drawPlay(canvas);
         }
     }
@@ -292,6 +294,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         // constructor of SurfaceView
         // provided by Android
         super(context);
+        pacmanLives = 3;
 
         numberHorizontalPixels = x;
 

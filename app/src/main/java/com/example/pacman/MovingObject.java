@@ -22,7 +22,7 @@ public class MovingObject implements GameObject{
     private int bitmapDimension;
     //protected int currentBitmapIndex;
 
-    public void eaten(){
+    public void eat(){
         appear = false;
     }
     public boolean checkalive(){
@@ -98,6 +98,5 @@ public class MovingObject implements GameObject{
 //        this.addObserver(motionObserver);
         this.viewList = viewList;
         this.bitmapDimension = viewList.get(0).getHeight();
-        this.alive(); // need to set appear to true for later checking alive
     }
 }

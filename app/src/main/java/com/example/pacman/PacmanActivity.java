@@ -37,11 +37,14 @@ public class PacmanActivity extends Activity {
         intent = getIntent();
         modeSelected = intent.getIntExtra(MapSelectionActivity.EXTRA_NUMBER, -1);
         System.out.println("++++++++++++++ PacmanActivity mode selected " + modeSelected);
-
         //FIXME
         mPacmanGame = new PacmanGame(this, size.x, size.y, modeSelected);
         //mPacmanGame = new PacmanGame(this, 2028, 1080);
         setContentView(mPacmanGame);
+        Intent intent = new Intent(this, GameOverActivity.class);
+        if(mPacmanGame.pacmanLives == 0){
+            gameOver();
+        }
         Log.d("Debugging", "In onCreate");
 
         gameOverThread = new Thread() {

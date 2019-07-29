@@ -7,6 +7,7 @@ public class ArcadeAnalyzer{
     private final int numRow;
     private final int numCol;
     public final int blockDimension;
+    public final boolean ghostHouseEnabled;
 
     //Allowed direction of an Arcade Block
     private ArrayList<ArrayList<Integer>> analyzedArcade;
@@ -48,22 +49,22 @@ public class ArcadeAnalyzer{
                 ArrayList<Integer> allowedDirections = new ArrayList<>(4);
                 TwoTuple thisBlock = new TwoTuple(i, j);
                 //Analyze Left
-                if (arcade.pathValid(thisBlock.toLeft())) {
+                if (arcade.pathValid(thisBlock.toLeft(), ghostHouseEnabled)) {
                     allowedDirections.add(LEFT);
                 }
 
                 //Analyze Right
-                if (arcade.pathValid(thisBlock.toRight())) {
+                if (arcade.pathValid(thisBlock.toRight(), ghostHouseEnabled)) {
                     allowedDirections.add(RIGHT);
                 }
 
                 //Analyze Up
-                if (arcade.pathValid(thisBlock.toUp())) {
+                if (arcade.pathValid(thisBlock.toUp(), ghostHouseEnabled)) {
                     allowedDirections.add(UP);
                 }
 
                 //Analyze Down
-                if (arcade.pathValid(thisBlock.toDown())) {
+                if (arcade.pathValid(thisBlock.toDown(), ghostHouseEnabled)) {
                     allowedDirections.add(DOWN);
                 }
 
@@ -82,13 +83,14 @@ public class ArcadeAnalyzer{
         }
     }
 
-    public ArcadeAnalyzer(Arcade arcade) {
+    public ArcadeAnalyzer(Arcade arcade, boolean ghostHouseEnabled) {
         this.arcade = arcade;
         this.numRow = arcade.getNumRow();
         this.numCol = arcade.getNumCol();
         this.blockDimension = arcade.getBlockHeight();
         this.analyzedArcade = new ArrayList<>();
         this.cross = new ArrayList<>();
+        this.ghostHouseEnabled = ghostHouseEnabled;
         this.run();
     }
 }
