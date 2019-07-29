@@ -224,7 +224,7 @@ class PacmanGame extends SurfaceView implements Runnable {
     // This method is called by PacmanActivity
     // when the player starts the game
     public void resume() {
-        mPaused = false;
+        //mPaused = false;
         // Initialize the instance of Thread
         mGameThread = new Thread(this);
 
