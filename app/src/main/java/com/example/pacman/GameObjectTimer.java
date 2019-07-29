@@ -17,6 +17,7 @@ public class GameObjectTimer {
     public void setTimer(long countDownTime) {
         this.timeUp = false;
 
+        this.countDownTimer.cancel();
         this.countDownTimer = new CountDownTimer(countDownTime, 1000) {
             @Override
             public void onTick(long l) {
@@ -28,6 +29,10 @@ public class GameObjectTimer {
                 timeUp = true;
             }
         }.start();
+    }
+
+    public void cancelTimer() {
+        this.countDownTimer.cancel();
     }
 
     public GameObjectTimer(long countDownTime) {
