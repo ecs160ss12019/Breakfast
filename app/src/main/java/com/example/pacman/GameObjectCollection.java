@@ -169,7 +169,7 @@ public class GameObjectCollection {
                 MotionInfo pinkInitMotion = new MotionInfo(
                         pinkGhostInitPos,
                         arcade.mapScreen(pinkGhostInitPos),
-                        0, UP, -1, gameMode.getGhostsSpeed());
+                        0,RIGHT, -1, gameMode.getGhostsSpeed());
                 Initialmotion = pinkInitMotion;
 
                 break;
@@ -346,7 +346,7 @@ public class GameObjectCollection {
         MotionInfo pinkInitMotion = new MotionInfo(
                 pinkGhostInitPos,
                 arcade.mapScreen(pinkGhostInitPos),
-                0, UP, -1, gameMode.getGhostsSpeed());
+                0, RIGHT, -1, gameMode.getGhostsSpeed());
         ArrayList<Bitmap> pinkViews = new ArrayList<>();
         pinkViews.add(ghostsViewList.get(3));
         pinkViews.add(ghostsViewList.get(3));
