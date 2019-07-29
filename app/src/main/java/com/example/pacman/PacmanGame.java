@@ -22,6 +22,9 @@ class PacmanGame extends SurfaceView implements Runnable {
     private Canvas mCanvas;
     private Paint mPaint;
 
+    //initialize sound class
+    private SoundEffects sound;
+
     // How many frames per second did we get?
     private long mFPS;
     // The number of milliseconds in a second
@@ -335,6 +338,9 @@ class PacmanGame extends SurfaceView implements Runnable {
 
         //userInput handler
         userInput = new UserInput();
+
+        // initialize the sound class
+        sound = new SoundEffects(getContext());
 
         // init the menu button
         menu = new Menu(context, mScreen.x, mScreen.y);

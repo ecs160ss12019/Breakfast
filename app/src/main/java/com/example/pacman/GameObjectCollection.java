@@ -34,10 +34,7 @@ public class GameObjectCollection {
     private ArrayList<GameObject> collisions;
 
     private boolean containsPacman;
-    private boolean ghostChasing;
-    private boolean ghostScattering;
-    private boolean ghostEscaping;
-    private boolean PowerPelletEffective;
+    private boolean PowerPelletEaten;
 
     private Context context; // this context is originally from Pacman Activity, we can use this context to start another activity, like GameOverActivity
 
@@ -132,7 +129,7 @@ public class GameObjectCollection {
         updateMotion(fps);
         updateCollision();
         updateStatus(score);
-        //updateTimer();
+        updateGhost();
 
         pacmanReborn();
     }
@@ -172,10 +169,10 @@ public class GameObjectCollection {
     }
 
     private void updateCollision() {
+        collisions = new ArrayList<>();
         //All collisions happen when the pacman is present!!!
         if (!containsPacman) return;
 
-        collisions = new ArrayList<>();
         Rect pacmanPathRect = pacman.getPathRect();
         for (MovingObject movingObject : movingObjects) {
             if (!(movingObject instanceof Pacman) &&
@@ -194,12 +191,13 @@ public class GameObjectCollection {
     //All collisions happen when the pacman is present!!!
     //we only cares about and update upon those ones !!!
     private void updateStatus(PointSystem score) {
+        PowerPelletEaten = false;
         for (GameObject gameObject : collisions) {
             if (gameObject instanceof MovingObject) {
                 if (gameObject instanceof Ghost) {
-                    if (PowerPelletEffective) {
+                    if (PowerPelletEaten) {
                         //eats ghost
-                        movingObjects.remove(gameObject);
+                        //movingObjects.remove(gameObject);
                         //ghost.ghostBehaviour = new GhostKilledBehaviour();
                         //ghostChasing = false;
                         //ghostScattering = false;
@@ -227,7 +225,7 @@ public class GameObjectCollection {
                     }
 
                     powerPelletTimer = new GameObjectTimer(GameObjectTimer.powerUp);
-                    PowerPelletEffective = true;
+                    PowerPelletEaten = true;
                 }else {
                     if(((NormalPellet) gameObject).checkReward() == false){
                         score.pelletEaten();
@@ -239,85 +237,12 @@ public class GameObjectCollection {
         }
     }
 
-    private void updateGhostBehaviour (Ghost ghost){
-        if (ghost.ghostBehaviour instanceof GhostChaseBehaviour ||
-                ghost.ghostBehaviour instanceof ChaseFrontBehaviour ||
-                ghost.ghostBehaviour instanceof GhostPredictAndChaseBehaviour ||
-                ghost.ghostBehaviour instanceof GhostSearchAndChaseBehaviour) {
-            if (ghostEscaping) {
-                ghost.ghostBehaviour = new EscapeBehaviour();
-
-                System.out.println("ghost " + ghost.id + ": from chase behaviour to escape behaviour");
-                return;
+    private void updateGhost() {
+        for(MovingObject movingObject : movingObjects) {
+            if (movingObject instanceof Ghost) {
+                boolean ghostCollision = collisions.contains(movingObject);
+                ((Ghost)movingObject).updateGhostBehavior(PowerPelletEaten, ghostCollision);
             }
-
-            if (ghostScattering) {
-                //ghost.ghostBehaviour = new GhostScatterBehaviour();
-
-                System.out.println("ghost " + ghost.id + ": from chase behaviour to scatter behaviour");
-                return;
-            }
-
-            System.out.println("ghost " + ghost.id + ": from chase behaviour to chase behaviour");
-            return;
-        }
-
-        //FIXME
-        if (ghost.ghostBehaviour instanceof GhostScatterLeftTop) {
-            if (ghostEscaping) {
-                ghost.ghostBehaviour = new EscapeBehaviour();
-
-                System.out.println("ghost " + ghost.id + ": from scatter behaviour to escape behaviour");
-                return;
-            }
-
-            if (ghostChasing) {
-                switch (ghost.id) {
-                    case 0:
-                        ghost.ghostBehaviour = new GhostChaseBehaviour();
-                        break;
-                    case 1:
-                        ghost.ghostBehaviour = new ChaseFrontBehaviour();
-                        break;
-                    case 2:
-                        ghost.ghostBehaviour = new GhostPredictAndChaseBehaviour();
-                        break;
-                    case 3:
-                        ghost.ghostBehaviour = new GhostSearchAndChaseBehaviour();
-                        break;
-                }
-
-                System.out.println("ghost " + ghost.id + ": from scatter behaviour to chase behaviour");
-                return;
-            }
-
-            System.out.println("ghost " + ghost.id + ": from scatter behaviour to scatter behaviour");
-            return;
-        }
-
-        if (ghost.ghostBehaviour instanceof EscapeBehaviour) {
-            if (ghostChasing) {
-                switch (ghost.id) {
-                    case 0:
-                        ghost.ghostBehaviour = new GhostChaseBehaviour();
-                        break;
-                    case 1:
-                        ghost.ghostBehaviour = new ChaseFrontBehaviour();
-                        break;
-                    case 2:
-                        ghost.ghostBehaviour = new GhostPredictAndChaseBehaviour();
-                        break;
-                    case 3:
-                        ghost.ghostBehaviour = new GhostSearchAndChaseBehaviour();
-                        break;
-                }
-
-                System.out.println("ghost " + ghost.id + ": from escape behaviour to chase behaviour");
-                return;
-            }
-
-            System.out.println("ghost " + ghost.id + ": from escape behaviour to escape behaviour");
-            return;
         }
     }
 
@@ -329,10 +254,7 @@ public class GameObjectCollection {
         this.arcadeAnalyzer = new ArcadeAnalyzer(arcade, true);
         this.motionController = new MotionController(arcade);
 
-        this.ghostChasing = true;
-        this.ghostScattering = false;
-        this.ghostEscaping = false;
-        this.PowerPelletEffective = false;
+        this.PowerPelletEaten = false;
 
         this.powerPelletTimer = new GameObjectTimer();
 

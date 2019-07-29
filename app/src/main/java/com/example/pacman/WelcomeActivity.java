@@ -21,7 +21,7 @@ public class WelcomeActivity extends Activity {
     private String modeSelectedTmp;
     private int modeSelected;
     public static final String EXTRA_NUMBER = "com.example.pacman.EXTRA_NUMBER";
-    public MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +47,7 @@ public class WelcomeActivity extends Activity {
             public void onClick(View view) {
                 modeSelectedTmp = easyBtn.getText().toString();
                 System.out.println(modeSelectedTmp + "--------------------------------------------");
+                mediaPlayer.stop();
                 openActivitivy2();
             }
         });
@@ -55,6 +56,7 @@ public class WelcomeActivity extends Activity {
             public void onClick(View view) {
                 modeSelectedTmp = normalBtn.getText().toString();
                 System.out.println(modeSelectedTmp + "--------------------------------------------");
+                mediaPlayer.start();
                 openActivitivy2();
             }
         });
@@ -63,6 +65,7 @@ public class WelcomeActivity extends Activity {
             public void onClick(View view) {
                 modeSelectedTmp = hardBtn.getText().toString();
                 System.out.println(modeSelectedTmp + "--------------------------------------------");
+                mediaPlayer.start();
                 openActivitivy2();
             }
         });

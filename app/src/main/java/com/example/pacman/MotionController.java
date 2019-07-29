@@ -7,6 +7,7 @@ public class MotionController extends Observable {
     final private ArcadeAnalyzer arcadeAnalyzerGhostHouseEnabled;
     final private ArcadeAnalyzer arcadeAnalyzerGhostHouseDisabled;
     final private Arcade arcade;
+    private SoundEffects sound;
 
     public void updateMovingObject(MovingObject movingObject, long fps) {
         if (fps == 0 || fps == -1) {
@@ -17,6 +18,12 @@ public class MotionController extends Observable {
         MotionInfo motionInfo = new MotionInfo();
         if (movingObject instanceof Pacman) {
             motionInfo = updatePacman(movingObject.getMotionInfo(), fps);
+            if (!TwoTuple.compare(motionInfo.posInScreen, movingObject.motionInfo.posInScreen)) {
+
+//                System.out.println("Pac-Man is moving ##############################################");
+//                System.out.println("+++++++++motionInfo.posInScreen "+ motionInfo.posInScreen);
+//                System.out.println("+++++++++movingObject.motionInfo.posInScreen "+ movingObject.motionInfo.posInScreen);
+            }
         }
         else if (movingObject instanceof Ghost) {
             motionInfo = updateGhost((Ghost)movingObject, movingObject.getMotionInfo(), fps);
