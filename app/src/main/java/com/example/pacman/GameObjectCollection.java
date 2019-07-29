@@ -245,11 +245,11 @@ public class GameObjectCollection {
                 bitmapDivider.loadBitmap(R.drawable.ghostcombined),
                 new TwoTuple(6,4),
                 new TwoTuple(mScreen.y / 15, mScreen.y / 15));
-        final ArrayList<Bitmap> ghostKilledList = new ArrayList<>(ghostsViewList.subList(16,19));
-        final ArrayList<Bitmap> ghostEscapeList = new ArrayList<>(ghostsViewList.subList(20,23));
+        final ArrayList<Bitmap> ghostKilledList = new ArrayList<>(ghostsViewList.subList(16,20));
+        final ArrayList<Bitmap> ghostEscapeList = new ArrayList<>(ghostsViewList.subList(20,24));
 
         //INIT RedGhost
-        final ArrayList<Bitmap> redGhostsViewList = new ArrayList<>(ghostsViewList.subList(0,3));
+        final ArrayList<Bitmap> redGhostsViewList = new ArrayList<>(ghostsViewList.subList(0,4));
 
         final TwoTuple redGhostInitPos = new TwoTuple(11,14);
         final TwoTuple pinkGhostInitPos = new TwoTuple(15,11);
@@ -271,7 +271,7 @@ public class GameObjectCollection {
                 ghostEscapeList, ghostKilledList, new GhostStationaryBehaviour(), 1);
 
         //INIT PinkGhost
-        final ArrayList<Bitmap> pinkGhostsViewList = new ArrayList<>(ghostsViewList.subList(4,7));
+        final ArrayList<Bitmap> pinkGhostsViewList = new ArrayList<>(ghostsViewList.subList(4,8));
 
         MotionInfo pinkInitMotion = new MotionInfo(
                 pinkGhostInitPos,
@@ -287,7 +287,7 @@ public class GameObjectCollection {
                 ghostEscapeList, ghostKilledList, new GhostStationaryBehaviour(), 1);
 
         //INIT BlueGhost
-        final ArrayList<Bitmap> blueGhostsViewList = new ArrayList<>(ghostsViewList.subList(8,11));
+        final ArrayList<Bitmap> blueGhostsViewList = new ArrayList<>(ghostsViewList.subList(8,12));
         MotionInfo blueInitMotion = new MotionInfo(
                 blueGhostInitPos,
                 arcade.mapScreen(blueGhostInitPos),
@@ -302,7 +302,7 @@ public class GameObjectCollection {
                 ghostEscapeList, ghostKilledList, new GhostStationaryBehaviour(), 1);
 
         //INIT YellowGhost
-        final ArrayList<Bitmap> yellowGhostsViewList = new ArrayList<>(ghostsViewList.subList(12,15));
+        final ArrayList<Bitmap> yellowGhostsViewList = new ArrayList<>(ghostsViewList.subList(12,16));
         MotionInfo yellowInitMotion = new MotionInfo(
                 yellowGhostInitPos,
                 arcade.mapScreen(yellowGhostInitPos),
