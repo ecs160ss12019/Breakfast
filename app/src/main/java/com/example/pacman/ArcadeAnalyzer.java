@@ -49,12 +49,12 @@ public class ArcadeAnalyzer{
                 ArrayList<Integer> allowedDirections = new ArrayList<>(4);
                 TwoTuple thisBlock = new TwoTuple(i, j);
                 //Analyze Left
-                if (arcade.pathValid(thisBlock.toLeft(), ghostHouseEnabled)) {
+                if (arcade.pathValid(thisBlock.toLeft(), ghostHouseEnabled) || arcade.getBlock(thisBlock).getType() == 18) { // add 18 so Pacman can run into the next arcade
                     allowedDirections.add(LEFT);
                 }
 
                 //Analyze Right
-                if (arcade.pathValid(thisBlock.toRight(), ghostHouseEnabled)) {
+                if (arcade.pathValid(thisBlock.toRight(), ghostHouseEnabled) || arcade.getBlock(thisBlock).getType() == 18) {
                     allowedDirections.add(RIGHT);
                 }
 

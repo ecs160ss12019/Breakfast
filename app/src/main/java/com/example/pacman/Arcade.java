@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /*
 this class is the arcade that the pacman
@@ -140,11 +139,13 @@ public class Arcade{
             return inRange(tuple) &&
                     (getBlock(tuple).getType() == 16 ||
                             getBlock(tuple).getType() == 17 ||
+                            getBlock(tuple).getType() == 18 ||
                             getBlock(tuple).getType() == 42 ||
                             getBlock(tuple).getType() == 40);
         } else {
             return inRange(tuple) &&
                     (getBlock(tuple).getType() == 16 ||
+                            getBlock(tuple).getType() == 18 ||
                             getBlock(tuple).getType() == 42 ||
                             getBlock(tuple).getType() == 40);
         }

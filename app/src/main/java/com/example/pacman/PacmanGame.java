@@ -86,7 +86,7 @@ class PacmanGame extends SurfaceView implements Runnable {
             //long frameStartTime = System.currentTimeMillis();
             long frameStartTime = System.nanoTime();
 
-            System.out.println("Game is paused: " + mPaused);
+            // System.out.println("Game is paused: " + mPaused);
 
             if(!mPaused) {
                 /*

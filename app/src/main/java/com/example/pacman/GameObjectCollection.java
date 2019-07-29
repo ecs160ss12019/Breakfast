@@ -109,6 +109,27 @@ public class GameObjectCollection {
         updateStatus(score);
         updateGhostBehaviour();
         //pacmanReborn();
+        checkIfMovingObjectRunOut();
+    }
+
+    public void checkIfMovingObjectRunOut() {
+        // check if Pacman is out of bound, which means it runs into the next arcade
+        // System.out.println("containsPacman: " + containsPacman);
+        if (pacman == null) return;
+        // System.out.println("arcade.getNumCol(): " + arcade.getNumCol());
+        for(MovingObject movingObject: movingObjects) {
+            if(movingObject.ranIntoNextArcade(arcade.getNumCol())) {
+                movingObject.moveToNextArcade();
+                System.out.println(movingObject.getClass().toString() + " in arcade: " + movingObject.motionInfo.posInArcade.second() + " " + movingObject.motionInfo.posInArcade.first());
+                movingObject.motionInfo.posInScreen = arcade.mapScreen(movingObject.motionInfo.posInArcade);
+                // moveToNextArcade = 1; // we only need to set a flag for change arcade, let PacmanGame handle the rest. Because we can not update all the arcades in Collection
+                // System.out.println("moveToNextArcade: " + moveToNextArcade);
+            } else if (movingObject.ranIntoPrevArcade()) {
+                movingObject.moveToPrevArcade(arcade.getNumCol());
+                movingObject.motionInfo.posInScreen = arcade.mapScreen(movingObject.motionInfo.posInArcade);
+                // moveToNextArcade = -1;
+            }
+        }
     }
 
     public void pacmanReborn() {

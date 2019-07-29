@@ -90,6 +90,24 @@ public class MovingObject implements GameObject{
         return Rect.intersects(pacmanPathRect, getPathRect());
     }
 
+    // check if Pacman ran out of current arcade
+    public boolean ranIntoPrevArcade() {
+        return motionInfo.posInArcade.second() == -1;
+    }
+
+    public boolean ranIntoNextArcade(int numCol) {
+        return motionInfo.posInArcade.second() == numCol;
+    }
+
+    // move Pacman to the left or right entrance
+    public void moveToNextArcade() {
+        this.motionInfo.posInArcade.y = 0;
+    }
+
+    public void moveToPrevArcade(int arcadeColNum) {
+        this.motionInfo.posInArcade.y = arcadeColNum-1;
+    }
+
 
     //Constructor
     public MovingObject(final MotionInfo motionInfo, ArrayList<Bitmap> viewList) {
