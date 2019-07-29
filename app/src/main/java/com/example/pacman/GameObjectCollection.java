@@ -472,9 +472,7 @@ public class GameObjectCollection {
 
             }
         }
-
         collisions = new ArrayList<>();
-
         this.containsPacman = arcade.inUse;
     }
 }
