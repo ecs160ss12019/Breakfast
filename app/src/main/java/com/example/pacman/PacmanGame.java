@@ -253,6 +253,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         mCanvas.drawText("Score: "+ score.getScore(), 50, (numberHorizontalPixels/40)*3, paint);
         mCanvas.drawText("Speed: "+ modeSelected, 50, (numberHorizontalPixels/40)*4, paint);
         mCanvas.drawText("Lives: "+ pacmanLives, 50, (numberHorizontalPixels/40)*5, paint);
+        mCanvas.drawText("Fps: "+ mFPS, 50, (numberHorizontalPixels/40)*6, paint);
         gameObjectCollections.get(0).draw(canvas);
         navigationButtons.draw(canvas);
         if (!mPaused) {
