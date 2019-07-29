@@ -26,6 +26,7 @@ public class GameObjectCollection {
     final private Arcade arcade;
     final private ArcadeAnalyzer arcadeAnalyzer;
     final private MotionController motionController;
+    final private GameMode gameMode;
 
     private MovingObject pacman;
     private MovingObject redGhost;
@@ -47,7 +48,7 @@ public class GameObjectCollection {
             movingObject.draw(canvas);
         }
 
-        if(containsPacman == false) {
+        if(!containsPacman) {
             ((Pacman)pacman).drawDied(canvas);
             pacmanReborn();
         }
@@ -108,7 +109,7 @@ public class GameObjectCollection {
 
     public void pacmanReborn() {
         if(pacman == null) return;
-        if ( containsPacman == false ) {
+        if (!containsPacman ) {
 
             System.out.println("pacmanReborn");
             // reborn Pacman to the middle of current Arcade
@@ -129,8 +130,22 @@ public class GameObjectCollection {
 
             containsPacman = true;
             Pacman.totalLives -=1;
+
+            // initial ghost when pacman died
         }
     }
+
+    // initial ghost position and behavior
+    public void initialGhost() {
+        for (MovingObject movingObject : movingObjects) {
+            if (movingObject instanceof Ghost) {
+                ((Ghost)movingObject).ghostBehaviour = new GhostStationaryBehaviour();
+                ((Ghost)movingObject).motionInfo = InitialMotioninfo(((Ghost)movingObject).id);
+            }
+        }
+    }
+
+
 
     private void updateMotion(long fps) {
         for (MovingObject movingObject : movingObjects) {
@@ -225,6 +240,7 @@ public class GameObjectCollection {
         this.motionController = new MotionController(arcade);
 
         this.PowerPelletEaten = false;
+        this.gameMode = gameMode;
 
         final BitmapDivider bitmapDivider = new BitmapDivider(context);
 
@@ -289,7 +305,7 @@ public class GameObjectCollection {
         pinkViews.add(ghostsViewList.get(3));
         pinkViews.add(ghostsViewList.get(3));
 
-        Ghost pinkGhost = new Ghost(0, pinkInitMotion, pinkGhostsViewList,
+        Ghost pinkGhost = new Ghost(1, pinkInitMotion, pinkGhostsViewList,
                 ghostEscapeList, ghostKilledList, new GhostStationaryBehaviour(), 1);
 
         //INIT BlueGhost
@@ -304,7 +320,7 @@ public class GameObjectCollection {
         blueViews.add(ghostsViewList.get(2));
         blueViews.add(ghostsViewList.get(2));
 
-        Ghost blueGhost = new Ghost(0, blueInitMotion, blueGhostsViewList,
+        Ghost blueGhost = new Ghost(2, blueInitMotion, blueGhostsViewList,
                 ghostEscapeList, ghostKilledList, new GhostStationaryBehaviour(), 1);
 
         //INIT YellowGhost
@@ -319,7 +335,7 @@ public class GameObjectCollection {
         yellowViews.add(ghostsViewList.get(0));
         yellowViews.add(ghostsViewList.get(0));
 
-        Ghost yellowGhost = new Ghost(0, yellowInitMotion, yellowGhostsViewList,
+        Ghost yellowGhost = new Ghost(3, yellowInitMotion, yellowGhostsViewList,
                 ghostEscapeList, ghostKilledList, new GhostStationaryBehaviour(), 1);
 
         //INIT Cake
