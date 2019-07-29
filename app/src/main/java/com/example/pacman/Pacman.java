@@ -2,7 +2,6 @@ package com.example.pacman;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,13 +45,19 @@ public class Pacman extends MovingObject {
                     motionInfo.posInScreen.x - (bitmapDimension/2),
                     motionInfo.posInScreen.y - (bitmapDimension/2),
                     null);
-            new android.os.Handler().postDelayed(
-                    new Runnable() {
-                        public void run() {
-                            Log.i("tag", "This'll run 300 milliseconds later");
-                        }
-                    },
-                    300);
+//            new android.os.Handler(Looper.getMainLooper()).postDelayed(
+//                    new Runnable() {
+//                        public void run() {
+//                            Log.i("tag", "This'll run 300 milliseconds later");
+//                        }
+//                    },
+//                    300);
+            
+//            try {
+//                TimeUnit.MILLISECONDS.sleep(300);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
 
         }
     }

@@ -49,6 +49,7 @@ public class GameObjectCollection {
 
         if(containsPacman == false) {
             ((Pacman)pacman).drawDied(canvas);
+            pacmanReborn();
         }
     }
 
@@ -102,12 +103,13 @@ public class GameObjectCollection {
         updateCollision();
         updateStatus(score);
         updateGhostBehaviour();
-        pacmanReborn();
+        //pacmanReborn();
     }
 
     public void pacmanReborn() {
         if(pacman == null) return;
         if ( containsPacman == false ) {
+
             System.out.println("pacmanReborn");
             // reborn Pacman to the middle of current Arcade
             MotionInfo prevMotion = pacman.getMotionInfo();
