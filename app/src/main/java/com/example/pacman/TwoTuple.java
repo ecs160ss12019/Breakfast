@@ -96,6 +96,10 @@ public class TwoTuple {
         }
     }
 
+    public static boolean compare (final TwoTuple a, final TwoTuple b) {
+        return a.x == b.x && a.y == b.y;
+    }
+
     public TwoTuple(int x, int y) {
         this.x = x;
         this.y = y;

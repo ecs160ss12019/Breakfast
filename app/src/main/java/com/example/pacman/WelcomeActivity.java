@@ -47,6 +47,7 @@ public class WelcomeActivity extends Activity {
             public void onClick(View view) {
                 modeSelectedTmp = easyBtn.getText().toString();
                 System.out.println(modeSelectedTmp + "--------------------------------------------");
+                mediaPlayer.stop();
                 openActivitivy2();
             }
         });
@@ -55,6 +56,7 @@ public class WelcomeActivity extends Activity {
             public void onClick(View view) {
                 modeSelectedTmp = normalBtn.getText().toString();
                 System.out.println(modeSelectedTmp + "--------------------------------------------");
+                mediaPlayer.start();
                 openActivitivy2();
             }
         });
@@ -63,6 +65,7 @@ public class WelcomeActivity extends Activity {
             public void onClick(View view) {
                 modeSelectedTmp = hardBtn.getText().toString();
                 System.out.println(modeSelectedTmp + "--------------------------------------------");
+                mediaPlayer.start();
                 openActivitivy2();
             }
         });
