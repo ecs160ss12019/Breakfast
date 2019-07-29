@@ -142,7 +142,7 @@ public class GameObjectCollection {
     public void initialGhost() {
         for (MovingObject movingObject : movingObjects) {
             if (movingObject instanceof Ghost) {
-                ((Ghost)movingObject).ghostBehaviour = new GhostStationaryBehaviour();
+                ((Ghost)movingObject).ghostBehaviour = new GhostExitBehaviour();
                 ((Ghost)movingObject).motionInfo = InitialMotioninfo(((Ghost)movingObject).id);
             }
         }
@@ -357,7 +357,7 @@ public class GameObjectCollection {
         pinkViews.add(ghostsViewList.get(3));
 
         Ghost pinkGhost = new Ghost(1, pinkInitMotion, pinkGhostsViewList,
-                ghostEscapeList, ghostKilledList, new GhostStationaryBehaviour(), 1);
+                ghostEscapeList, ghostKilledList, new GhostStationaryBehaviour(), 2);
 
         //INIT BlueGhost
         final ArrayList<Bitmap> blueGhostsViewList = new ArrayList<>(ghostsViewList.subList(8,12));
@@ -372,7 +372,7 @@ public class GameObjectCollection {
         blueViews.add(ghostsViewList.get(2));
 
         Ghost blueGhost = new Ghost(2, blueInitMotion, blueGhostsViewList,
-                ghostEscapeList, ghostKilledList, new GhostStationaryBehaviour(), 1);
+                ghostEscapeList, ghostKilledList, new GhostStationaryBehaviour(), 3);
 
         //INIT YellowGhost
         final ArrayList<Bitmap> yellowGhostsViewList = new ArrayList<>(ghostsViewList.subList(12,16));
@@ -387,7 +387,7 @@ public class GameObjectCollection {
         yellowViews.add(ghostsViewList.get(0));
 
         Ghost yellowGhost = new Ghost(3, yellowInitMotion, yellowGhostsViewList,
-                ghostEscapeList, ghostKilledList, new GhostStationaryBehaviour(), 1);
+                ghostEscapeList, ghostKilledList, new GhostStationaryBehaviour(), 4);
 
         //INIT Cake
         TwoTuple cakeInitPos = new TwoTuple(arcade.cakePosition);
@@ -475,9 +475,7 @@ public class GameObjectCollection {
 
             }
         }
-
         collisions = new ArrayList<>();
-
         this.containsPacman = arcade.inUse;
     }
 }
