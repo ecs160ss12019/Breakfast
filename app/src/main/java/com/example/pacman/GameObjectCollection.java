@@ -16,6 +16,7 @@ public class GameObjectCollection {
     final static int UP = 2;
     final static int DOWN = 3;
 
+
     //red: chase
     //pink: front
     //blue: predict
@@ -45,6 +46,7 @@ public class GameObjectCollection {
     private boolean escapeMusic;
     private boolean containsPacman;
     private boolean PowerPelletEaten;
+    private boolean cakeAppear;
     boolean needToPause = false;
 
     public void draw(Canvas canvas) {
@@ -80,9 +82,13 @@ public class GameObjectCollection {
         } else {
             sound.playSiren();
         }
+        if(cakeTimer.isTimeUp() && cakeAppear == false){
+            movingObjects.add(cake);
+            cakeAppear = true;
+        }
 
         if (!gamePrepTimer.isTimeUp()) return;
-        if (cakeTimer.isTimeUp()) movingObjects.add(cake);
+        //if (cakeTimer.isTimeUp()) movingObjects.add(cake);
 
         for (MovingObject movingObject : movingObjects) {
             if (movingObject instanceof Pacman) {
@@ -257,7 +263,6 @@ public class GameObjectCollection {
     //we only cares about and update upon those ones !!!
     private void updateStatus(PointSystem score) {
         PowerPelletEaten = false;
-
         for (GameObject gameObject : collisions) {
             if (gameObject instanceof MovingObject) {
                 if (gameObject instanceof Ghost) {
@@ -351,7 +356,9 @@ public class GameObjectCollection {
         this.redGhost = movingObjects.get(movingObjects.size() - 4);
         CakeGenerator cake = new CakeGenerator(arcade, context, mScreen, gameMode);
         this.cake = cake.getCake();
+
         this.cakeTimer = new GameObjectTimer(GameObjectTimer.chaseTime);
+
 
 //        //INIT Cake
 //        TwoTuple cakeInitPos = new TwoTuple(arcade.cakePosition);
@@ -369,7 +376,7 @@ public class GameObjectCollection {
 //        cakeViews.add(cakeViewList.get(0));
 //        cakeViews.add(cakeViewList.get(0));
 //        MovingObject cake = new Cake(cakeInitMotion, cakeViews);
-//        movingObjects.add(cake);
+//
 
 
         //Add Stationary objects to stationaryObjects list
@@ -377,6 +384,7 @@ public class GameObjectCollection {
         PelletsGenerator pelletsGenerator = new PelletsGenerator(arcade, context,
                 mScreen, gameMode);
         stationaryObjects = pelletsGenerator.getPellets();
+        cakeAppear = false;
 
 
         this.gamePrepTimer = new GameObjectTimer();

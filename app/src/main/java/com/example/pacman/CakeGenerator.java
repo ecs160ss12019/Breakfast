@@ -13,10 +13,14 @@ public class CakeGenerator {
     final static int UP = 2;
     final static int DOWN = 3;
     MovingObject cake;
-    GameObjectTimer timer;
+//    final Arcade arcade;
+    final GameMode gameMode;
+//    final ArrayList<Bitmap> pacmanViewList;
+//    GameObjectTimer timer;
 
     public  CakeGenerator(final Arcade arcade, Context context,
                          final TwoTuple mScreen, final GameMode gameMode){
+        this.gameMode = gameMode;
         TwoTuple cakeInitPos = new TwoTuple(arcade.cakePosition);
         final BitmapDivider bitmapDivider = new BitmapDivider(context);
         MotionInfo cakeInitMotion = new MotionInfo(
@@ -37,5 +41,4 @@ public class CakeGenerator {
     public MovingObject getCake(){
         return cake;
     }
-
 }
