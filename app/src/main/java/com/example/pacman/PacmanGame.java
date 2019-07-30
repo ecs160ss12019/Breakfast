@@ -170,9 +170,7 @@ class PacmanGame extends SurfaceView implements Runnable {
     the thread is running
      */
     public void updateGame() {
-        if(menu.check(userInput) == 0) {
-            mPaused = mPaused ? false : true;
-        }
+
 
         if (!mPaused) {
             final int direction; // check if user pressed touch button on screen; if not, check if user entered arrow key on keyboard (for testing)
@@ -206,6 +204,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         // Set mPlaying to false
         // Stopping the thread isn't
         // always instant
+
         try {
             // Stop the thread
             mGameThread.join();
@@ -220,6 +219,7 @@ class PacmanGame extends SurfaceView implements Runnable {
     public void resume() {
         //mPaused = false;
         // Initialize the instance of Thread
+
         mGameThread = new Thread(this);
 
         // Start the thread
@@ -257,7 +257,6 @@ class PacmanGame extends SurfaceView implements Runnable {
         }
     }
 
-
     /*
     implement onTouchEvent to handle user input
      */
@@ -268,6 +267,9 @@ class PacmanGame extends SurfaceView implements Runnable {
             case MotionEvent.ACTION_DOWN:
                 //update UserInput only, update other game objects somewhere else
                 userInput.updateUserInput(motionEvent.getX(), motionEvent.getY());
+                if(menu.check(userInput) == 0) {
+                    mPaused = mPaused ? false : true;
+                }
                 break;
             case MotionEvent.ACTION_UP:
                 userInput.updateUserInput(Float.MAX_VALUE, Float.MAX_VALUE);

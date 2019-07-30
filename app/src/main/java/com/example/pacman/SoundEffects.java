@@ -37,9 +37,7 @@ public class SoundEffects {
         eat_power = soundPool.load(context, R.raw.pacman_eatfruit, 1);
     }
 
-    public void playPacmanChomp() {
-        soundPool.play(pacman_chomp, 1, 1, 0, 0, 1);
-    }
+    public void playPacmanChomp() { soundPool.play(pacman_chomp, 1, 1, 0, 0, 1); }
 
     public void playEatPower() {
         soundPool.play(eat_power, 1,1,0,0,1);
