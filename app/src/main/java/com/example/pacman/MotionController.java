@@ -8,6 +8,7 @@ public class MotionController extends Observable {
     final private ArcadeAnalyzer arcadeAnalyzerGhostHouseEnabled;
     final private ArcadeAnalyzer arcadeAnalyzerGhostHouseDisabled;
     final private Arcade arcade;
+    final private GameMode gameMode;
 
     public void updateMovingObject(MovingObject movingObject, long fps) {
         if (fps == 0 || fps == -1) {
@@ -40,12 +41,37 @@ public class MotionController extends Observable {
     }
 
     private MotionInfo updateGhost(final Ghost ghost, final MotionInfo motionInfo, final long fps) {
+
+        int screenX = gameMode.getScreenX();
+        int ModeSelected = gameMode.getModeSelection();
         MotionUpdater motionUpdater;
+
         if (ghost.ghostBehaviour instanceof GhostEnterBehaviour ||
                 ghost.ghostBehaviour instanceof GhostExitBehaviour) {
+            motionInfo.setSpeed(gameMode.getGhostsSpeed());
             motionUpdater = new MotionUpdater(motionInfo, fps,
                     this.arcade, this.arcadeAnalyzerGhostHouseEnabled);
-        } else {
+        }
+
+        else if(ghost.ghostBehaviour instanceof GhostEscapeBehaviour) {
+            switch (ModeSelected){
+                case 0:
+                    motionInfo.setSpeed(screenX/20);
+                    break;
+                case 1:
+                    motionInfo.setSpeed(screenX/17);
+                    break;
+                case 2:
+                    motionInfo.setSpeed(screenX/14);
+                    break;
+            }
+            //motionInfo.setSpeed(100/2);
+            motionUpdater = new MotionUpdater(motionInfo, fps,
+                    this.arcade, this.arcadeAnalyzerGhostHouseDisabled);
+        }
+        else {
+            motionInfo.setSpeed(gameMode.getGhostsSpeed());
+            //motionInfo.setSpeed(gameMode.getGhostsSpeed());
             motionUpdater = new MotionUpdater(motionInfo, fps,
                     this.arcade, this.arcadeAnalyzerGhostHouseDisabled);
         }
@@ -63,8 +89,9 @@ public class MotionController extends Observable {
 
 
     //Constructor
-    public MotionController(Arcade arcade) {
+    public MotionController(Arcade arcade, GameMode gameMode) {
         this.arcade = arcade;
+        this.gameMode = gameMode;
         this.arcadeAnalyzerGhostHouseEnabled = new ArcadeAnalyzer(arcade, true);
         this.arcadeAnalyzerGhostHouseDisabled = new ArcadeAnalyzer(arcade, false);
     }
