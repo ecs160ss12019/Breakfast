@@ -90,7 +90,7 @@ public class Arcade{
     public TwoTuple pacmanPosition;
 
     //where the ghost should start from
-    public TwoTuple ghostPosition;
+    public ArrayList<TwoTuple> ghostsPos;
 
     //where the cake should start from
     public TwoTuple cakePosition;
@@ -416,7 +416,7 @@ public class Arcade{
 
         // since pos in arcade use x for row, and y for col; we need to use arcade y to calculate screen x, vice versa。
         pacmanPosition_pix = new TwoTuple(xReference + pacmanPosition.y * blockWidth, yReference + pacmanPosition.x * blockHeight);
-        ghostPosition_pix = new TwoTuple(xReference + ghostPosition.y * blockWidth, yReference + ghostPosition.x * blockHeight);
+
         cakePosition_pix = new TwoTuple(xReference + cakePosition.y * blockWidth, yReference + cakePosition.x * blockHeight);
 
 
@@ -460,7 +460,7 @@ public class Arcade{
     public Arcade(Context context, ArrayList<ArrayList<Integer>> matrix,
                   int numRow, int numCol,
                   int imgFileRow, int imgFileCol,
-                  TwoTuple pacmanPosition, TwoTuple ghostPosition, TwoTuple cakePosition,
+                  TwoTuple pacmanPosition, ArrayList<ArrayList<Integer>> _ghostsPos, TwoTuple cakePosition,
                   boolean inUse) {
         this.context = context;
 
@@ -493,7 +493,12 @@ public class Arcade{
         this.imgFileCol = imgFileCol;
 
         this.pacmanPosition = pacmanPosition;
-        this.ghostPosition = ghostPosition;
+
+        this.ghostsPos = new ArrayList<>();
+        for (int i = 0; i < _ghostsPos.size(); i++) {
+            this.ghostsPos.add(new TwoTuple(_ghostsPos.get(i).get(0), _ghostsPos.get(i).get(1)));
+        }
+
         this.cakePosition = cakePosition;
 
         this.inUse = inUse;
