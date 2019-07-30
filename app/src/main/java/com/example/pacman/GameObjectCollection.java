@@ -68,28 +68,6 @@ public class GameObjectCollection {
                 MotionInfo ghostInfo = movingObject.motionInfo;
                 MotionInfo pacmanInfo = pacman.motionInfo;
 
-                //updateGhostBehaviour((Ghost)movingObject);
-
-//                int id = ((Ghost)movingObject).id;
-//                MotionInfo target = new MotionInfo();
-//                if (id == RedGhostId) {
-//                    target.posInArcade = new TwoTuple(2,3);
-//                }
-//
-//                if (id == PinkGhostId) {
-//                    target.posInArcade = new TwoTuple(2,24);
-//                }
-//
-//                if (id == BlueGhostId) {
-//                    target.posInArcade = new TwoTuple(28,3);
-//                }
-//
-//                if (id == YellowGhostId) {
-//                    target.posInArcade = new TwoTuple(28,24);
-//                }
-
-                System.out.println("Ghost timer: " + ((Ghost)movingObject).id + " " + ((Ghost)movingObject).gameObjectTimer.isTimeUp());
-
                 if (arcadeAnalyzer.isCross(ghostInfo.posInArcade)) {
                     movingObject.motionInfo.nextDirection = ((Ghost) movingObject).ghostBehaviour.performBehaviour(ghostInfo,
                             pacmanInfo, redGhost.motionInfo, arcadeAnalyzer);
@@ -158,7 +136,6 @@ public class GameObjectCollection {
 
             // initial ghost when pacman died
             initialGhost();
-            needToPause = true;
         }
     }
 
@@ -327,189 +304,45 @@ public class GameObjectCollection {
         this.gameMode = gameMode;
         this.context = context;
 
-        final BitmapDivider bitmapDivider = new BitmapDivider(context);
-
         //Add moving objects to movingObjects list
         movingObjects = new ArrayList<>();
+        collisions = new ArrayList<>();
+        this.containsPacman = arcade.inUse;
 
-        //INIT Pacman
-        TwoTuple pacmanInitPos = new TwoTuple(arcade.pacmanPosition);
-
-        ArrayList<Bitmap> pacmanViewList = BitmapDivider.splitAndResize(
-                bitmapDivider.loadBitmap(R.drawable.pacmancombined),
-                new TwoTuple(6,4),
-                new TwoTuple(mScreen.y / 15, mScreen.y / 15));
-
-        MotionInfo pacmanInitMotion = new MotionInfo(
-                pacmanInitPos,
-                arcade.mapScreen(pacmanInitPos),
-                0, RIGHT, -1, gameMode.getPacmanSpeed());
-
-        pacman = new Pacman(pacmanInitMotion, pacmanViewList);
-
-        //Init ghosts
-        final ArrayList<Bitmap> ghostsViewList = BitmapDivider.splitAndResize(
-                bitmapDivider.loadBitmap(R.drawable.ghostcombined),
-                new TwoTuple(6,4),
-                new TwoTuple(mScreen.y / 15, mScreen.y / 15));
-        final ArrayList<Bitmap> ghostKilledList = new ArrayList<>(ghostsViewList.subList(16,20));
-        final ArrayList<Bitmap> ghostEscapeList = new ArrayList<>(ghostsViewList.subList(20,24));
-
-        //INIT RedGhost
-        final ArrayList<Bitmap> redGhostsViewList = new ArrayList<>(ghostsViewList.subList(0,4));
-
-        final TwoTuple redGhostInitPos = new TwoTuple(11,14);
-        final TwoTuple pinkGhostInitPos = new TwoTuple(15,11);
-        final TwoTuple blueGhostInitPos = new TwoTuple(15,13);
-        final TwoTuple yellowGhostInitPos = new TwoTuple(15,15);
-
-        MotionInfo redInitMotion = new MotionInfo(
-                redGhostInitPos,
-                arcade.mapScreen(redGhostInitPos),
-                0, UP, -1, gameMode.getGhostsSpeed());
-
-        ArrayList<Bitmap> redViews = new ArrayList<>();
-        redViews.add(ghostsViewList.get(1));
-        redViews.add(ghostsViewList.get(1));
-        redViews.add(ghostsViewList.get(1));
-        redViews.add(ghostsViewList.get(1));
-
-        redGhost = new Ghost(0, redInitMotion, redGhostsViewList,
-                ghostEscapeList, ghostKilledList, new GhostStationaryBehaviour(), 1);
-
-        //INIT PinkGhost
-        final ArrayList<Bitmap> pinkGhostsViewList = new ArrayList<>(ghostsViewList.subList(4,8));
-
-        MotionInfo pinkInitMotion = new MotionInfo(
-                pinkGhostInitPos,
-                arcade.mapScreen(pinkGhostInitPos),
-                0, RIGHT, -1, gameMode.getGhostsSpeed());
-        ArrayList<Bitmap> pinkViews = new ArrayList<>();
-        pinkViews.add(ghostsViewList.get(3));
-        pinkViews.add(ghostsViewList.get(3));
-        pinkViews.add(ghostsViewList.get(3));
-        pinkViews.add(ghostsViewList.get(3));
-
-        Ghost pinkGhost = new Ghost(1, pinkInitMotion, pinkGhostsViewList,
-                ghostEscapeList, ghostKilledList, new GhostStationaryBehaviour(), 3);
-
-        //INIT BlueGhost
-        final ArrayList<Bitmap> blueGhostsViewList = new ArrayList<>(ghostsViewList.subList(8,12));
-        MotionInfo blueInitMotion = new MotionInfo(
-                blueGhostInitPos,
-                arcade.mapScreen(blueGhostInitPos),
-                0, UP, -1, gameMode.getGhostsSpeed());
-        ArrayList<Bitmap> blueViews = new ArrayList<>();
-        blueViews.add(ghostsViewList.get(2));
-        blueViews.add(ghostsViewList.get(2));
-        blueViews.add(ghostsViewList.get(2));
-        blueViews.add(ghostsViewList.get(2));
-
-        Ghost blueGhost = new Ghost(2, blueInitMotion, blueGhostsViewList,
-                ghostEscapeList, ghostKilledList, new GhostStationaryBehaviour(), 6);
-
-        //INIT YellowGhost
-        final ArrayList<Bitmap> yellowGhostsViewList = new ArrayList<>(ghostsViewList.subList(12,16));
-        MotionInfo yellowInitMotion = new MotionInfo(
-                yellowGhostInitPos,
-                arcade.mapScreen(yellowGhostInitPos),
-                0, UP, -1, gameMode.getGhostsSpeed());
-        ArrayList<Bitmap> yellowViews = new ArrayList<>();
-        yellowViews.add(ghostsViewList.get(0));
-        yellowViews.add(ghostsViewList.get(0));
-        yellowViews.add(ghostsViewList.get(0));
-        yellowViews.add(ghostsViewList.get(0));
-
-        Ghost yellowGhost = new Ghost(3, yellowInitMotion, yellowGhostsViewList,
-                ghostEscapeList, ghostKilledList, new GhostStationaryBehaviour(), 8);
-
-        //INIT Cake
-        TwoTuple cakeInitPos = new TwoTuple(arcade.cakePosition);
-        MotionInfo cakeInitMotion = new MotionInfo(
-                cakeInitPos,
-                arcade.mapScreen(cakeInitPos),
-                0, UP, UP, gameMode.getPacmanSpeed());
-        ArrayList<Bitmap> cakeViewList = BitmapDivider.splitAndResize(
-                bitmapDivider.loadBitmap(R.drawable.cake),
-                new TwoTuple(1,1),
-                new TwoTuple(mScreen.y / 15, mScreen.y / 15));
-        ArrayList<Bitmap> cakeViews = new ArrayList<>();
-        cakeViews.add(cakeViewList.get(0));
-        cakeViews.add(cakeViewList.get(0));
-        cakeViews.add(cakeViewList.get(0));
-        cakeViews.add(cakeViewList.get(0));
-        MovingObject cake = new Cake(cakeInitMotion, cakeViews);
-
+        PacmanGenerator pacmanGenerator = new PacmanGenerator(arcade, context,
+                mScreen, gameMode);
+        pacman = pacmanGenerator.getPacman();
         movingObjects.add(pacman);
-        movingObjects.add(this.redGhost);
-        movingObjects.add(pinkGhost);
-        movingObjects.add(blueGhost);
-        movingObjects.add(yellowGhost);
-        movingObjects.add(cake);
+
+        GhostsGenerator ghostsGenerator = new GhostsGenerator(arcade, context,
+        mScreen, gameMode);
+
+        movingObjects.addAll(new ArrayList<>(ghostsGenerator.getGhosts()));
+        this.redGhost = movingObjects.get(movingObjects.size() - 4);
+
+//        //INIT Cake
+//        TwoTuple cakeInitPos = new TwoTuple(arcade.cakePosition);
+//        MotionInfo cakeInitMotion = new MotionInfo(
+//                cakeInitPos,
+//                arcade.mapScreen(cakeInitPos),
+//                0, UP, UP, gameMode.getPacmanSpeed());
+//        ArrayList<Bitmap> cakeViewList = BitmapDivider.splitAndResize(
+//                bitmapDivider.loadBitmap(R.drawable.cake),
+//                new TwoTuple(1,1),
+//                new TwoTuple(mScreen.y / 15, mScreen.y / 15));
+//        ArrayList<Bitmap> cakeViews = new ArrayList<>();
+//        cakeViews.add(cakeViewList.get(0));
+//        cakeViews.add(cakeViewList.get(0));
+//        cakeViews.add(cakeViewList.get(0));
+//        cakeViews.add(cakeViewList.get(0));
+//        MovingObject cake = new Cake(cakeInitMotion, cakeViews);
+//        movingObjects.add(cake);
 
 
         //Add Stationary objects to stationaryObjects list
-        stationaryObjects = new ArrayList<>();
 
-        //Init Pellets
-        final int numRow = arcade.getNumRow();
-        final int numCol = arcade.getNumCol();
-
-        final ArrayList<Bitmap> normalPelletViewList = BitmapDivider.splitAndResize(
-                bitmapDivider.loadBitmap(R.drawable.pellet),
-                new TwoTuple(1,1),
-                new TwoTuple(mScreen.y / 45, mScreen.y / 45));
-
-        final ArrayList<Bitmap> powerPelletViewList = BitmapDivider.splitAndResize(
-                bitmapDivider.loadBitmap(R.drawable.powerpellet),
-                new TwoTuple(1,1),
-                new TwoTuple(mScreen.y / 22, mScreen.y / 22));
-
-        ArrayList<ArrayList<Bitmap>> pelletViewLists= new ArrayList<>();
-        pelletViewLists.add(normalPelletViewList);
-        pelletViewLists.add(powerPelletViewList);
-
-        Random random = new Random();
-        for (int i = 0; i < numRow; i++) {
-            for (int j = 0; j < numCol; j++) {
-                int type = arcade.getBlock(new TwoTuple(i, j)).getType();
-                //Will need to update the location of pellets with json later
-//                if (type == 16) {
-//                    TwoTuple posInArcade = new TwoTuple(i, j);
-//                    TwoTuple posInScreen = arcade.mapScreen(posInArcade);
-//                    StaticInfo pelletInfo = new StaticInfo(posInArcade, posInScreen);
-//                    int pelletType = random.nextInt(2);
-//
-//                    StationaryObject nextPellet;
-//                    if (pelletType == 0){
-//                        nextPellet = new PowerPellet(pelletInfo, pelletViewLists.get(pelletType));
-//                    } else {
-//                        nextPellet = new NormalPellet(pelletInfo, pelletViewLists.get(pelletType));
-//                    }
-//                    stationaryObjects.add(nextPellet);
-//                }
-
-                TwoTuple posInArcade = new TwoTuple(i, j);
-                TwoTuple posInScreen = arcade.mapScreen(posInArcade);
-                StaticInfo pelletInfo = new StaticInfo(posInArcade, posInScreen);
-                StationaryObject nextPellet;
-
-                //Normal pellet
-                if (type == 40) {
-                    nextPellet = new NormalPellet(pelletInfo, pelletViewLists.get(0));
-                    stationaryObjects.add(nextPellet);
-                }
-
-                //Power pellet!!!
-                if (type == 42) {
-                    nextPellet = new PowerPellet(pelletInfo, pelletViewLists.get(1));
-                    stationaryObjects.add(nextPellet);
-                }
-
-
-            }
-        }
-        collisions = new ArrayList<>();
-        this.containsPacman = arcade.inUse;
+        PelletsGenerator pelletsGenerator = new PelletsGenerator(arcade, context,
+                mScreen, gameMode);
+        stationaryObjects = pelletsGenerator.getPellets();
     }
 }
