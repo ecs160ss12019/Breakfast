@@ -60,6 +60,8 @@ public class PacmanActivity extends Activity {
         };
         gameOverThread.start();
 
+
+
     }
 
     @Override

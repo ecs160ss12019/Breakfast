@@ -62,13 +62,20 @@ public class GameOverActivity extends Activity {
             }
         });
     }
+    public static void restartActivity(Activity activity) {
+
+            activity.finish();
+            activity.startActivity(activity.getIntent());
+
+    }
 
     public void replay() {
         checkMode();
-
         Intent intent = new Intent(this, PacmanActivity.class);
         intent.putExtra(EXTRA_NUMBER, modeSelected);
+        finish();
         startActivity(intent);
+
 
     }
 
