@@ -314,7 +314,7 @@ public class GameObjectCollection {
                                 final Arcade arcade, final GameMode gameMode, SoundEffects sound) {
         this.arcade = arcade;
         this.arcadeAnalyzer = new ArcadeAnalyzer(arcade, true);
-        this.motionController = new MotionController(arcade);
+        this.motionController = new MotionController(arcade, gameMode);
         this.sound = sound;
 
         this.PowerPelletEaten = false;
