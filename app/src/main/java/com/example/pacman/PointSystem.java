@@ -12,6 +12,7 @@ public class PointSystem {
     private boolean bonus;
     private int ghost = 50;
     private int cake = 100;
+    private GameObjectTimer cakeTimer;
 
     public PointSystem(){
         this.total = 0;
@@ -63,6 +64,7 @@ public class PointSystem {
 
     //Update the score once the cake is eaten
     public void cakeEaten(){
+
         this.bonus = true;
         total = total + cake;
     }

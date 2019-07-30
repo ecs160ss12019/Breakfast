@@ -20,6 +20,7 @@ public class Cake extends MovingObject implements GameObject {
     private boolean isDead;
     //eaten means whether points was added.
     private boolean eaten;
+//    private GameObjectTimer timer;
 
 //    public boolean isDead() {
 //        return isDead;
@@ -110,5 +111,6 @@ public class Cake extends MovingObject implements GameObject {
     //Constructor
     public Cake(final MotionInfo motionInfo, final ArrayList<Bitmap> viewList){
         super(motionInfo, viewList);
+
     }
 }

@@ -33,9 +33,11 @@ public class GameObjectCollection {
     private Context context;
     private SoundEffects sound;
     private GameObjectTimer gamePrepTimer;
+    private GameObjectTimer cakeTimer;
 
     private MovingObject pacman;
     private MovingObject redGhost;
+    private MovingObject cake;
     private ArrayList<MovingObject> movingObjects;
     private ArrayList<StationaryObject> stationaryObjects;
     private ArrayList<GameObject> collisions;
@@ -80,6 +82,7 @@ public class GameObjectCollection {
         }
 
         if (!gamePrepTimer.isTimeUp()) return;
+        if (cakeTimer.isTimeUp()) movingObjects.add(cake);
 
         for (MovingObject movingObject : movingObjects) {
             if (movingObject instanceof Pacman) {
@@ -254,6 +257,7 @@ public class GameObjectCollection {
     //we only cares about and update upon those ones !!!
     private void updateStatus(PointSystem score) {
         PowerPelletEaten = false;
+
         for (GameObject gameObject : collisions) {
             if (gameObject instanceof MovingObject) {
                 if (gameObject instanceof Ghost) {
@@ -345,6 +349,9 @@ public class GameObjectCollection {
 
         movingObjects.addAll(new ArrayList<>(ghostsGenerator.getGhosts()));
         this.redGhost = movingObjects.get(movingObjects.size() - 4);
+        CakeGenerator cake = new CakeGenerator(arcade, context, mScreen, gameMode);
+        this.cake = cake.getCake();
+        this.cakeTimer = new GameObjectTimer(GameObjectTimer.chaseTime);
 
 //        //INIT Cake
 //        TwoTuple cakeInitPos = new TwoTuple(arcade.cakePosition);

@@ -247,6 +247,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         mCanvas.drawText("Speed: "+ modeSelected, 50, (numberHorizontalPixels/40)*4, paint);
 
         mCanvas.drawText("Fps: "+ mFPS, 50, (numberHorizontalPixels/40)*6, paint);
+
         gameObjectCollections.get(0).draw(canvas);
         navigationButtons.draw(canvas);
         if (!mPaused) {
@@ -255,6 +256,7 @@ class PacmanGame extends SurfaceView implements Runnable {
             menu.drawPlay(canvas);
         }
     }
+
 
     /*
     implement onTouchEvent to handle user input
