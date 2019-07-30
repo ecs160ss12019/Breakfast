@@ -108,6 +108,7 @@ public class ArcadeDecoder {
         things we need to extract
          */
         ArrayList<ArrayList<Integer>> matrix = new ArrayList<ArrayList<Integer>>();
+        ArrayList<ArrayList<Integer>> ghostsPos = new ArrayList<ArrayList<Integer>>();
         int numRow = 0;
         int numCol = 0;
         int imgFileRow = 0;
@@ -148,6 +149,8 @@ public class ArcadeDecoder {
                 ghostX = reader.nextInt();
             } else if(name.equals("ghostY")) {
                 ghostY = reader.nextInt();
+            } else if(name.equals("ghostsPos")) {
+                ghostsPos = readMatrix(reader);
             } else if(name.equals("cakeX")){
                 cakeX = reader.nextInt();
             } else if(name.equals("cakeY")){
@@ -163,12 +166,12 @@ public class ArcadeDecoder {
         reader.endObject();
 
         pacmanPosition = new TwoTuple(pacmanX, pacmanY);
-        ghostPosition = new TwoTuple(ghostX, ghostY);
+
         cakePosition = new TwoTuple(cakeX, cakeY);
 
 
         return new Arcade(context, matrix, numRow, numCol,
-                imgFileRow, imgFileCol, pacmanPosition, ghostPosition, cakePosition, inUse);
+                imgFileRow, imgFileCol, pacmanPosition, ghostsPos, cakePosition, inUse);
     }
 
     /*
