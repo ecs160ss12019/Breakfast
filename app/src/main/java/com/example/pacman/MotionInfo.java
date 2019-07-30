@@ -33,6 +33,10 @@ public class MotionInfo implements Info {
     public MotionInfo() {
     }
 
+    public void setSpeed(float speed){
+        this.speed = speed;
+    }
+
     public MotionInfo(MotionInfo info) {
         this.posInArcade = info.posInArcade;
         this.posInScreen = info.posInScreen;
