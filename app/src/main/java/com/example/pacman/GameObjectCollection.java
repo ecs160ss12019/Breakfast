@@ -40,6 +40,7 @@ public class GameObjectCollection {
     private ArrayList<StationaryObject> stationaryObjects;
     private ArrayList<GameObject> collisions;
 
+    private boolean escapeMusic;
     private boolean containsPacman;
     private boolean PowerPelletEaten;
     boolean needToPause = false;
@@ -72,7 +73,11 @@ public class GameObjectCollection {
     }
 
     public void update(int userInput, long fps, PointSystem score) {
-        sound.playSiren();
+        if (escapeMusic){
+            sound.playWaze();
+        } else {
+            sound.playSiren();
+        }
 
         if (!gamePrepTimer.isTimeUp()) return;
 
@@ -82,6 +87,8 @@ public class GameObjectCollection {
             }
 
             if (movingObject instanceof Ghost) {
+
+                escapeMusic = ((Ghost) movingObject).getIsGhostEscape();
                 MotionInfo ghostInfo = movingObject.motionInfo;
                 MotionInfo pacmanInfo = pacman.motionInfo;
 
@@ -326,6 +333,7 @@ public class GameObjectCollection {
         movingObjects = new ArrayList<>();
         collisions = new ArrayList<>();
         this.containsPacman = arcade.inUse;
+        escapeMusic = false;
 
         PacmanGenerator pacmanGenerator = new PacmanGenerator(arcade, context,
                 mScreen, gameMode);
@@ -362,6 +370,7 @@ public class GameObjectCollection {
         PelletsGenerator pelletsGenerator = new PelletsGenerator(arcade, context,
                 mScreen, gameMode);
         stationaryObjects = pelletsGenerator.getPellets();
+
 
         this.gamePrepTimer = new GameObjectTimer();
         this.gamePrepTimer.setTimer(GameObjectTimer.gamePrepTime);

@@ -9,7 +9,7 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Build;
 
 public class SoundEffects {
-    MediaPlayer welcome, pacman_death, eat_ghost, siren;
+    MediaPlayer welcome, pacman_death, eat_ghost, siren, waze;
 
     private SoundPool soundPool;
     private int pacman_chomp, eat_power;
@@ -19,7 +19,8 @@ public class SoundEffects {
         welcome = MediaPlayer.create(context, R.raw.welcome_music);
         pacman_death = MediaPlayer.create(context, R.raw.pacman_death);
         eat_ghost = MediaPlayer.create(context, R.raw.pacman_eatghost);
-        siren = MediaPlayer.create(context, R.raw.edited_siren);
+        siren = MediaPlayer.create(context, R.raw.my_siren);
+        waze = MediaPlayer.create(context, R.raw.edited_waze);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             audioAttributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_GAME)
@@ -47,6 +48,8 @@ public class SoundEffects {
     public void playSiren() {
         siren.start();
     }
+
+    public void playWaze() { waze.start(); }
 
     public void playEatGhost() {
         eat_ghost.start();

@@ -23,6 +23,11 @@ public class Ghost extends MovingObject {
     private static TwoTuple RebornPos = new TwoTuple(14,14);
     private ArrayList<GhostBehaviour> chaseBehaviourList;
     private ArrayList<GhostBehaviour> scatterBehaviourList;
+    private boolean ghostEscape;
+
+    public boolean getIsGhostEscape() {
+        return ghostEscape;
+    }
 
     public void updateGhostBehavior(boolean powerPelletEaten, boolean collision) {
         final GhostBehaviour currBehaviour = this.ghostBehaviour;
@@ -35,13 +40,11 @@ public class Ghost extends MovingObject {
         final boolean atReborn = currPos.x == RebornPos.x && currPos.y == RebornPos.y;
 
         if (currBehaviour instanceof GhostStationaryBehaviour && timeUp) {
-
             this.ghostBehaviour = new GhostExitBehaviour();
             return;
         }
 
         if (currBehaviour instanceof GhostExitBehaviour && atDoor) {
-
             switch (id) {
                 case 0:
                     this.ghostBehaviour = new GhostChaseBehaviour();
@@ -62,6 +65,7 @@ public class Ghost extends MovingObject {
         }
 
         if (isChasing && powerPelletEaten) {
+            ghostEscape = true;
             this.ghostBehaviour = new GhostEscapeBehaviour();
             System.out.println("Changed to escape");
             this.gameObjectTimer = new GameObjectTimer(GameObjectTimer.powerUp);
@@ -69,7 +73,7 @@ public class Ghost extends MovingObject {
         }
 
         if (isChasing && timeUp) {
-
+            ghostEscape = true;
             switch (id) {
                 case 0:
                     this.ghostBehaviour = new GhostScatterLeftTop();
@@ -90,13 +94,14 @@ public class Ghost extends MovingObject {
         }
 
         if (isScatter && powerPelletEaten) {
+            ghostEscape = true;
             this.ghostBehaviour = new GhostEscapeBehaviour();
             this.gameObjectTimer = new GameObjectTimer(GameObjectTimer.powerUp);
             return;
         }
 
         if (isScatter && timeUp) {
-
+            ghostEscape = false;
             switch (id) {
                 case 0:
                     this.ghostBehaviour = new GhostChaseBehaviour();
@@ -111,13 +116,12 @@ public class Ghost extends MovingObject {
                     this.ghostBehaviour = new GhostSearchAndChaseBehaviour();
                     break;
             }
-
             this.gameObjectTimer = new GameObjectTimer(GameObjectTimer.chaseTime);
             return;
         }
 
         if (currBehaviour instanceof GhostEscapeBehaviour && timeUp) {
-
+            ghostEscape = false;
             switch (id) {
                 case 0:
                     this.ghostBehaviour = new GhostChaseBehaviour();
@@ -132,27 +136,22 @@ public class Ghost extends MovingObject {
                     this.ghostBehaviour = new GhostSearchAndChaseBehaviour();
                     break;
             }
-
             this.gameObjectTimer = new GameObjectTimer(GameObjectTimer.chaseTime);
             return;
         }
 
         if (currBehaviour instanceof GhostEscapeBehaviour && collision) {
             this.ghostBehaviour = new GhostKilledBehaviour();
-
             return;
         }
 
         if(currBehaviour instanceof GhostKilledBehaviour && atDoor){
             this.ghostBehaviour = new GhostEnterBehaviour();
-
             return;
         }
 
         if(currBehaviour instanceof GhostEnterBehaviour && atReborn){
-
             this.ghostBehaviour = new GhostExitBehaviour();
-
             return;
         }
     }
@@ -179,7 +178,7 @@ public class Ghost extends MovingObject {
                  final ArrayList<Bitmap> killedViewList,
                  GhostBehaviour ghostBehaviour, long countDownTime) {
         super(motionInfo, normalViewList);
-
+        ghostEscape = false;
         this.normalViewList = normalViewList;
         this.escapingViewList = escapingViewList;
         this.killedViewList = killedViewList;
