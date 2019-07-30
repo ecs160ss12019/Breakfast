@@ -3,7 +3,9 @@ package com.example.pacman;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -27,8 +29,10 @@ public class GameObjectCollection {
     final private ArcadeAnalyzer arcadeAnalyzer;
     final private MotionController motionController;
     final private GameMode gameMode;
+    final private TwoTuple mScreen;
     private Context context;
     private SoundEffects sound;
+    private GameObjectTimer gamePrepTimer;
 
     private MovingObject pacman;
     private MovingObject redGhost;
@@ -54,11 +58,24 @@ public class GameObjectCollection {
         if(!containsPacman) {
             ((Pacman)pacman).drawDied(canvas);
             if(pacman.checkalive()) pacmanReborn();
+            gamePrepTimer.setTimer(GameObjectTimer.gamePrepTime);
+        }
+
+        if (!gamePrepTimer.isTimeUp()) {
+            Typeface plain = Typeface.createFromAsset(context.getAssets(), "fonts/myFont.ttf");
+            Paint paint = new Paint();
+            paint.setTextSize(mScreen.x/20);
+            paint.setTypeface(plain);
+            paint.setARGB(230, 255, 0,100);
+            canvas.drawText("Ready!!!", mScreen.x / 2 - 200, mScreen.y/2 + 150, paint);
         }
     }
 
     public void update(int userInput, long fps, PointSystem score) {
         sound.playSiren();
+
+        if (!gamePrepTimer.isTimeUp()) return;
+
         for (MovingObject movingObject : movingObjects) {
             if (movingObject instanceof Pacman) {
                 ((Pacman) movingObject).setInputDirection(userInput);
@@ -303,6 +320,7 @@ public class GameObjectCollection {
         this.PowerPelletEaten = false;
         this.gameMode = gameMode;
         this.context = context;
+        this.mScreen = mScreen;
 
         //Add moving objects to movingObjects list
         movingObjects = new ArrayList<>();
@@ -344,5 +362,8 @@ public class GameObjectCollection {
         PelletsGenerator pelletsGenerator = new PelletsGenerator(arcade, context,
                 mScreen, gameMode);
         stationaryObjects = pelletsGenerator.getPellets();
+
+        this.gamePrepTimer = new GameObjectTimer();
+        this.gamePrepTimer.setTimer(GameObjectTimer.gamePrepTime);
     }
 }

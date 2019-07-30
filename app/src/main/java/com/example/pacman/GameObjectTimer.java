@@ -8,6 +8,7 @@ public class GameObjectTimer {
     final static int fraction = 1000000000;
     final static int chaseTime = 20;
     final static int scatterTime = 7;
+    final static int gamePrepTime = 2;
     final static int powerUp = 10;
 
     private long startTime;

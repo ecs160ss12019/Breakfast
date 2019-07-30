@@ -311,7 +311,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         mFPS = -1;
 
         mPlaying = true;
-        mPaused = true;
+        mPaused = false;
 
         gameMode = new GameMode(inputLevel, mScreen.x);
         switch (gameMode.getDisplayMode()){
