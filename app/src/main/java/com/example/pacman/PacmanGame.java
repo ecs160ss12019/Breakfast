@@ -174,14 +174,6 @@ class PacmanGame extends SurfaceView implements Runnable {
             mPaused = mPaused ? false : true;
         }
 
-        for(GameObjectCollection goc : gameObjectCollections) {
-            if(goc.needToPause) {
-                mPaused = true;
-                goc.needToPause = false;
-            }
-            break;
-        }
-
         if (!mPaused) {
             final int direction; // check if user pressed touch button on screen; if not, check if user entered arrow key on keyboard (for testing)
             if(navigationButtons.checkAndUpdate(userInput) != -1) direction = navigationButtons.checkAndUpdate(userInput);
