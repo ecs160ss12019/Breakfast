@@ -48,30 +48,21 @@ public class MotionController extends Observable {
 
         if (ghost.ghostBehaviour instanceof GhostEnterBehaviour ||
                 ghost.ghostBehaviour instanceof GhostExitBehaviour) {
+
             motionInfo.setSpeed(gameMode.getGhostsSpeed());
             motionUpdater = new MotionUpdater(motionInfo, fps,
                     this.arcade, this.arcadeAnalyzerGhostHouseEnabled);
         }
 
         else if(ghost.ghostBehaviour instanceof GhostEscapeBehaviour) {
-            switch (ModeSelected){
-                case 0:
-                    motionInfo.setSpeed(screenX/20);
-                    break;
-                case 1:
-                    motionInfo.setSpeed(screenX/17);
-                    break;
-                case 2:
-                    motionInfo.setSpeed(screenX/14);
-                    break;
-            }
-            //motionInfo.setSpeed(100/2);
+
+            motionInfo.setSpeed(gameMode.getGhostsSpeed()*3/5);
             motionUpdater = new MotionUpdater(motionInfo, fps,
                     this.arcade, this.arcadeAnalyzerGhostHouseDisabled);
         }
         else {
+
             motionInfo.setSpeed(gameMode.getGhostsSpeed());
-            //motionInfo.setSpeed(gameMode.getGhostsSpeed());
             motionUpdater = new MotionUpdater(motionInfo, fps,
                     this.arcade, this.arcadeAnalyzerGhostHouseDisabled);
         }
