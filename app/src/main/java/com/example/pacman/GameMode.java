@@ -25,6 +25,7 @@ public class GameMode {
 
     public int getDisplayMode() { return displayMode; }
 
+
     public GameMode(int inputMode, int screenX){
         this.screenX = screenX;
         // mode is normal by default
@@ -45,6 +46,7 @@ public class GameMode {
         modeManager();
 
     }
+
     public void modeManager(){
         switch (modeSelection){
             case easy:
@@ -58,6 +60,7 @@ public class GameMode {
                 break;
         }
     }
+
     public void easyMode(){
         // This code means the Pacman and ghosts can cover the width
         // of the screen in 9 seconds
@@ -75,5 +78,13 @@ public class GameMode {
         // of the screen in 9 seconds
         pacmanSpeed = screenX/6;
         ghostsSpeed = screenX/6;
+    }
+
+    public int getModeSelection(){
+        return modeSelection;
+    }
+
+    public int getScreenX(){
+        return screenX;
     }
 }
