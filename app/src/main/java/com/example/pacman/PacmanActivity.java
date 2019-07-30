@@ -52,6 +52,8 @@ public class PacmanActivity extends Activity {
                 while(true) {
                     // System.out.println("Check Game over");
                     if(Pacman.totalLives <= 0) {
+//                        Intent intent = getIntent();
+//                        finish();
                         gameOver();
                         break;
                     }
@@ -82,6 +84,8 @@ public class PacmanActivity extends Activity {
 
     public void gameOver() {
         // System.out.println("gameOver is called");
+//        Intent curintent = getIntent();
+//        curintent.finish();
         Intent intent = new Intent(this, GameOverActivity.class);
         startActivity(intent);
         try {
