@@ -16,16 +16,6 @@ public class GameObjectCollection {
     final static int UP = 2;
     final static int DOWN = 3;
 
-
-    //red: chase
-    //pink: front
-    //blue: predict
-    //yellow: search
-    final static int RedGhostId = 0;
-    final static int PinkGhostId = 1;
-    final static int BlueGhostId = 2;
-    final static int YellowGhostId = 3;
-
     final private Arcade arcade;
     final private ArcadeAnalyzer arcadeAnalyzer;
     final private MotionController motionController;
@@ -358,25 +348,6 @@ public class GameObjectCollection {
         this.cake = cake.getCake();
 
         this.cakeTimer = new GameObjectTimer(GameObjectTimer.chaseTime);
-
-
-//        //INIT Cake
-//        TwoTuple cakeInitPos = new TwoTuple(arcade.cakePosition);
-//        MotionInfo cakeInitMotion = new MotionInfo(
-//                cakeInitPos,
-//                arcade.mapScreen(cakeInitPos),
-//                0, UP, UP, gameMode.getPacmanSpeed());
-//        ArrayList<Bitmap> cakeViewList = BitmapDivider.splitAndResize(
-//                bitmapDivider.loadBitmap(R.drawable.cake),
-//                new TwoTuple(1,1),
-//                new TwoTuple(mScreen.y / 15, mScreen.y / 15));
-//        ArrayList<Bitmap> cakeViews = new ArrayList<>();
-//        cakeViews.add(cakeViewList.get(0));
-//        cakeViews.add(cakeViewList.get(0));
-//        cakeViews.add(cakeViewList.get(0));
-//        cakeViews.add(cakeViewList.get(0));
-//        MovingObject cake = new Cake(cakeInitMotion, cakeViews);
-//
 
 
         //Add Stationary objects to stationaryObjects list
