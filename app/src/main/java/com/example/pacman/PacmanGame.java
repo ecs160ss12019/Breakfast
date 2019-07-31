@@ -13,6 +13,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.content.Intent;
+import android.widget.Button;
+
 import java.util.ArrayList;
 
 class PacmanGame extends SurfaceView implements Runnable {
@@ -23,6 +25,9 @@ class PacmanGame extends SurfaceView implements Runnable {
     private SurfaceHolder mOurHolder;
     private Canvas mCanvas;
     private Paint mPaint;
+
+    // when the pause button is pressed, the menu popup activity will popup
+    private Button menuBtn;
 
     //create SoundEffects class object
     private SoundEffects sound;
@@ -56,6 +61,7 @@ class PacmanGame extends SurfaceView implements Runnable {
     private Records records;
 
     private int numberHorizontalPixels;
+    private int numberVerticalPixels;
     private String modeSelected;
 
     //Our Navigation Buttons!
@@ -253,6 +259,14 @@ class PacmanGame extends SurfaceView implements Runnable {
         if (!mPaused) {
             menu.drawPause(canvas);
         } else {
+            mCanvas.drawColor(Color.argb
+                    (255, 222, 184, 184));
+            paint.setColor(Color.argb(255, 255, 255, 255));
+            paint.setTextSize(numberHorizontalPixels/30);
+            canvas.drawText("Paused!", (numberHorizontalPixels/2)-100,
+                    numberVerticalPixels/2, paint);
+            canvas.drawText("click on the play button to resume", (numberHorizontalPixels/20),
+                    (numberVerticalPixels/2)+100, paint);
             menu.drawPlay(canvas);
         }
     }
@@ -296,6 +310,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         this.context = context;
 
         numberHorizontalPixels = x;
+        numberVerticalPixels = y;
         // initialize the sound class
         sound = new SoundEffects(getContext());
 

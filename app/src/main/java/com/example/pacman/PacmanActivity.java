@@ -43,7 +43,7 @@ public class PacmanActivity extends Activity {
         mPacmanGame = new PacmanGame(this, size.x, size.y, modeSelected);
         //mPacmanGame = new PacmanGame(this, 2028, 1080);
         setContentView(mPacmanGame);
-        Intent intent = new Intent(this, GameOverActivity.class);
+//        Intent intent = new Intent(this, GameOverActivity.class);
         Log.d("Debugging", "In onCreate");
 
 
@@ -51,7 +51,7 @@ public class PacmanActivity extends Activity {
             public void run() {
                 while(true) {
                     // System.out.println("Check Game over");
-                    if(Pacman.totalLives <= 0) {
+                    if (Pacman.totalLives <= 0) {
                         gameOver();
                         break;
                     }
@@ -59,15 +59,11 @@ public class PacmanActivity extends Activity {
             }
         };
         gameOverThread.start();
-
-
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         // More code here later
         mPacmanGame.resume();
     }
@@ -75,7 +71,6 @@ public class PacmanActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-
         // More code here later
         mPacmanGame.pause();
     }
