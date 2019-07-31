@@ -187,7 +187,7 @@ class PacmanGame extends SurfaceView implements Runnable {
             }
 
             for (GameObjectCollection gameObjectCollection : gameObjectCollections) {
-                gameObjectCollection.update(direction, mFPS, score);
+                gameObjectCollection.update(direction, mFPS,score);
             }
             if(Pacman.totalLives <= 0) {
                 mPlaying = false;
@@ -313,6 +313,7 @@ class PacmanGame extends SurfaceView implements Runnable {
         numberVerticalPixels = y;
         // initialize the sound class
         sound = new SoundEffects(getContext());
+        score = new PointSystem();
 
         // Initialize these two members/fields
         // With the values passed in as parameters
@@ -357,7 +358,6 @@ class PacmanGame extends SurfaceView implements Runnable {
 
         //init Nav Buttons
         navigationButtons = new NavigationButtons(context, mScreen.x, mScreen.y);
-        score = new PointSystem();
         //records = new Records(context);
         //records.printRecord();
     }

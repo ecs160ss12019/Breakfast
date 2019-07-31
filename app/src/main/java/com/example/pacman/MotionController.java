@@ -36,14 +36,13 @@ public class MotionController extends Observable {
 
     private MotionInfo updatePacman(final MotionInfo motionInfo, final long fps) {
         MotionUpdater motionUpdater = new MotionUpdater(motionInfo, fps,
-                this.arcade, this.arcadeAnalyzerGhostHouseDisabled);
+                    this.arcade, this.arcadeAnalyzerGhostHouseDisabled);
+
         return motionUpdater.updateMotion();
     }
 
     private MotionInfo updateGhost(final Ghost ghost, final MotionInfo motionInfo, final long fps) {
 
-        int screenX = gameMode.getScreenX();
-        int ModeSelected = gameMode.getModeSelection();
         MotionUpdater motionUpdater;
 
         if (ghost.ghostBehaviour instanceof GhostEnterBehaviour ||
