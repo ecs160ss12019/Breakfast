@@ -166,8 +166,22 @@ public class GameObjectCollection {
     public void initialGhost() {
         for (MovingObject movingObject : movingObjects) {
             if (movingObject instanceof Ghost) {
-                ((Ghost)movingObject).ghostBehaviour = new GhostExitBehaviour();
+                ((Ghost)movingObject).ghostBehaviour = new GhostStationaryBehaviour();
                 ((Ghost)movingObject).motionInfo = InitialMotioninfo(((Ghost)movingObject).id);
+                switch (((Ghost)movingObject).id){
+                    case 0:
+                        ((Ghost)movingObject).gameObjectTimer.setTimer(0);
+                        break;
+                    case 1:
+                        ((Ghost)movingObject).gameObjectTimer.setTimer(1);
+                        break;
+                    case 2:
+                        ((Ghost)movingObject).gameObjectTimer.setTimer(2);
+                        break;
+                    case 3:
+                        ((Ghost)movingObject).gameObjectTimer.setTimer(3);
+                        break;
+                }
             }
         }
     }
