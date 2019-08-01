@@ -77,7 +77,9 @@ public class GameObjectCollection {
             cakeAppear = true;
         }
 
-        if (!gamePrepTimer.isTimeUp()) return;
+        if (!gamePrepTimer.isTimeUp()) {
+            return;
+        }
         //if (cakeTimer.isTimeUp()) movingObjects.add(cake);
 
         for (MovingObject movingObject : movingObjects) {
@@ -156,7 +158,7 @@ public class GameObjectCollection {
 
             containsPacman = true;
             Pacman.totalLives -=1;
-
+            System.out.println("Total lives: " + Pacman.totalLives);
             // initial ghost when pacman died
             initialGhost();
         }

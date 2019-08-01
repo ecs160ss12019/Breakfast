@@ -94,8 +94,6 @@ class PacmanGame extends SurfaceView implements Runnable {
             //long frameStartTime = System.currentTimeMillis();
             long frameStartTime = System.nanoTime();
 
-            // System.out.println("Game is paused: " + mPaused);
-
             if(!mPaused) {
                 /*
                 We want to prevent from updating any
@@ -239,7 +237,7 @@ class PacmanGame extends SurfaceView implements Runnable {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-
+        System.out.println("drawing");
         // Fill the screen with a solid color
         mCanvas.drawColor(Color.argb
                 (255, 255, 255, 255));
@@ -307,6 +305,8 @@ class PacmanGame extends SurfaceView implements Runnable {
         // constructor of SurfaceView
         // provided by Android
         super(context);
+        //FIXME
+        Pacman.totalLives = 3;
         this.context = context;
 
         numberHorizontalPixels = x;

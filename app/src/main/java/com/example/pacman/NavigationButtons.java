@@ -98,7 +98,7 @@ public class NavigationButtons {
         int numImgCol = 2;
 
         //resize
-        int optimalWidth = screenHeight / 8;
+        int optimalWidth = (int)(screenHeight / 8 * 1.7);
         int optimalHeight = optimalWidth;
         arrowsImg = Bitmap.createScaledBitmap(arrowsImg, optimalWidth, optimalHeight, true);
         pressedArrowsImg = Bitmap.createScaledBitmap(pressedArrowsImg, optimalWidth, optimalHeight, true);
