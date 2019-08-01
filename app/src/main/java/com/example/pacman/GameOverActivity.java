@@ -37,7 +37,7 @@ public class GameOverActivity extends Activity {
         playGame();
     }
     public void playGame(){
-        mapBtn.setOnClickListener(new View.OnClickListener() {
+        replayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 modeSelectedTmp = replayBtn.getText().toString();
@@ -45,7 +45,7 @@ public class GameOverActivity extends Activity {
                 replay();
             }
         });
-        replayBtn.setOnClickListener(new View.OnClickListener() {
+        mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 modeSelectedTmp = mapBtn.getText().toString();

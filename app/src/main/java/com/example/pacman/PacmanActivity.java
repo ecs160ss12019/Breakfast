@@ -46,14 +46,13 @@ public class PacmanActivity extends Activity {
         Intent intent = new Intent(this, GameOverActivity.class);
         Log.d("Debugging", "In onCreate");
 
+        Pacman.totalLives = 3;
 
         gameOverThread = new Thread() {
             public void run() {
                 while(true) {
                     // System.out.println("Check Game over");
                     if(Pacman.totalLives <= 0) {
-//                        Intent intent = getIntent();
-//                        finish();
                         gameOver();
                         break;
                     }
