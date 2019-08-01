@@ -9,8 +9,12 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Build;
 
 public class SoundEffects {
+    // use MediaPlayer for static music (the ones that have to be
+    // finished playing before playing again)
     MediaPlayer welcome, pacman_death, eat_ghost, siren, waze;
 
+    // use SoundPool for dynamic music (the ones that can restart
+    // playing before the music finishes)
     private SoundPool soundPool;
     private int pacman_chomp, eat_power;
     private AudioAttributes audioAttributes;
@@ -22,6 +26,7 @@ public class SoundEffects {
         siren = MediaPlayer.create(context, R.raw.my_siren);
         waze = MediaPlayer.create(context, R.raw.edited_waze);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // new way of setting SoundPool
             audioAttributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_GAME)
                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -31,6 +36,7 @@ public class SoundEffects {
                     .setMaxStreams(1)
                     .build();
         } else {
+            // this is the old way of setting SoundPool (cannot be used anymore)
             soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
         }
         pacman_chomp = soundPool.load(context, R.raw.edited_chomp, 1);

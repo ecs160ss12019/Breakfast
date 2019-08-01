@@ -33,11 +33,11 @@ public class PacmanActivity extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         Display display = getWindowManager().getDefaultDisplay();
+        // get the size of the player's device
         Point size = new Point();
         display.getSize(size);
         intent = getIntent();
         modeSelected = intent.getIntExtra(MapSelectionActivity.EXTRA_NUMBER, -1);
-        System.out.println("++++++++++++++ PacmanActivity mode selected " + modeSelected);
 
         //FIXME
         mPacmanGame = new PacmanGame(this, size.x, size.y, modeSelected);
@@ -46,12 +46,13 @@ public class PacmanActivity extends Activity {
         Intent intent = new Intent(this, GameOverActivity.class);
         Log.d("Debugging", "In onCreate");
 
+        // initialize the lives of the pacman
         Pacman.totalLives = 3;
 
         gameOverThread = new Thread() {
             public void run() {
                 while(true) {
-                    // System.out.println("Check Game over");
+//                    System.out.println("Check Game over");
                     if(Pacman.totalLives <= 0) {
                         gameOver();
                         break;
@@ -81,6 +82,8 @@ public class PacmanActivity extends Activity {
         mPacmanGame.pause();
     }
 
+    // this method switches the player to the game over activity page
+    // when the pacman life is equal to zero
     public void gameOver() {
         // System.out.println("gameOver is called");
 //        Intent curintent = getIntent();
